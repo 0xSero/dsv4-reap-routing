@@ -225,6 +225,26 @@
 <h3>10.4 Specialist vs backbone firing style</h3>
 <p>When the L42 specialists fire they do so densely: e164 averages ~13 firings per Qur'an sample (up to 13 of every 6×seqlen routings) with mean activation norm ≈2,666 — comparable to backbone expert e26 (norm ≈1,590, ~19 firings/sample). Specialists are not rare, weak units; they are high-magnitude units gated off entirely outside their register.</p>
 
+
+<h2 id="jlens-data">11 J-lens probe data — early release</h2>
+<p>Raw logit-lens and bounded-Jacobian probe records are published below as gzipped JSONL (24 of a planned 80 samples; the remaining 56 across six more traditions are <b>coming soon</b> — the run is in progress). Each record contains the input token strings, per-layer top-decoded tokens at 3 sampled positions for all 43 layers, final logits, and 16-direction finite-difference Jacobian norms from source layers {0, 10, 20, 30, 42}.</p>
+<table>
+<tr><th>File</th><th>Samples</th><th>Tradition</th></tr>
+<tr><td><a href="jlens/bible_jlens.jsonl.gz">bible_jlens.jsonl.gz</a></td><td>11</td><td>Bible (KJV)</td></tr>
+<tr><td><a href="jlens/quran_jlens.jsonl.gz">quran_jlens.jsonl.gz</a></td><td>11</td><td>Qur'an (English)</td></tr>
+<tr><td><a href="jlens/tao_jlens.jsonl.gz">tao_jlens.jsonl.gz</a></td><td>2</td><td>Tao Te Ching</td></tr>
+<tr><td colspan="3"><b>Coming soon:</b> gita, dhamma, bofm, analects, upanishads (+ remaining bible/quran/tao)</td></tr>
+</table>
+<p><b>Prompts:</b> the exact input texts (public-domain scripture openings, ≤2k tokens each) are listed in <a href="jlens_prompts.json">jlens_prompts.json</a> — e.g. Genesis 1 KJV ("In the beginning God created the heaven and the earth…"), Quran 1:1–…, Tao Te Ching chapter 1.</p>
+<p><b>Exact code</b> (read-only harness, no weight edits; credentials never in source):</p>
+<ul>
+<li><a href="code/observe_religious.py">observe_religious.py</a> — TP-2 observation harness (router hooks, fail-closed Σfreq = seqlen×6 invariants, fsynced JSONL)</li>
+<li><a href="code/run_jlens.py">run_jlens.py</a> + <a href="code/jlens_dsv4.py">jlens_dsv4.py</a> — logit-lens (hc_head → RMSNorm → lm_head) and bounded-Jacobian probes</li>
+<li><a href="code/analyze_experts.py">analyze_experts.py</a> — REAP aggregation, rankings, Jaccard matrices</li>
+<li><a href="code/prepare_corpus.py">prepare_corpus.py</a>, <a href="code/scrape_christian.py">scrape_christian.py</a>, <a href="code/prepare_christian_corpus.py">prepare_christian_corpus.py</a> — corpus builders (pinned tokenizer rev 9e165c30)</li>
+</ul>
+<p><b>Full dataset:</b> all 2,749 REAP observation records (22.3M tokens, 9 corpora) are in the private dataset <code>0xSero/deepseek-v4-flash-religious-reap-observations</code> on Hugging Face (access on request). The J-lens files above are the public probe subset.</p>
+
 <h2 id="refs">9 References</h2>
 <ol class="refs">
 <li>REAP (Router-weighted Expert Activation Product) — internal scoring definition, §3.2.</li>
