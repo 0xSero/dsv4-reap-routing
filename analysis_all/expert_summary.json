@@ -1,0 +1,25 @@
+{
+  "n_samples": 1482,
+  "n_texts": 8,
+  "texts": [
+    "analects",
+    "bible",
+    "bofm",
+    "dhamma",
+    "gita",
+    "quran",
+    "tao",
+    "upanishads"
+  ],
+  "layers": 43,
+  "experts": 256,
+  "topk": 6,
+  "files": [
+    "expert_rankings.csv",
+    "expert_rankings_per_book.csv",
+    "expert_frequency.csv",
+    "text_expert_profiles.parquet",
+    "per_layer_topk.csv",
+    "cross_text_jaccard.csv"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "text": "analects",
+  "tokenizer": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "tokenizer_revision": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+  "max_sample_tokens": 16384,
+  "min_sample_tokens": 8,
+  "seed": 33377335,
+  "units": [
+    "book_01_hsio_r",
+    "book_02_wei_chang",
+    "book_03_pa_yih",
+    "book_04_le_jin",
+    "book_05_kung_ye_ch_ang",
+    "book_06_yung_yey",
+    "book_07_shu_r",
+    "book_08_t_ai_po",
+    "book_09_tsze_han",
+    "book_10_heang_tang",
+    "book_11_hsien_tsin",
+    "book_12_yen_yuan",
+    "book_13_tsze_lu",
+    "book_14_hsien_wan",
+    "book_15_wei_ling_kung",
+    "book_16_ke_she",
+    "book_17_yang_ho",
+    "book_18_wei_tsze",
+    "book_19_tsze_chang",
+    "book_20_yao_yueh"
+  ],
+  "n_units": 20,
+  "n_samples": 20
+}

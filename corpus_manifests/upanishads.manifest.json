@@ -1,0 +1,15 @@
+{
+  "text": "upanishads",
+  "tokenizer": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "tokenizer_revision": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+  "max_sample_tokens": 16384,
+  "min_sample_tokens": 8,
+  "seed": 33377335,
+  "units": [
+    "isa",
+    "katha",
+    "kena"
+  ],
+  "n_units": 3,
+  "n_samples": 3
+}

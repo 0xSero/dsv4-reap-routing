@@ -1,0 +1,10 @@
+Robustness: matched-n bootstrap checks (2026-08-14)
+- L42 e164: 0/1189 bible samples activated (hard zero). Gita mean 3320 at n=18;
+  5000 bootstrap n=18 bible subsets all give 0.000. Not a small-n artifact.
+- L34 e33: bible 2.7 [2.5-2.9]; dhamma 4358 [2013-7107] at n=26. Real specialist.
+- L41 e34: bible 0.05 [0.01-0.09]; quran 24.2 [21.7-26.8] at n=115 (~300x gap).
+- Gita (n=18): direction certain, magnitude imprecise (CI floor 248 >> 0).
+- Upanishads (n=3): all 3 samples consistent (e105 ~916) but labeled hypothesis-only.
+- Core-expert overlap is tradition-agnostic: bible-bofm Jaccard 0.539 ~=
+  bofm-quran 0.544 ~= bible-quran 0.525 (per-layer top-5 profiles).
+  Specialists are a thin layer on a shared scripture backbone.

@@ -1,0 +1,27 @@
+{
+  "text": "bofm",
+  "tokenizer": "deepseek-ai/DeepSeek-V4-Flash-0731",
+  "tokenizer_revision": "9e165c30e2704aec5d9d593cce3eebd58bbef1cb",
+  "max_sample_tokens": 16384,
+  "min_sample_tokens": 8,
+  "seed": 33377335,
+  "units": [
+    "1_nephi",
+    "2_nephi",
+    "jacob",
+    "enos",
+    "jarom",
+    "omni",
+    "words_of_mormon",
+    "mosiah",
+    "alma",
+    "helaman",
+    "3_nephi",
+    "4_nephi",
+    "mormon",
+    "ether",
+    "moroni"
+  ],
+  "n_units": 15,
+  "n_samples": 30
+}
