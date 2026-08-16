@@ -1,5 +1,22 @@
 # EXPERIMENTS — DeepSeek-V4-Flash-0731 Interpretability
 
+> **REVISED 2026-08-16 after external review (wiki §9):** the flagship e164
+> "memorization" interpretation was withdrawn (digit-density confound). New
+> priority order:
+> 1. **Exp 11 (NEW): e164/e27/e68 context dump** — top-500 firing contexts, ±20
+>    tokens. Prediction: numerals, footnote markers, verse refs, roman numerals.
+> 2. **Exp 12 (NEW): digit minimal-pair test** — one Bible chapter, three
+>    versions: (a) as-is digit-free, (b) verse numbers reinserted `N:M`, (c)
+>    arbitrary numerals at matched density. Sub-hour run; separates
+>    citation-structure vs bare-numeral feature. Strictly more decisive than
+>    Exp 1 (multi-translation varies register+digits+memorization together).
+> 3. Exp 3 (secular null) — stratified by digit density, not topic.
+> 4. All corpus contrasts: report partial effects controlling digit%,
+>    punctuation%, sentence length, TTR.
+> Deprioritized: Exp 9 (answered: length-matched bands show Bible 0 / Qur'an
+> 4383/M), Exp 8 (tested the never-at-risk channel), Exps 5/6 (Wikipedia
+> corpora are digit-dense; run only after Exp 11/12 settle the digit question).
+
 ## Running experiments
 
 These experiments are designed to run autonomously when GPU nodes are free,
