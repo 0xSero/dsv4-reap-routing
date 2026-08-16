@@ -62,7 +62,7 @@ mkdir -p code
 for py in observe_religious.py run_jlens.py jlens_dsv4.py analyze_experts.py generate_report.py prepare_corpus.py scrape_christian.py prepare_christian_corpus.py prepare_theology_corpus.py scrape_wikipedia.py stream_to_hf.py; do
     if [ -f "$RESEARCH_DIR/$py" ]; then
         # Sanitize: check for credentials
-        if grep -q 'REDACTED' "$RESEARCH_DIR/$py" 2>/dev/null; then
+        if grep -qE 'in.t-4.@' "$RESEARCH_DIR/$py" 2>/dev/null; then
             sed "s/$SSHPASS_ENV/\$SSHPASS_ENV/g" "$RESEARCH_DIR/$py" > "code/$py"
         else
             cp "$RESEARCH_DIR/$py" "code/$py"
@@ -72,7 +72,7 @@ for py in observe_religious.py run_jlens.py jlens_dsv4.py analyze_experts.py gen
 done
 for sh in run_full_observation.sh run_christian_observation.sh run_jlens_tp2.sh jlens_watch.sh obs_christian_watch.sh chain_next_runs.sh finalize_christian.sh sync_to_github.sh; do
     if [ -f "$RESEARCH_DIR/$sh" ]; then
-        if grep -q 'REDACTED' "$RESEARCH_DIR/$sh" 2>/dev/null; then
+        if grep -qE 'in.t-4.@' "$RESEARCH_DIR/$sh" 2>/dev/null; then
             sed "s/$SSHPASS_ENV/\$SSHPASS_ENV/g" "$RESEARCH_DIR/$sh" > "code/$sh"
         else
             cp "$RESEARCH_DIR/$sh" "code/$sh"
