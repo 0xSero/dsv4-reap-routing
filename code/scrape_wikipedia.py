@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """scrape_wikipedia.py — Scrape Wikipedia articles for theological/religious topics.
 
-Crawls Wikipedia categories recursively (up to N levels deep), downloads the
-full plaintext of every article found, and saves each as an individual .txt file
-under corpus/theology/raw/.  Resumable (skips files already downloaded).
-Targets 50M+ tokens across all topics.
+Uses the MediaWiki generator API to fetch category members + their extracts
+in a single API call (50 at a time), dramatically reducing request count.
+Sequential operation with conservative rate limiting.
 
 Usage:
-  python scrape_wikipedia.py --topic jesus --depth 3 --max-articles 8000
-  python scrape_wikipedia.py --topic all          # run every topic
+  python3 scrape_wikipedia.py --topic jesus --depth 3 --max-articles 8000
+  python3 scrape_wikipedia.py --topic all
 """
 from __future__ import annotations
 import argparse, json, os, re, sys, time, urllib.request, urllib.parse
@@ -19,10 +18,12 @@ OUT = ROOT / "corpus" / "theology" / "raw"
 OUT.mkdir(parents=True, exist_ok=True)
 
 API = "https://en.wikipedia.org/w/api.php"
-DELAY = 1.0  # seconds between API calls (1 req/s — safe for sequential)
+DELAY = 2.0
+BATCH_SIZE = 50  # max titles per generator query
+UA = "theology-interpretability-research/1.0 (educational; contact: research@local)"
 
 # ---------------------------------------------------------------------------
-# Topic seeds: categories to crawl + articles to grab directly
+# Topic seeds
 # ---------------------------------------------------------------------------
 SEEDS: dict[str, dict] = {
     "jesus": {
@@ -44,14 +45,15 @@ SEEDS: dict[str, dict] = {
             "Early Christianity", "Apostolic Age", "Ante-Nicene Fathers",
             "Church Fathers", "Christianity in the 1st century",
             "Christianity in the 2nd century", "Christian apologetics",
-            "Jesus in Islam", "Jesus in the Bahá'í Faith",
-            "Christian views of Jesus", "Jewish views of Jesus",
-            "Quest for the historical Jesus", "Jesus Seminar",
+            "Jesus in the Bahá'í Faith", "Christian views of Jesus",
+            "Jewish views of Jesus", "Jesus Seminar",
             "Sources for the historicity of Jesus", "Non-Christian sources for Jesus",
             "Archeology of Jesus", "Language of Jesus", "Race of Jesus",
             "Depictions of Jesus", "Life of Christ in art",
-            "Holy Blood", "Relics associated with Jesus",
-            "Shroud of Turin", "True Cross", "Crown of Thorns",
+            "Relics associated with Jesus", "Shroud of Turin", "True Cross",
+            "Crown of Thorns", "Christian mythology",
+            "New Testament apocrypha", "Gnostic Gospels", "Gospel of Thomas",
+            "Infancy Gospels", "Apocryphal Gospels",
         ],
         "articles": [
             "Jesus", "Historical Jesus", "Christ (title)", "Life of Jesus in the New Testament",
@@ -70,18 +72,17 @@ SEEDS: dict[str, dict] = {
             "Finding in the Temple", "Cana wedding", "Cleansing of the Temple",
             "Money changers", "Render unto Caesar", "Woes to the scribes and Pharisees",
             "Olivet Discourse", "Last Judgment", "Great Commission",
-            "Ascension of Jesus", "Road to Emmaus appearance",
-            "Post-resurrection appearances of Jesus", "Doubting Thomas",
-            "Paul the Apostle", "Apostle Peter", "James brother of Jesus",
-            "Mary Magdalene", "Penitent thief", "Barabbas", "Pontius Pilate",
-            "Herod Antipas", "Caiaphas", "Judas Iscariot",
-            "Gospel of Matthew", "Gospel of Mark", "Gospel of Luke", "Gospel of John",
-            "Source Q", "Signs Gospel", "Acts of the Apostles",
-            "Epistle to the Romans", "First Epistle to the Corinthians",
-            "Book of Revelation", "Logos Christianity", "Kenosis",
-            "Hypostatic union", "Nicene Creed", "Chalcedonian Creed",
-            "Arianism", "Gnosticism", "Docetism", "Adoptionism",
-            "Ebionites", "Marcionism", "Montanism",
+            "Road to Emmaus appearance", "Post-resurrection appearances of Jesus",
+            "Doubting Thomas", "Paul the Apostle", "Apostle Peter",
+            "James brother of Jesus", "Mary Magdalene", "Penitent thief",
+            "Barabbas", "Pontius Pilate", "Herod Antipas", "Caiaphas",
+            "Judas Iscariot", "Gospel of Matthew", "Gospel of Mark",
+            "Gospel of Luke", "Gospel of John", "Source Q", "Signs Gospel",
+            "Acts of the Apostles", "Epistle to the Romans",
+            "First Epistle to the Corinthians", "Book of Revelation",
+            "Logos Christianity", "Kenosis", "Hypostatic union",
+            "Nicene Creed", "Chalcedonian Creed", "Arianism", "Gnosticism",
+            "Docetism", "Adoptionism", "Ebionites", "Marcionism", "Montanism",
         ],
     },
     "lucifer": {
@@ -101,16 +102,16 @@ SEEDS: dict[str, dict] = {
             "Four horsemen of the Apocalypse", "Beast Revelation",
             "Whore of Babylon", "Number of the Beast", "Armageddon",
             "Rapture", "Tribulation", "Millennialism",
-            "Antichrist", "False prophet",
+            "Antichrist", "False prophet", "Demonic possession",
         ],
         "articles": [
             "Satan", "Devil", "Lucifer", "Beelzebub", "Fallen angel",
             "Demonology", "Hell in Christianity", "Antichrist",
             "Book of Revelation", "Seven deadly sins", "Original sin",
             "Problem of evil", "Theodicy", "Demonic possession",
-            "Exorcism", "Angels in Christianity", "Archangel", "Michael archangel",
-            "Gabriel archangel", "Raphael archangel", "Uriel angel",
-            "Djinn", "Ifrit", "Shaitan", "Iblis",
+            "Exorcism", "Angels in Christianity", "Archangel",
+            "Michael archangel", "Gabriel archangel", "Raphael archangel",
+            "Uriel angel", "Djinn", "Ifrit", "Shaitan", "Iblis",
             "Seven princes of Hell", "Hierarchy of demons",
             "Ars Goetia", "Lesser Key of Solomon",
             "Four horsemen of the Apocalypse", "Beast Revelation", "Whore of Babylon",
@@ -143,6 +144,7 @@ SEEDS: dict[str, dict] = {
             "Documentary hypothesis", "Canaanite religion",
             "Phoenician religion", "Ugaritic texts", "Ammonite religion",
             "Moabite religion", "Edomite religion", "Philistines",
+            "Samaritans", "Essenes", "Pharisees", "Sadducees", "Zealots",
         ],
         "articles": [
             "History of ancient Israel and Judah", "Origins of Judaism",
@@ -160,11 +162,11 @@ SEEDS: dict[str, dict] = {
             "Joseph son of Jacob", "Moses", "Aaron", "Joshua",
             "Judges Bible", "Samuel", "Saul king", "David",
             "Solomon", "Nebuchadnezzar II", "Cyrus the Great",
-            "Ezra", "Nehemiah", "Judith Maccabees",
-            "Documentary hypothesis", "Historicity of the Bible",
-            "Biblical criticism", "Phoenician alphabet",
-            "Mesha Stele", "Tel Dan Stele", "Ketef Hinnom scrolls",
-            "Silver scrolls",
+            "Ezra", "Nehemiah", "Documentary hypothesis",
+            "Historicity of the Bible", "Biblical criticism",
+            "Phoenician alphabet", "Mesha Stele", "Tel Dan Stele",
+            "Ketef Hinnom scrolls", "Samaritans", "Essenes",
+            "Pharisees", "Sadducees", "Zealots",
         ],
     },
     "judaism": {
@@ -178,10 +180,11 @@ SEEDS: dict[str, dict] = {
             "Halakha", "Midrash", "Tosefta", "Targum",
             "Jewish denominations", "Orthodox Judaism", "Reform Judaism",
             "Conservative Judaism", "Reconstructionist Judaism",
-            "Jewish identity", "Who is a Jew",
-            "Conversion to Judaism", "History of Judaism",
-            "Secular Jewish culture", "Haskalah", "Zionism",
-            "Land of Israel", "Aliyah",
+            "Jewish identity", "Who is a Jew", "Conversion to Judaism",
+            "History of Judaism", "Secular Jewish culture", "Haskalah",
+            "Zionism", "Land of Israel", "Aliyah",
+            "Jewish ethics", "Tikkun olam", "Pikuach nefesh",
+            "Lashon hara", "Kashrut", "Tzniut", "Modesty in Judaism",
         ],
         "articles": [
             "Judaism", "Talmud", "Mishnah", "Gemara",
@@ -202,10 +205,10 @@ SEEDS: dict[str, dict] = {
             "Tzitzit", "Tefillin", "Mezuzah", "Kippah",
             "Kosher food", "Kashrut", "Brit milah",
             "Jewish wedding", "Chuppah", "Ketubah",
-            "Jewish mourning", "Shiva Judaism", "Kaddish",
-            "Mussar movement", "Lithuanian Jews",
+            "Jewish mourning", "Shiva Judaism", "Mussar movement",
             "Sephardic Jews", "Ashkenazi Jews", "Mizrahi Jews",
-            "Beta Israel", "Jewish diaspora",
+            "Beta Israel", "Jewish diaspora", "Tikkun olam",
+            "Pikuach nefesh", "Lashon hara", "Tzniut",
         ],
     },
     "moloch": {
@@ -250,7 +253,7 @@ SEEDS: dict[str, dict] = {
             "Byblos", "Carthage", "Utica Tunisia",
             "Tarshish", "Cadiz", "Ibiza",
             "Sacrifice in Judaism", "Akedah",
-            "Jephthah", "Mesha Stele", "Moabite Stone",
+            "Jephthah", "Moabite Stone",
             "Cronus", "Saturn mythology", "Saturnalia",
             "El deity", "Elohim", "Yahweh",
             "Asherah pole", "Golden Calf",
@@ -271,6 +274,7 @@ SEEDS: dict[str, dict] = {
             "Ancient Greek religion", "Ancient Roman festivals",
             "Parentalia", "Lemuria festival", "Compitalia",
             "Consualia", "Opiconsivia",
+            "Roman imperial cult", "Mithraism",
         ],
         "articles": [
             "Saturn mythology", "Saturnalia", "Cronus", "Golden Age metaphor",
@@ -280,19 +284,16 @@ SEEDS: dict[str, dict] = {
             "Saturn in astrology", "Saturn symbol",
             "Planets in astrology", "Planetary deity",
             "Temple of Saturn", "Saturnalia in art",
-            "Macrobius", "Saturnaliorum",
-            "Ops", "Lua mythology", "Tellus Mater",
+            "Macrobius", "Ops", "Lua mythology", "Tellus Mater",
             "Janus mythology", "Jupiter mythology",
             "Neptune mythology", "Pluto mythology",
             "Uranus mythology", "Gaia mythology",
             "Rhea mythology", "Titanomachy",
             "Hesiod", "Theogony", "Works and Days",
             "Ovid", "Fasti poem", "Metamorphoses",
-            "Varro", "Augustine City of God",
-            "Numa Pompilius", "Roman calendar",
+            "Varro", "Numa Pompilius", "Roman calendar",
             "Nones calendar", "Ides calendar", "Kalends",
-            "Saturn in culture", "Saturn in art",
-            "Father Time", "Grim Reaper",
+            "Saturn in culture", "Father Time", "Grim Reaper",
             "Chronos", "Aion deity", "Eternity in philosophy",
             "Saturn in Hindu astrology", "Shani",
             "Planetary hours", "Decans", "Zodiac",
@@ -301,235 +302,192 @@ SEEDS: dict[str, dict] = {
             "Christmas origins", "Pagan influences on Christmas",
             "Mithraism", "Mithras", "Tauroctony",
             "Sol Indiges", "Elagabalus deity",
-            "Roman imperial cult", "Imperial cult ancient Rome",
-            "Augur", "Haruspex", "Sibylline Books",
-            "Vesta mythology", "Vestal Virgin", "Penates",
-            "Lares", "Genius mythology", "Manes",
+            "Roman imperial cult", "Augur", "Haruspex",
+            "Sibylline Books", "Vesta mythology", "Vestal Virgin",
+            "Penates", "Lares", "Genius mythology", "Manes",
             "Lemures", "Di parentes",
         ],
     },
 }
 
+
 # ---------------------------------------------------------------------------
 # API helpers
 # ---------------------------------------------------------------------------
 def _api(params: dict, retries: int = 5) -> dict:
-    """Call the MediaWiki API and return parsed JSON with 429 backoff."""
     params["format"] = "json"
     url = API + "?" + urllib.parse.urlencode(params)
     for attempt in range(retries):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": "theology-research/1.0 (educational)"})
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read().decode("utf-8"))
         except urllib.error.HTTPError as e:
             if e.code == 429:
-                wait = 5 * (attempt + 1)  # 5, 10, 15, 20, 25 seconds
-                print(f"  429 rate limited, backing off {wait}s (attempt {attempt+1})", file=sys.stderr)
+                wait = min(60, 10 * (attempt + 1))
+                print(f"  429, backing off {wait}s (attempt {attempt+1}/{retries})", file=sys.stderr)
                 time.sleep(wait)
             elif attempt < retries - 1:
-                time.sleep(3 * (attempt + 1))
+                time.sleep(5 * (attempt + 1))
             else:
                 print(f"  API error: {e}", file=sys.stderr)
                 return {}
         except Exception as e:
             if attempt < retries - 1:
-                time.sleep(3 * (attempt + 1))
+                time.sleep(5 * (attempt + 1))
             else:
                 print(f"  API error: {e}", file=sys.stderr)
                 return {}
     return {}
 
 
-def category_members(cat: str, depth: int, max_depth: int,
-                     seen_pages: set, seen_cats: set,
-                     queue: list, delay: float = DELAY) -> None:
-    """Recursively enumerate pages and subcategories under a Wikipedia category."""
-    if depth > max_depth:
-        return
-    cat_title = cat if cat.startswith("Category:") else f"Category:{cat}"
-    if cat_title in seen_cats:
-        return
-    seen_cats.add(cat_title)
-
-    cont = None
-    while True:
-        params = {
-            "action": "query", "list": "categorymembers",
-            "cmtitle": cat_title, "cmlimit": "500",
-            "cmtype": "page|subcat",
-        }
-        if cont:
-            params.update(cont)
-        data = _api(params)
-        if not data or "query" not in data:
-            break
-        for member in data["query"]["categorymembers"]:
-            title = member["title"]
-            ns = member["ns"]
-            if ns == 0:  # article
-                if title not in seen_pages:
-                    seen_pages.add(title)
-                    queue.append(title)
-            elif ns == 14:  # subcategory
-                if title not in seen_cats:
-                    queue_cats_remaining = True
-                    # we'll recurse later
-                    pass
-        if "continue" in data:
-            cont = data["continue"]
-        else:
-            break
-        time.sleep(delay)
-
-    # now recurse into subcategories we found
-    # re-query just for subcats
-    cont = None
-    subcats: list[str] = []
-    while True:
-        params = {
-            "action": "query", "list": "categorymembers",
-            "cmtitle": cat_title, "cmlimit": "500",
-            "cmtype": "subcat",
-        }
-        if cont:
-            params.update(cont)
-        data = _api(params)
-        if not data or "query" not in data:
-            break
-        for member in data["query"]["categorymembers"]:
-            t = member["title"]
-            if t not in seen_cats:
-                subcats.append(t)
-        if "continue" in data:
-            cont = data["continue"]
-        else:
-            break
-        time.sleep(delay)
-
-    for sc in subcats:
-        if sc not in seen_cats:
-            category_members(sc, depth + 1, max_depth, seen_pages, seen_cats, queue, delay)
-
-
-def fetch_article(title: str, delay: float = DELAY) -> str:
-    """Download an article's plaintext via the API."""
-    # Use the extracts API with explaintext for clean text
-    data = _api({
-        "action": "query", "titles": title,
-        "prop": "extracts", "explaintext": "1",
-        "exsectionformat": "plain", "redirects": "1",
-    })
-    if not data or "query" not in data or "pages" not in data["query"]:
-        return ""
-    pages = data["query"]["pages"]
-    for pid, page in pages.items():
-        if pid == "-1":
-            return ""
-        extract = page.get("extract", "")
-        if not extract:
-            # Fallback: parse API for wikitext
-            data2 = _api({
-                "action": "parse", "page": title,
-                "prop": "wikitext", "redirects": "1",
-            })
-            if data2 and "parse" in data2:
-                wikitext = data2["parse"].get("wikitext", {}).get("*", "")
-                extract = _strip_wikitext(wikitext)
-        return extract.strip()
-    return ""
-
-
-def _strip_wikitext(text: str) -> str:
-    """Crude wikitext → plaintext converter."""
-    # Remove templates {{...}}
-    text = re.sub(r"\{\{[^}]*\}\}", "", text)
-    # Remove links [[target|display]] → display
-    text = re.sub(r"\[\[[^]|]*\|([^\]]*)\]\]", r"\1", text)
-    text = re.sub(r"\[\[([^\]]*)\]\]", r"\1", text)
-    # Remove HTML tags
-    text = re.sub(r"<[^>]+>", "", text)
-    # Remove ref tags
-    text = re.sub(r"<ref[^>]*>.*?</ref>", "", text, flags=re.DOTALL)
-    # Remove comments
-    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
-    # Remove magic words / headings markers
-    text = re.sub(r"^=+\s*", "", text, flags=re.MULTILINE)
-    text = re.sub(r"\s*=+$", "", text, flags=re.MULTILINE)
-    # Collapse whitespace
-    text = re.sub(r"\n{3,}", "\n\n", text)
-    return text.strip()
-
-
 def _safe_filename(title: str, topic: str) -> str:
-    """Generate a safe filename for an article."""
     slug = re.sub(r"[^A-Za-z0-9]+", "_", title).strip("_").lower()[:80]
     return f"{topic}_{slug}.txt"
+
+
+def fetch_via_generator(category: str, topic: str, seen: set, max_depth: int,
+                       depth: int = 1) -> int:
+    """Use generator=categorymembers with prop=extracts to fetch both the list
+    of pages in a category AND their full text in a single API call series.
+    Returns number of articles saved."""
+    cat_title = category if category.startswith("Category:") else f"Category:{category}"
+    if cat_title in seen:
+        return 0
+    seen.add(cat_title)
+
+    n_saved = 0
+    cont = None
+    while True:
+        params = {
+            "action": "query",
+            "generator": "categorymembers",
+            "gcmtitle": cat_title,
+            "gcmtype": "page",
+            "gcmlimit": str(BATCH_SIZE),
+            "prop": "extracts",
+            "explaintext": "1",
+            "exsectionformat": "plain",
+            "redirects": "1",
+            "exlimit": "max",
+        }
+        if cont:
+            params.update(cont)
+        data = _api(params)
+        if not data or "query" not in data:
+            break
+
+        pages = data["query"].get("pages", {})
+        for pid, page in pages.items():
+            if pid == "-1":
+                continue
+            title = page.get("title", "")
+            extract = page.get("extract", "")
+            if not extract or len(extract) < 200:
+                continue
+            fname = _safe_filename(title, topic)
+            fpath = OUT / fname
+            if not fpath.exists() or fpath.stat().st_size < 500:
+                fpath.write_text(f"# {title}\n\n{extract.strip()}\n", encoding="utf-8")
+                n_saved += 1
+
+        if "continue" in data:
+            cont = data["continue"]
+            time.sleep(DELAY)
+        else:
+            break
+        time.sleep(DELAY)
+
+    # Recurse into subcategories (just enumerate, don't fetch extracts yet)
+    if depth < max_depth:
+        subcont = None
+        while True:
+            params = {
+                "action": "query", "list": "categorymembers",
+                "cmtitle": cat_title, "cmlimit": "500", "cmtype": "subcat",
+            }
+            if subcont:
+                params.update(subcont)
+            data = _api(params)
+            if not data or "query" not in data:
+                break
+            for member in data["query"]["categorymembers"]:
+                sc = member["title"]
+                if sc not in seen:
+                    n_saved += fetch_via_generator(sc, topic, seen, max_depth, depth + 1)
+            if "continue" in data:
+                subcont = data["continue"]
+            else:
+                break
+            time.sleep(DELAY)
+
+    return n_saved
+
+
+def fetch_seed_articles(titles: list[str], topic: str) -> int:
+    """Fetch seed articles in batches using prop=extracts."""
+    n_saved = 0
+    for i in range(0, len(titles), BATCH_SIZE):
+        batch = titles[i:i + BATCH_SIZE]
+        data = _api({
+            "action": "query",
+            "titles": "|".join(batch),
+            "prop": "extracts",
+            "explaintext": "1",
+            "exsectionformat": "plain",
+            "redirects": "1",
+            "exlimit": "max",
+        })
+        if not data or "query" not in data:
+            time.sleep(DELAY)
+            continue
+        pages = data["query"].get("pages", {})
+        for pid, page in pages.items():
+            if pid == "-1":
+                continue
+            title = page.get("title", "")
+            extract = page.get("extract", "")
+            if not extract or len(extract) < 200:
+                continue
+            fname = _safe_filename(title, topic)
+            fpath = OUT / fname
+            if not fpath.exists() or fpath.stat().st_size < 500:
+                fpath.write_text(f"# {title}\n\n{extract.strip()}\n", encoding="utf-8")
+                n_saved += 1
+        time.sleep(DELAY)
+    return n_saved
 
 
 # ---------------------------------------------------------------------------
 # Main scraping loop
 # ---------------------------------------------------------------------------
 def scrape_topic(topic: str, depth: int, max_articles: int) -> tuple[int, int]:
-    """Scrape one topic. Returns (n_articles, total_chars)."""
     seeds = SEEDS.get(topic)
     if not seeds:
         print(f"Unknown topic: {topic}", file=sys.stderr)
         return 0, 0
 
-    seen_pages: set[str] = set()
+    print(f"[{topic}] Fetching {len(seeds['articles'])} seed articles...")
+    n_seeds = fetch_seed_articles(seeds.get("articles", []), topic)
+    print(f"[{topic}] Seeds: {n_seeds} saved")
+
+    print(f"[{topic}] Crawling {len(seeds['categories'])} categories (depth={depth})...")
     seen_cats: set[str] = set()
-    article_queue: list[str] = []
-
-    # Add direct articles first
-    for art in seeds.get("articles", []):
-        if art not in seen_pages:
-            seen_pages.add(art)
-            article_queue.append(art)
-
-    print(f"[{topic}] {len(article_queue)} seed articles, crawling {len(seeds['categories'])} categories (depth={depth})...")
-
-    # Crawl categories
-    for cat in seeds.get("categories", []):
-        before = len(article_queue)
-        category_members(cat, 1, depth, seen_pages, seen_cats, article_queue)
-        after = len(article_queue)
-        print(f"  [{topic}] cat '{cat}': +{after - before} articles (total queue: {after})")
-        time.sleep(DELAY)
-
-    print(f"[{topic}] total articles in queue: {len(article_queue)}")
-
-    n_downloaded = 0
-    total_chars = 0
-    for i, title in enumerate(article_queue):
-        if n_downloaded >= max_articles:
-            print(f"  [{topic}] hit max_articles={max_articles}, stopping")
+    total_saved = n_seeds
+    for ci, cat in enumerate(seeds.get("categories", [])):
+        n = fetch_via_generator(cat, topic, seen_cats, depth)
+        total_saved += n
+        est_tokens = sum(f.stat().st_size for f in OUT.glob(f"{topic}_*.txt")) // 4
+        print(f"  [{topic}] ({ci+1}/{len(seeds['categories'])}) cat '{cat}': +{n} (total: {total_saved}, ~{est_tokens:,} tokens)", flush=True)
+        if total_saved >= max_articles:
+            print(f"  [{topic}] hit max_articles={max_articles}")
             break
 
-        fname = _safe_filename(title, topic)
-        fpath = OUT / fname
-        if fpath.exists() and fpath.stat().st_size > 500:
-            n_downloaded += 1
-            total_chars += fpath.stat().st_size
-            continue
-
-        text = fetch_article(title)
-        if not text or len(text) < 200:
-            continue
-
-        fpath.write_text(f"# {title}\n\n{text}\n", encoding="utf-8")
-        n_downloaded += 1
-        total_chars += len(text)
-
-        if n_downloaded % 50 == 0:
-            est_tokens = total_chars // 4  # ~4 chars/token
-            print(f"  [{topic}] {n_downloaded}/{len(article_queue)} articles, "
-                  f"{total_chars:,} chars (~{est_tokens:,} tokens)", flush=True)
-        time.sleep(DELAY)
-
+    total_chars = sum(f.stat().st_size for f in OUT.glob(f"{topic}_*.txt"))
     est_tokens = total_chars // 4
-    print(f"[{topic}] DONE: {n_downloaded} articles, {total_chars:,} chars (~{est_tokens:,} tokens)")
-    return n_downloaded, total_chars
+    n_files = len(list(OUT.glob(f"{topic}_*.txt")))
+    print(f"[{topic}] DONE: {n_files} articles, {total_chars:,} chars (~{est_tokens:,} tokens)")
+    return n_files, total_chars
 
 
 def main():

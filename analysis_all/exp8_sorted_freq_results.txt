@@ -1,0 +1,75 @@
+======================================================================
+EXPERIMENT 8: Sorted L42 Frequency Distribution Check
+======================================================================
+
+Bible: 1189 samples, 1,045,776 tokens
+Quran: 115 samples, 258,122 tokens
+Christian: 1267 samples, 20,409,440 tokens
+
+--- e164 firing count at L42 ---
+Bible L42 e164:     0  (expected ~24,510 under proportional routing)
+Quran L42 e164:     1,180  (expected ~6,049)
+Christian L42 e164: 93,265  (expected ~478,346)
+
+Exact-zero experts at L42: Bible=4/256, Quran=1/256
+
+--- Sorted frequency distributions (top 30) ---
+rank        Bible        Quran
+   1      401,781      111,390
+   2      186,723       59,075
+   3      162,066       54,813
+   4      161,070       53,548
+   5      155,180       45,598
+   6      143,673       44,737
+   7      125,935       38,797
+   8      124,866       35,835
+   9      117,911       34,408
+  10      115,058       33,804
+  11      115,011       32,078
+  12      113,844       30,990
+  13      111,392       30,333
+  14      108,703       29,933
+  15       96,539       29,625
+  16       90,312       26,954
+  17       90,231       26,856
+  18       89,385       26,032
+  19       86,361       25,173
+  20       76,999       24,051
+  21       76,988       23,563
+  22       73,065       22,240
+  23       71,792       20,738
+  24       70,750       20,404
+  25       69,733       19,380
+  26       68,655       16,167
+  27       68,061       16,133
+  28       66,427       15,344
+  29       63,884       14,526
+  30       61,477       13,737
+
+Pearson r of sorted distributions (Bible vs Quran): 0.9902
+  (If ~1.0 → shapes match → possible permutation bug)
+  (If <0.95 → shapes differ → distributions genuinely differ)
+
+Bible L42 top-10 experts by freq:  ['e119(401,781)', 'e150(186,723)', 'e205(162,066)', 'e190(161,070)', 'e236(155,180)', 'e143(143,673)', 'e32(125,935)', 'e240(124,866)', 'e146(117,911)', 'e137(115,058)']
+Quran L42 top-10 experts by freq:  ['e119(111,390)', 'e63(59,075)', 'e205(54,813)', 'e190(53,548)', 'e40(45,598)', 'e101(44,737)', 'e107(38,797)', 'e154(35,835)', 'e78(34,408)', 'e236(33,804)']
+
+e164 rank in Bible: 255/256 (freq=0)
+e164 rank in Quran: 152/256 (freq=1,180)
+
+--- Multiset comparison (permutation signature) ---
+Bible nonzero experts: 252, total routed: 6,274,656
+Quran nonzero experts: 255, total routed: 1,548,732
+
+Top-5 normalized freq per 1M tokens:
+  Bible: ['384194', '178550', '154972', '154020', '148387']
+  Quran: ['431540', '228865', '212353', '207452', '176653']
+
+Cross-corpus ID consistency: 15/20 top-L42 experts shared between Bible and Quran: [34, 63, 78, 101, 107, 119, 129, 146, 150, 190, 193, 200, 205, 236, 240]
+Bible∩Christian top-20 overlap: 15/20
+
+--- VERDICT ---
+ID mapping CONSISTENT across corpora (15 shared top experts).
+A per-shard permutation would break this alignment — NOT a permutation bug.
+The e164 exact-zero in Bible (expected ~24,510, got 0) is a REAL finding.
+Note: r=0.99 on sorted shapes reflects the universal heavy-tail routing
+profile, not a bug — the cross-corpus ID overlap is the decisive check.
