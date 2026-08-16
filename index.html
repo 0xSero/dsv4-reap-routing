@@ -1,72 +1,69 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>We asked an AI which parts of its brain light up when it reads the Bible</title>
+<title>Scripture in the Router — DeepSeek-V4-Flash field notes</title>
 <style>
-  :root{--ink:#1a1a1a;--mut:#555;--line:#ddd;--bg:#fff;--soft:#f7f7f8;--accent:#2050a0;}
-  *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:var(--ink);font-size:17px;line-height:1.65;background:var(--bg)}
-  .wrap{max-width:720px;margin:0 auto;padding:24px 18px 80px}
-  .kicker{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
-  h1{font-family:Georgia,'Times New Roman',serif;font-size:2rem;font-weight:400;line-height:1.25;margin:8px 0 6px}
-  .dek{font-size:1.05rem;color:var(--mut);margin-bottom:8px}
-  .byline{font-size:.85rem;color:var(--mut);border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:22px}
-  h2{font-family:Georgia,serif;font-size:1.35rem;font-weight:400;margin:36px 0 10px}
-  figure{margin:26px 0}
-  figure img{width:100%;height:auto;border:1px solid var(--line)}
-  figcaption{font-size:.85rem;color:var(--mut);margin-top:6px}
-  .takeaway{border-left:3px solid var(--accent);background:var(--soft);padding:12px 16px;margin:22px 0;font-size:.98rem}
-  .next{font-size:.9rem;color:var(--mut)}
-  a{color:var(--accent)}
-  .toc{font-size:.9rem;background:var(--soft);border:1px solid var(--line);padding:10px 16px;margin:18px 0}
+:root{--ink:#1a1a1a;--mut:#555;--line:#d9d9d9;--soft:#f6f6f4;--accent:#8b1a1a}
+*{box-sizing:border-box}
+body{margin:0;font-family:Georgia,'Times New Roman',serif;color:var(--ink);background:#fff;line-height:1.65}
+.wrap{max-width:720px;margin:0 auto;padding:36px 20px 80px}
+.kicker{font-family:ui-monospace,Menlo,monospace;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+h1{font-size:2rem;line-height:1.2;margin:.4em 0 .2em}
+h2{font-size:1.35rem;margin-top:2.2em;border-bottom:1px solid var(--line);padding-bottom:.25em}
+.dek{font-size:1.1rem;color:var(--mut);font-style:italic;margin:0 0 .6em}
+.byline{font-size:.85rem;color:var(--mut);border-bottom:1px solid var(--line);padding-bottom:1em}
+figure{margin:1.4em 0;text-align:center}
+figure img{max-width:100%;border:1px solid var(--line)}
+figcaption{font-size:.82rem;color:var(--mut);margin-top:.4em}
+.takeaway{border-left:3px solid var(--accent);background:var(--soft);padding:12px 16px;margin:22px 0;font-size:.98rem}
+.next{font-size:.9rem;color:var(--mut)}
+a{color:var(--accent)}
+.toc{font-size:.9rem;background:var(--soft);border:1px solid var(--line);padding:10px 16px;margin:18px 0}
+.corrected{border:1px solid var(--accent);padding:10px 16px;margin:18px 0;font-size:.9rem;background:#fdf6f6}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="kicker">AI interpretability · field notes</div>
+<div class="kicker">AI interpretability · field notes · corrected edition</div>
 <h1>We asked an AI which parts of its brain light up when it reads scripture</h1>
-<div class="dek">22 million tokens. Nine traditions. Every single routing decision, recorded.</div>
+<div class="dek">22 million tokens. Nine traditions. Every routing decision recorded. Then we let other AIs audit us — and one of our headline findings died.</div>
 <div class="byline">DeepSeek-V4-Flash-0731 · observed August 2026 · read-only, no modifications · <a href="wiki.html">full technical wiki →</a></div>
 
-<div class="toc"><b>The story, in four pictures</b><br>
-1. <a href="#f1">The expert that never reads the Bible</a> ·
-2. <a href="#f2">Same faith, different wiring</a> ·
-3. <a href="#f3">It "knows" Genesis 1:2 before it says it</a> ·
-4. <a href="#f4">Harder text, more brainpower</a></div>
+<div class="toc"><b>The story, in four parts</b><br>
+1. <a href="#f1">The last-layer experts that can't stand numbers</a> ·
+2. <a href="#f2">We were wrong — and how we found out</a> ·
+3. <a href="#f3">Religion doesn't map onto the wiring</a> ·
+4. <a href="#f4">Repetitive text, narrow brain</a></div>
 
-<p>Modern AI models are <b>mixture-of-experts</b> machines: inside every layer sit 256 small specialist networks, and for every single word it reads, the model picks 6 of them to do the thinking. Nobody fully understands how it chooses. So we did something simple and obsessive: we let DeepSeek-V4-Flash read scripture all day — the entire King James Bible, the Qur'an, the Bhagavad Gita, the Tao Te Ching, the Book of Mormon, and 1,267 books of Christian writing spanning 2,000 years — and we wrote down every choice it made. 43 layers × 256 experts × 22 million tokens. Then we looked for patterns.</p>
+<p>Modern AI models are <b>mixture-of-experts</b> machines: inside every layer sit 256 small specialist networks, and for every single word it reads, the model picks 6 of them to do the thinking. Nobody fully understands how it chooses. So we did something simple and obsessive: we let DeepSeek-V4-Flash read scripture all day — the entire King James Bible, the Qur'an, the Bhagavad Gita, the Tao Te Ching, the Book of Mormon, and 1,267 books of Christian writing spanning 2,000 years — and we wrote down every choice it made. 43 layers × 256 experts × 22 million tokens. Then we looked for patterns, and then — this is the part that matters — we asked two external AI reviewers to tear the whole analysis apart.</p>
 
-<h2 id="f1">1. The expert that never reads the Bible</h2>
-<p>One specialist, deep in the network (layer 42, expert #164), did something strange. Across all 1,189 chapters of the KJV Bible — more than a million tokens — it activated <b>exactly zero times</b>. Statistically it "should" have fired ~24,000 times. Then the Qur'an: it fires constantly. Christian theology books: constantly, at <i>almost exactly the same rate</i>. The Book of Mormon sits in between.</p>
-<figure><img src="img/expert164.png" alt="Bar chart: expert 164 activation rates">
-<figcaption>Expert #164's activation rate per million tokens (log scale). The KJV bar is zero — across everything.</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> the model has the KJV memorised cold. When it reads the actual Bible, it's <i>reciting from memory</i> — that circuitry stays off. But when it reads something that <i>sounds like</i> scripture and <i>isn't</i> — a Qur'an translation, a Victorian sermon — a different part has to actually do the work of producing archaic religious English. The AI didn't learn "religion." It learned the difference between <b>remembering</b> and <b>reasoning in a register</b>.</div>
-<p>The Book of Mormon's middle position is the detail we love: it imitates KJV style but isn't verbatim canon — and its rate lands neatly between "memorised" and "foreign."</p>
+<h2 id="f1">1. The last-layer experts that can't stand numbers</h2>
+<p>A cluster of specialists in the <b>final layer</b> of the network (layer 42) behaves in a way nobody expected. They are gated, near-perfectly, by something absurdly simple: <b>whether the text contains numerals</b>. Trace their firing rate against digit density and it's monotone across four orders of magnitude — 0 per million tokens on digit-free text, up to 16,000/M on digit-dense text. Within a single corpus, holding everything else fixed.</p>
+<figure><img src="img/expert164.png" alt="Bar chart: expert 164 activation rates across corpora">
+<figcaption>Expert #164's activation rate per million tokens (log scale) — which we first misread as a memorization detector.</figcaption></figure>
+<div class="takeaway"><b>What this means:</b> the textbook expectation is that surface features like digits are handled early, and late layers work in abstract meaning-space. This is a clean counterexample: the <i>last</i> layer of the network maintains specialists for an orthographic surface property. Final-layer routing is watching the page, not just the meaning.</div>
 
-<h2 id="f2">2. Same faith, different wiring — but only in some layers</h2>
-<p>Here's a question a theologian would ask: does the model process <i>the Bible</i> and <i>books about the Bible</i> (sermons, commentaries, Aquinas, Augustine) the same way? On average — no. Christian literature turned out to be the Bible's <i>least</i> similar partner of all nine traditions, less alike than the Tao Te Ching. But the average hides the real story:</p>
-<figure><img src="img/sandwich.png" alt="Overlap by layer between Bible and Christian books">
-<figcaption>How much the Bible and Christian books rely on the same experts, at each depth in the network.</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> the network is a sandwich. Near the input (layers 0–2) it processes <i>spelling and style</i> — and there the two are almost opposites. In the middle (layers 3–6, 19) it processes <i>meaning</i> — God, covenant, sin, grace — and there Bible and doctrine strongly converge. Near the output (layers 39–42) it decides <i>what voice to speak in</i>, and they split again. Same God, shared meaning, different voice.</div>
+<h2 id="f2">2. We were wrong — and how we found out</h2>
+<p>Our first headline was beautiful: one expert (#164) fired <b>exactly zero times</b> across the entire KJV Bible — a million tokens — while firing constantly on the Qur'an and Christian doctrine. We called it the "not-memorized-scripture expert": proof the model recites the Bible from memory but has to compute everything that merely sounds like it. Then Claude Opus 5 re-derived every number from our raw data and found what we'd missed: <b>our own corpus preparation strips verse numbers from the Bible text.</b> The KJV samples are literally 0.0000% digits. The Qur'an translation and the theology books are full of footnotes, citations, page references. The "memorization gradient" was a digit gradient.</p>
+<div class="corrected"><b>The correction, in one number:</b> Christian samples containing exactly zero digits fire expert #164 at 4.9 per million tokens — versus 4,570/M for the corpus overall. Remove the digits, remove 99.9% of the effect.</div>
+<div class="takeaway"><b>What this means:</b> every number in the dataset was real — both reviewers reproduced all of them to the digit. What failed was the interpretation: an unadjusted comparison between corpora that differ in more ways than the one we attributed the difference to. The corrected finding (part 1) is smaller, stranger, and actually more interesting.</div>
 
-<h2 id="f3">3. It "knows" Genesis 1:2 before it says it</h2>
-<p>We also peered inside while it read, using a technique called the <a href="wiki.html#methods">logit lens</a>: at every layer we asked the half-formed thought "what word comes next?" While reading Genesis 1 — early layers produce noise. Then at <b>layer 30</b>, out of nowhere, the answer locks in:</p>
-<figure><img src="img/spirit.png" alt="Logit lens decoding converging to 'Spirit' at layer 30">
-<figcaption>The model's running guess for one position in Genesis 1, layer by layer. At layer 30 it commits: "Spirit" — 77% confident.</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> "And the Spirit of God moved upon the face of the waters." The model isn't waiting until the end to decide what it's reading — the plan for the verse is complete two-thirds of the way down the stack, in the exact wording of the 1611 translation. That's what memorisation looks like from the inside.</div>
+<h2 id="f3">3. Religion doesn't map onto the wiring</h2>
+<p>A theologian would expect related traditions to share machinery: Bible close to Christian doctrine, both close to the Book of Mormon. The router disagrees. Bible↔doctrine is the pairing with <i>less</i> overlap than Bible↔Tao. The Upanishads — Hindu philosophy, different continent, different millennium — overlap Christian literature <i>more</i> than the Bible does. Nothing in the pairwise routing structure tracks doctrine, tradition, or family tree.</p>
+<div class="takeaway"><b>What this means:</b> the shared "backbone" experts that every religious text uses aren't religious at all — they're an English-text backbone. Routing overlap between these corpora carries no information about theological relatedness. That's a genuinely useful negative result: the model didn't organise religion the way a comparative-religions department does.</div>
 
-<h2 id="f4">4. Harder text, more brainpower</h2>
-<p>How many of its 256 specialists does a text really use? At the deepest layers, the pattern is beautifully simple:</p>
+<h2 id="f4">4. Repetitive text, narrow brain</h2>
+<p>How many of its 256 specialists does a text really use? Corrected for pooling artifacts, a clean signal survives at the deep layers: the Bhagavad Gita — essentially one long chant — runs on ~24. The Qur'an needs ~40, the Bible ~54. The more repetitive and predictable the text, the narrower the palette of experts the router recruits.</p>
 <figure><img src="img/experts_used.png" alt="Effective expert count by text">
-<figcaption>Effective number of experts used at layer 40. The Bhagavad Gita — the most chant-like, repetitive text — needs the fewest.</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> the more predictable the text, the fewer experts it takes. The Gita, essentially one long chant, runs on 26. Christian theology — 2,000 years of unpredictable arguments — needs 111. The router's "palette width" is a proxy for how surprised the model is, word after word.</div>
+<figcaption>Effective number of experts used per sample at layer 40 (corrected per-sample estimator).</figcaption></figure>
+<div class="takeaway"><b>What this means:</b> the router's "palette width" tracks how surprised the model is, word after word — with the caveat we now know to add: surface properties like digit density have to be controlled before you attribute anything to meaning.</div>
 
 <h2>So what did we learn?</h2>
-<p>An AI that has read everything still doesn't organise religion the way a comparative-religions department does — by tradition, by doctrine, by faith. It organises it by <b>what the text is doing to it</b>: am I reciting or computing? Is this the voice I know? How surprised should I be? The theology is in there, in the middle layers, shared across every tradition we tested. But the edges of the network belong to something simpler and stranger: style, memory, and the confidence of a mind that has heard these words ten thousand times before.</p>
+<p>Two things. About the model: late-layer routing keeps one eye on the surface of the page; religious tradition per se barely registers in the wiring; predictability shapes how broadly the router recruits. And about method: when your corpora differ in digit density, footnote density, translation status and window length all at once, an external audit that decodes the actual tokens is worth more than any amount of clean bookkeeping. The measurement rig never lied. The story we told about it did.</p>
 
-<p class="next"><b>Everything is public:</b> the observation code, the probe data, the prompts, and the full technical write-up with every number in this story — <a href="wiki.html">read the research wiki</a> · raw records in the (private, access-on-request) dataset <code>0xSero/deepseek-v4-flash-religious-reap-observations</code> · remaining J-lens samples for six more traditions: coming soon.</p>
+<p class="next"><b>Everything is public:</b> the full technical wiki with the complete correction log (§9) and both external reviews · the observation code · all 80 J-lens probe samples · raw records in the dataset <code>0xSero/deepseek-v4-flash-reap</code> (private, access on request) · <a href="wiki.html">read the research wiki →</a></p>
 </div>
 </body>
 </html>

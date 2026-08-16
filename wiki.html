@@ -221,6 +221,35 @@
 </ul>
 <p><span class="tag">read-only</span><span class="tag">fail-closed invariants</span><span class="tag">TP-2</span><span class="tag">no weight edits</span><span class="tag">docker</span><span class="tag">wave 2 + theology queued</span></p>
 
+<h2 id="correction">9 External review and corrections (2026-08-16)</h2>
+<p>Two independent external reviews (Claude Opus 5, Kimi K3 — full texts in <a href="reviews/claude_opus5_review.md">reviews/</a>) re-derived every headline number from the raw JSONL. <b>All numbers reproduce exactly; several interpretations do not survive.</b> The reviews were sanity-checked and their central claims independently re-verified against our own data. Corrections, in order of severity:</p>
+
+<h3>9.1 e164 is a numeral/citation-apparatus detector, not a "not-memorized-scripture" expert</h3>
+<p><b>The flagship interpretation (§5) is withdrawn.</b> The confound: <code>prepare_corpus.py</code> strips KJV verse numbers, so the Bible corpus contains <b>exactly 0.0000% digit characters</b> (re-verified on decoded samples: Qur'an 0.66%, Dhammapada 1.80%, Gita 0.12%, BoM 0.015%, Tao 0.014%). e164's L42 firing rate is <b>monotone in digit density</b>: within the Christian corpus alone (length/genre/windowing fixed), digit-density deciles run 42.9 → 16,448 /M tokens; Christian samples with exactly zero digits fire at 4.9/M (n=38, 613K tokens) — at which rate the KJV's 1.05M tokens would expect ~1–15 firings, so the observed 0 is unremarkable. e164 is also not a singleton: e27 is a near-twin (0 Bible / 4,174/M Christian) and e68 is more extreme in absolute terms (expected 20,000, observed 1); ~29 L42 experts show >90% suppression on digit-free text. <b>The corrected finding: a cluster of final-layer experts is gated near-perfectly by an orthographic surface property (numerals/citation apparatus) — a clean counterexample to the expectation that late layers operate only in abstract space.</b> That stands on its own and is arguably more interesting than the memorization story.</p>
+
+<h3>9.2 The "layer sandwich" is an artifact of the <code>reap_score</code> channel</h3>
+<p>Recomputed on <code>expert_frequencies</code> (actual routing), Bible↔Christian Jaccard <b>inverts</b>: L0 = 0.905 (highest, not lowest), mid-layers low/flat, L42 = 0.600. The published sandwich (J≤0.03 at L0–2) exists only on <code>reap_score</code>, a per-firing mean whose top-20 is dominated by experts firing &lt;35 times in 98,304 slots — a noise-floor statistic. Structural note: layers 0–2 are <i>hash-routed</i> (<code>n_hash_layers=3</code>: expert indices are a learned token-ID lookup, not score-based), which explains corpus-invariant early-layer routing. All sandwich claims are withdrawn pending recomputation with frequency-weighted metrics.</p>
+
+<h3>9.3 Effective-expert count is a pooling artifact</h3>
+<p>Christian literature's 111 effective experts @L40 collapses to 70.1 when entropy is computed per-sample then averaged (between-sample heterogeneity of 1,267 windows from 3,562 books). The sub-claim Gita (24.3) &lt; Qur'an (39.5) &lt; Bible (54.1) survives; the Christian rung and the "tracks predictability" framing do not (Analects 58.1 &gt; Bible 54.1 per-sample).</p>
+
+<h3>9.4 Logit-lens claim withdrawn</h3>
+<p>The "Spirit @76.7% at L30" figure rests on n=3 records and a mislabeled position (input token at position 30 is <code>' deep'</code>; <code>' Spirit'</code> sits 4 positions later — the lens "predicted" a later token in the verse while the final layer correctly predicted <code>'.'</code>). Readout path uses layer-0's <code>hc_head</code> reduction + final norm on mid-stack states — uncalibrated. No contrast condition. Removed from headline findings.</p>
+
+<h3>9.5 Smaller corrections</h3>
+<ul>
+<li>Lowest pairwise Jaccard is <b>tao↔christian (0.300)</b>, not bible↔christian (0.326); bible↔BoM highest (0.527) stands.</li>
+<li>Exp 8 (permutation check) tested the frequency channel, which was never at risk (bincount over replicated indices, not sharded); the at-risk channels (<code>reap_score</code>, <code>activation_norms</code>) were not tested — and the pre-registered decision rule was overridden post hoc (bad practice, even when the conclusion is right).</li>
+<li>Position/length confound for e164: dead, in our favour — length-matched [600,1500) tokens: Bible 714,242 tokens → 0 firings; Qur'an 31,484 → 4,383/M. But BoM hides an unreported 340× internal length swing.</li>
+<li><code>gate_weights[256]</code> in the records is a softmax diagnostic, not the routing score function (model uses <code>sqrtsoftplus</code>); <code>frequencies</code> and <code>reap_score</code> use the correct scores.</li>
+</ul>
+
+<h3>9.6 Harness verification (the reviewers' gating concern — resolved)</h3>
+<p>The reimplemented gate was diffed against the real <code>Gate.forward</code> (<code>source-inference/model.py</code>): this model uses <b>plain top-k with aux-loss-free bias — no group-limited routing exists in this architecture</b> (V3-style <code>n_groups</code> masking is not applicable; config's <code>o_groups=8</code> is an attention parameter). Score function (<code>sqrtsoftplus</code>), bias-for-selection-only, hash layers (0–2), and weight normalization all match line-for-line. The dataset is sound; the corrected interpretation is §9.1.</p>
+
+<h3>9.7 What survives, and the revised experiment queue</h3>
+<p><b>Survives:</b> the harness + dataset (fail-closed, reproducible — both reviewers reproduced every number to the digit); the final-layer surface-form specialist cluster (§9.1); the tradition-agnostic backbone null (routing overlap carries no doctrinal information: upanishads↔christian 0.477 &gt; bofm↔christian 0.436 &gt; bible↔christian 0.326); corpus-leakage check (clean: 3/1,267 Christian samples contain Gen 1:1). <b>Revised priorities:</b> (1) e164/e27 context dump (±20 tokens) — predicted: numerals, footnote markers, verse refs; (2) minimal-pair test on one Bible chapter: as-is vs verse numbers reinserted vs arbitrary digits at matched density — a sub-hour run that settles citation-structure vs bare-numeral; (3) secular null stratified by digit density; (4) all future corpus contrasts reported as partial effects controlling digit/punctuation density, sentence length, TTR.</p>
+
 <h2 id="addendum">10 Addendum: routing concentration and depth (2026-08-15)</h2>
 <h3>10.1 The New Testament is observed in full</h3>
 <p>The 16 k-token windowing applies <i>only</i> to the 3,705-book Christian-literature corpus. The Bible — including the entire NT — is observed chapter-by-chapter with no slicing: all 260 NT chapters, 235,902 tokens, verified against canonical chapter counts (Matthew 28 … Revelation 22); no NT chapter exceeds one 16 k window.</p>

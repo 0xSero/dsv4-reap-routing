@@ -40,14 +40,17 @@ docker run -d --name obs-r0 --privileged --network host \
 
 ## Headline findings
 
-- **L42 e164**: fires 0 times in 1.05M Bible tokens (expected ~24.5K) yet
-  ~4,600/M on Qur'an/Christian doctrine — a memorization gradient, not a topic
-  detector. Permutation confound ruled out (15/20 top IDs shared cross-corpus).
-- **Layer sandwich**: L0–2 surface form (J≤0.03), L3–6/19 semantics (J=0.54–0.74),
-  L39–42 output voice.
-- **Routing concentration tracks predictability**: effective experts@L40 —
-  Gita 26 < Qur'an 43 < Bible 65 < Christian doctrine 111.
-- **Logit lens**: Genesis 1 decodes "Spirit" at 76.7% by layer 30.
+- **Final-layer surface-form specialists** (corrected 2026-08-16 after external
+  review): a cluster of L42 experts (e164, e27, e68, ~29 more) is gated
+  near-perfectly by digit density — monotone 0→16,448/M across digit deciles
+  within a single corpus. Not a memorization detector (see wiki §9).
+- **Routing overlap carries no doctrinal information**: upanishads↔christian
+  (0.477) > bofm↔christian (0.436) > bible↔christian (0.326).
+- **Per-sample effective experts@L40**: Gita 24 < Qur'an 40 < Bible 54 —
+  predictability narrows the palette (Christian's 111 was a pooling artifact).
+- Withdrawn after review: "not-memorized-scripture e164", the layer sandwich
+  (reap_score artifact; inverts on frequencies), the Genesis logit-lens claim.
+  Full correction log: wiki §9 + reviews/.
 
 ## Status
 
