@@ -1,0 +1,29 @@
+# docker-compose for the TP2 DGX Spark pair. Deploy on the head node (de5c);
+# rank 1 runs via the same image on the worker (557f) — see README for the
+# two-host launch (docker compose does not span hosts; use run_full_observation.sh
+# which orchestrates both ranks over SSH).
+#
+# This file documents the single-host layout and lets you smoke-test one rank.
+services:
+  obs-rank0:
+    image: dsv4-reap-obs:latest
+    build: .
+    container_name: obs-r0
+    privileged: true
+    network_mode: host
+    environment:
+      - RANK=0
+      - WORLD_SIZE=2
+      - MASTER_ADDR=10.0.1.1
+      - MASTER_PORT=29500
+    volumes:
+      - ${CKPT_DIR:-/data/converted-mp2-r0}:/ckpt
+      - ${OBS_DIR:-/data/obs-religious}:/obs-religious
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped

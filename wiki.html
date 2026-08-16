@@ -201,14 +201,25 @@
 <h3 id="exp8">7.1 Robustness check: expert-permutation confound ruled out (2026-08-15)</h3>
 <p>The sharpest alternative explanation for the e164 exact-zero finding (§5) was a bookkeeping bug: a permuted expert-ID→TP-shard map satisfies the Σfreq = seqlen×6 invariant perfectly while scrambling labels. We tested it directly by comparing sorted L42 frequency histograms across corpora. <b>Result: 15 of the top-20 L42 experts share the same expert IDs across Bible↔Qur'an and Bible↔Christian literature</b> (e119, e205, e190, e236, e63…). A per-shard permutation would destroy this cross-corpus alignment, so the ID mapping is consistent. The sorted distributions' high shape correlation (r = 0.99) reflects the universal heavy-tailed routing profile, not a bug — the cross-corpus ID overlap is the decisive check. <b>The e164 exact-zero in 1.05 M Bible tokens (expected ~24,510 under proportional routing) is a genuine model property.</b> Full check: <a href="analysis_all/exp8_sorted_freq_results.txt">exp8_sorted_freq_results.txt</a>, code: <a href="code/exp8_sorted_freq.py">exp8_sorted_freq.py</a>.</p>
 
-<h2 id="data">8 Data and reproducibility</h2>
+<h2 id="data">8 Data and reproducibility — all resources</h2>
+<p><b>Single HuggingFace project</b> (private, access on request): <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap"><code>0xSero/deepseek-v4-flash-reap</code></a> — every observation, probe, manifest, analysis artifact and sanitized script, organized as subdatasets:</p>
+<table>
+<tr><th>HF path</th><th>Contents</th></tr>
+<tr><td><code>observations/religious-8text/</code></td><td>REAP activations, 8 scriptures (1,482 records)</td></tr>
+<tr><td><code>observations/christian-wave1/</code></td><td>Christian literature (1,267 records / 20.4M tokens)</td></tr>
+<tr><td><code>jlens/</code></td><td>Logit-lens + bounded-Jacobian probes, 80 samples × 8 traditions</td></tr>
+<tr><td><code>corpus/manifests/</code>, <code>corpus/theology/</code></td><td>Corpus manifests + theology scraping manifests (Jesus, Lucifer, Judaism origins, Judaism, Moloch, Saturn — ~113M tokens scraped from Wikipedia + Project Gutenberg)</td></tr>
+<tr><td><code>analysis/</code></td><td>Expert rankings, per-layer top-k, Jaccard matrices, robustness checks incl. the §7.1 permutation test</td></tr>
+<tr><td><code>code/</code></td><td>All sanitized harness scripts (same as <a href="#code">code/</a> here)</td></tr>
+</table>
 <ul>
-<li>Observation records: <code>full_obs.jsonl</code> (1,482), <code>christian_obs.jsonl</code> (1,267) — fsynced, invariant-checked, published to the private HF dataset <code>0xSero/deepseek-v4-flash-religious-reap-observations</code>.</li>
+<li><b>GitHub Releases</b> (large raw archives): <a href="https://github.com/0xSero/dsv4-reap-routing/releases/tag/raw-observations-v1">raw-observations-v1</a> (full_obs, 1,482 records), <a href="https://github.com/0xSero/dsv4-reap-routing/releases/tag/christian-wave1-v1">christian-wave1-v1</a> (1,267 records).</li>
+<li><b>Docker</b>: the harness ships as a container — <a href="Dockerfile">Dockerfile</a> + <a href="docker-compose.yml">docker-compose.yml</a> in this repo (base <code>ghcr.io/anemll/dspark-vllm-gx10:0.1.1</code>, one rank per DGX Spark node, NCCL over ConnectX).</li>
 <li>Pinned tokenizer: <code>deepseek-ai/DeepSeek-V4-Flash-0731</code> rev <code>9e165c30e2704aec5d9d593cce3eebd58bbef1cb</code>.</li>
-<li>Harmonics: <code>observe_religious.py</code>, <code>analyze_experts.py</code>, <code>run_jlens.py</code>, <code>jlens_dsv4.py</code>; corpus builders <code>prepare_corpus.py</code>, <code>scrape_christian.py</code>, <code>prepare_christian_corpus.py</code>.</li>
-<li>Christian corpus manifest: 3,705 books, 1.89 GB raw, English, public domain (Project Gutenberg).</li>
+<li>Christian corpus manifest: 3,705 books, 1.89 GB raw, English, public domain (Project Gutenberg). Theology corpus: 4,595+ files / ~451M chars (~113M tokens), Wikipedia (CC-BY-SA) + Gutenberg (public domain).</li>
+<li><b>Coming soon</b>: <code>observations/christian-wave2/</code> (2,295 books, running), <code>observations/theology/</code> (queued), secular null baseline.</li>
 </ul>
-<p><span class="tag">read-only</span><span class="tag">fail-closed invariants</span><span class="tag">TP-2</span><span class="tag">no weight edits</span><span class="tag">wave 2 running</span></p>
+<p><span class="tag">read-only</span><span class="tag">fail-closed invariants</span><span class="tag">TP-2</span><span class="tag">no weight edits</span><span class="tag">docker</span><span class="tag">wave 2 + theology queued</span></p>
 
 <h2 id="addendum">10 Addendum: routing concentration and depth (2026-08-15)</h2>
 <h3>10.1 The New Testament is observed in full</h3>
