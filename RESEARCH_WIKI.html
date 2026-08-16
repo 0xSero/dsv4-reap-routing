@@ -3,350 +3,453 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DeepSeek-V4-Flash-0731 REAP Routing Study — Research Wiki</title>
+<title>DeepSeek-V4-Flash-0731 expert routing study - Research Wiki</title>
 <style>
-  :root{
-    --bg:#fafafa; --fg:#1a1a1a; --mut:#666; --line:#ddd; --soft:#f4f4f4;
-    --accent:#00507a; --warn:#8a3300; --ok:#1a6b3a; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  /* Wikipedia Vector skin approximation */
+  body{
+    margin:0; padding:0;
+    background:#f8f9fa; color:#202122;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;
+    font-size:14px; line-height:1.6;
   }
-  *{box-sizing:border-box}
-  body{margin:0;padding:0;background:var(--bg);color:var(--fg);
-    font-family:Georgia,'Times New Roman',serif;font-size:16px;line-height:1.65}
-  .wrap{max-width:880px;margin:0 auto;padding:48px 32px 80px}
-  h1,h2,h3,h4{font-family:system-ui,-apple-system,sans-serif;font-weight:600;line-height:1.3}
-  h1{font-size:1.75rem;margin:0 0 4px;border:none}
-  h2{font-size:1.3rem;margin:36px 0 10px;padding-bottom:4px;border-bottom:2px solid var(--line)}
-  h3{font-size:1.05rem;margin:24px 0 6px}
-  h4{font-size:.95rem;margin:18px 0 4px;color:var(--mut)}
-  .kicker{font-family:system-ui,sans-serif;font-size:.8rem;color:var(--mut);letter-spacing:.08em;
-    text-transform:uppercase;margin-bottom:6px}
-  .meta{font-family:system-ui,sans-serif;font-size:.82rem;color:var(--mut);margin-bottom:24px}
-  p{margin:10px 0}
-  code{font-family:var(--mono);font-size:.88em;background:var(--soft);padding:1px 4px;border-radius:2px}
-  pre{background:var(--soft);border:1px solid var(--line);padding:12px 16px;overflow-x:auto;
-    font-family:var(--mono);font-size:.82rem;border-radius:3px}
-  table{border-collapse:collapse;width:100%;font-size:.88rem;margin:12px 0}
-  th,td{border:1px solid var(--line);padding:6px 10px;text-align:left}
-  th{background:var(--soft);font-family:system-ui,sans-serif;font-weight:600}
-  tr:nth-child(even){background:var(--soft)}
-  .toc{background:var(--soft);border:1px solid var(--line);padding:14px 20px;margin:20px 0;
-    font-family:system-ui,sans-serif;font-size:.88rem}
-  .toc ul{margin:4px 0;padding-left:20px}
-  .toc a{color:var(--accent);text-decoration:none}
-  .callout{border-left:3px solid var(--accent);background:var(--soft);padding:10px 16px;margin:16px 0;font-size:.92rem}
-  .retracted{border-left:3px solid var(--warn);background:#fff5f0;padding:10px 16px;margin:16px 0;font-size:.92rem}
-  .survives{border-left:3px solid var(--ok);background:#f0faf0;padding:10px 16px;margin:16px 0;font-size:.92rem}
-  .hypothesis{background:#f0f4ff;border:1px solid #c0d0e8;padding:12px 16px;margin:14px 0;border-radius:3px}
-  .hypothesis .h-label{font-family:system-ui,sans-serif;font-weight:700;font-size:.8rem;
-    color:var(--accent);letter-spacing:.05em;text-transform:uppercase}
-  .question{background:var(--soft);border:1px solid var(--line);padding:10px 16px;margin:10px 0}
-  .question .q-label{font-family:system-ui,sans-serif;font-weight:700;font-size:.8rem;
-    color:var(--mut);letter-spacing:.05em;text-transform:uppercase}
-  ul,ol{margin:8px 0;padding-left:24px}
-  li{margin:4px 0}
-  a{color:var(--accent)}
-  .small{font-size:.85rem;color:var(--mut)}
-  .stat{text-align:right;font-family:var(--mono);font-size:.85rem}
-  hr{border:none;border-top:1px solid var(--line);margin:32px 0}
-  .tag{display:inline-block;font-family:system-ui,sans-serif;font-size:.7rem;padding:2px 8px;
-    border-radius:10px;margin-left:6px;vertical-align:middle}
-  .tag-survives{background:#e0f0e0;color:var(--ok)}
-  .tag-retracted{background:#f0e0d0;color:var(--warn)}
-  .tag-pending{background:#e0e0f0;color:#4040c0}
-  .tag-verified{background:#e0f0e0;color:var(--ok)}
+  a{color:#3366cc; text-decoration:none}
+  a:hover{text-decoration:underline}
+  a:visited{color:#3366cc}
+  a.new{color:#ba0000}
+
+  /* top bar */
+  #mw-head{
+    position:fixed; top:0; left:0; right:0; height:3.5em;
+    background:#fff; border-bottom:1px solid #a2a9b1; z-index:100;
+    display:flex; align-items:center; padding:0 1.5em;
+  }
+  #mw-head .brand{font-weight:600; font-size:13px; color:#54595d}
+  #mw-head .search{margin-left:auto; display:flex; gap:4px}
+  #mw-head .search input{
+    border:1px solid #a2a9b1; border-radius:2px; padding:4px 8px;
+    font-size:13px; font-family:inherit; width:200px;
+  }
+  #mw-head .search button{
+    border:1px solid #a2a9b1; background:#f8f9fa; border-radius:2px;
+    padding:4px 12px; font-size:13px; cursor:pointer;
+  }
+
+  /* layout */
+  #mw-body{margin-left:10em; margin-top:3.5em; padding:0}
+  .mw-body{background:#fff; border:1px solid #a7d7f9; max-width:55.8em; margin:1em auto; padding:1em 1.5em 2em}
+  @media(max-width:768px){#mw-body{margin-left:0} #mw-panel{display:none} .mw-body{margin:0;border:none}}
+
+  /* sidebar */
+  #mw-panel{
+    position:fixed; top:3.5em; left:0; width:10em; bottom:0;
+    padding:1em 0 0 .5em; font-size:12px; background:#f8f9fa;
+    overflow-y:auto;
+  }
+  #mw-panel .portal{margin-bottom:1.2em}
+  #mw-panel .portal h3{
+    font-size:12px; font-weight:600; color:#54595d; margin:0 0 .4em 0;
+    padding:0; border:none; cursor:default;
+  }
+  #mw-panel .portal ul{list-style:none; margin:0; padding:0; line-height:1.8}
+  #mw-panel .portal li a{color:#3366cc; display:block; padding-left:.5em}
+
+  /* content typography */
+  .mw-body h1{
+    font-size:28px; font-family:'Linux Libertine','Georgia','Times',serif;
+    font-weight:400; border-bottom:1px solid #a2a9b1; margin:0 0 .25em; padding-bottom:.1em;
+  }
+  .mw-body h2{
+    font-size:24px; font-family:'Linux Libertine','Georgia','Times',serif;
+    font-weight:400; border-bottom:1px solid #a2a9b1; margin:1em 0 .5em; padding-bottom:.17em;
+  }
+  .mw-body h3{font-size:18px; font-weight:600; margin:.8em 0 .3em}
+  .mw-body h4{font-size:15px; font-weight:600; margin:.6em 0 .2em}
+  .mw-body p{margin:.5em 0}
+  .mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em; padding:0}
+  .mw-body li{margin:.2em 0}
+  .mw-body code{
+    font-family:'Courier New',monospace; font-size:13px;
+    background:#f0f0f0; padding:0 2px;
+  }
+  .mw-body pre{
+    background:#f8f9fa; border:1px solid #eaecf0; padding:.8em 1em;
+    font-family:'Courier New',monospace; font-size:13px; line-height:1.4;
+    overflow-x:auto; white-space:pre; border-radius:2px;
+  }
+  .mw-body hr{border:none; border-top:1px solid #c8ccd0; margin:1em 0}
+
+  /* section edit links */
+  .mw-editsection{
+    font-family:sans-serif; font-size:11px; font-weight:400;
+    margin-left:.5em; color:#54595d; user-select:none;
+  }
+  .mw-editsection a{color:#3366cc}
+
+  /* lead */
+  .mw-body .lead{font-size:15px; margin:.5em 0 1em}
+  .mw-body .subtitle{font-size:13px; color:#54595d; margin-bottom:.5em}
+
+  /* TOC */
+  .toc{
+    background:#f8f9fa; border:1px solid #a2a9b1; padding:.5em 1em;
+    display:inline-block; margin:.5em 0 1em; font-size:13px; border-radius:2px;
+  }
+  .toc .toctitle{font-weight:600; text-align:center; margin-bottom:.3em}
+  .toc ul{list-style:none; margin:0; padding-left:1.2em}
+  .toc li{margin:.1em 0}
+  .toc .tocnumber{color:#54595d}
+
+  /* wikitables */
+  .wikitable{
+    border-collapse:collapse; width:100%; margin:.5em 0; font-size:13px;
+    background:#fff; border:1px solid #a2a9b1;
+  }
+  .wikitable th{
+    background:#eaecf0; border:1px solid #a2a9b1; padding:4px 8px;
+    text-align:left; font-weight:600;
+  }
+  .wikitable td{border:1px solid #a2a9b1; padding:4px 8px; vertical-align:top}
+  .wikitable tr:nth-child(even){background:#f8f9fa}
+  .wikitable .num{text-align:right; font-family:monospace}
+
+  /* hatnote */
+  .hatnote{
+    font-style:italic; padding:.4em 1.6em; margin:.5em 0;
+    color:#54595d; font-size:13px;
+  }
+
+  /* ambox (article message boxes) */
+  .ambox{
+    margin:.5em 0; border:1px solid #a2a9b1; border-left:10px solid #c8ccd1;
+    background:#f8f9fa; padding:.5em 1em; font-size:13px; display:flex; gap:.8em;
+  }
+  .ambox.ambox-warning{border-left-color:#f28500; background:#fef6e7}
+  .ambox.ambox-retracted{border-left-color:#d33; background:#fee7e6}
+  .ambox.ambox-survives{border-left-color:#3c8; background:#eaf7ee}
+  .ambox .ambox-icon{font-size:20px; flex-shrink:0}
+  .ambox .ambox-text{flex:1}
+
+  /* hypothesis/question blocks — styled as Wikipedia definition lists / blockquotes */
+  .mw-body dl{margin:.5em 0; padding:0}
+  .mw-body dt{font-weight:600; margin:.4em 0 .1em; font-size:14px}
+  .mw-body dd{margin:0 0 .3em 1.6em; padding:0; font-size:13.5px}
+  .mw-body dd p{margin:.2em 0}
+
+  /* infobox */
+  .infobox{
+    float:right; clear:right; width:22em; margin:0 0 .5em 1em;
+    border:1px solid #a2a9b1; border-radius:2px; font-size:12.5px;
+    background:#f8f9fa; line-height:1.4;
+  }
+  .infobox .ib-title{
+    background:#cce4ff; padding:6px 8px; text-align:center;
+    font-size:14px; font-weight:600;
+  }
+  .infobox .ib-subtitle{
+    padding:4px 8px; text-align:center; font-size:12px; color:#54595d;
+    background:#f8f9fa; border-bottom:1px solid #a2a9b1;
+  }
+  .infobox table{width:100%; border-collapse:collapse}
+  .infobox th{background:#eaecf0; text-align:left; padding:3px 8px; border:1px solid #a2a9b1; vertical-align:top; width:40%}
+  .infobox td{padding:3px 8px; border:1px solid #a2a9b1; vertical-align:top}
+  @media(max-width:768px){.infobox{float:none; width:100%; margin:.5em 0}}
+
+  /* category bar */
+  .catlinks{
+    margin-top:1em; padding:.4em .8em; background:#f8f9fa;
+    border:1px solid #a2a9b1; font-size:12px; border-radius:2px;
+  }
+  .catlinks a{color:#3366cc}
+
+  .small{font-size:12px; color:#54595d}
+  .stat{text-align:right; font-family:monospace; font-size:12.5px}
+  .tag{display:inline-block; font-size:11px; padding:1px 7px; border-radius:10px; margin-left:4px}
+  .tag-survives{background:#eaf7ee; color:#14866d}
+  .tag-retracted{background:#fee7e6; color:#d33}
+  .tag-pending{background:#eaf0ff; color:#3366cc}
+  .tag-verified{background:#eaf7ee; color:#14866d}
+
+  /* printfooter */
+  .printfooter{display:none}
 </style>
 </head>
 <body>
-<div class="wrap">
 
-<div class="kicker">AI Interpretability · Research Wiki</div>
-<h1>DeepSeek-V4-Flash-0731 Expert Routing on Religious Texts</h1>
-<div class="meta">
-Read-only observation · 22M+ tokens · 9 religious traditions + theology corpus · August 2026<br>
-Model checkpoint rev <code>9e165c30e2704aec5d9d593cce3eebd58bbef1cb</code> · TP2 across DGX Spark nodes<br>
-HuggingFace: <code>0xSero/deepseek-v4-flash-reap</code> (private) ·
-GitHub: <code>0xSero/dsv4-reap-routing</code> ·
-External review: Claude Opus 5, Kimi K3
+<!-- top bar -->
+<div id="mw-head">
+  <span class="brand">Research Wiki</span>
+  <div class="search">
+    <input type="text" placeholder="Search Research Wiki">
+    <button>Search</button>
+  </div>
 </div>
 
-<!-- ════════════════════════════════════════════════════════════════ -->
+<!-- sidebar -->
+<div id="mw-panel">
+  <div class="portal">
+    <h3>Navigation</h3>
+    <ul>
+      <li><a href="#abstract">Abstract</a></li>
+      <li><a href="#hypotheses">Hypotheses</a></li>
+      <li><a href="#questions">Open questions</a></li>
+      <li><a href="#model">Model &amp; methods</a></li>
+      <li><a href="#data">Data inventory</a></li>
+      <li><a href="#structures">Data structures</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#retracted">Retracted claims</a></li>
+      <li><a href="#review">External review</a></li>
+      <li><a href="#experiments">Experiments</a></li>
+      <li><a href="#invariants">Verification</a></li>
+      <li><a href="#links">Resources</a></li>
+    </ul>
+  </div>
+  <div class="portal">
+    <h3>Tools</h3>
+    <ul>
+      <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
+      <li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
+      <li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
+      <li><a href="EXPERIMENTS.md">Experiment specs</a></li>
+    </ul>
+  </div>
+  <div class="portal">
+    <h3>External review</h3>
+    <ul>
+      <li><a href="reviews/claude_opus5_review.md">Claude Opus 5</a></li>
+      <li><a href="reviews/kimi_k3_review.md">Kimi K3</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- main body -->
+<div id="mw-body">
+<div class="mw-body" role="main">
+
+<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
+
+<h1>DeepSeek-V4-Flash-0731 expert routing on religious texts</h1>
+
+<div class="hatnote">This is a <b>research wiki</b> for an ongoing read-only interpretability study. It documents findings, retractions, open questions, and experimental plans. For the narrative summary see <a href="https://0xsero.github.io/dsv4-reap-routing/">the main page</a>; for the full technical writeup see <a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">the technical wiki</a>.</div>
+
+<!-- infobox -->
+<table class="infobox">
+<tr><td colspan="2" class="ib-title">DeepSeek-V4-Flash-0731<br>REAP Routing Study</td></tr>
+<tr><td colspan="2" class="ib-subtitle">Read-only interpretability observation</td></tr>
+<tr><th>Study type</th><td>Observational, read-only</td></tr>
+<tr><th>Model</th><td>DeepSeek-V4-Flash-0731</td></tr>
+<tr><th>Architecture</th><td>Sparse MoE (43 layers, 256 experts, top-6)</td></tr>
+<tr><th>Gate function</th><td>sqrt(softplus(x))</td></tr>
+<tr><th>Corpora</th><td>9 religious traditions + theology corpus</td></tr>
+<tr><th>Tokens observed</th><td>22,179,407 (completed)<br>~37M (wave-2 running)</td></tr>
+<tr><th>Records</th><td>2,749 completed + 2,295 running</td></tr>
+<tr><th>Checkpoint rev</th><td><code>9e165c30</code></td></tr>
+<tr><th>Started</th><td>August 2026</td></tr>
+<tr><th>Status</th><td>Ongoing</td></tr>
+<tr><th>Data</th><td><a href="#">0xSero/deepseek-v4-flash-reap</a> (private, HF)</td></tr>
+<tr><th>Code</th><td><a href="https://github.com/0xSero/dsv4-reap-routing">0xSero/dsv4-reap-routing</a></td></tr>
+<tr><th>Reviews</th><td>Claude Opus 5, Kimi K3</td></tr>
+</table>
+
+<div class="lead">
+<p><b>DeepSeek-V4-Flash-0731 expert routing on religious texts</b> is an ongoing <a href="#">interpretability</a> study that observes how a sparse <a href="#">mixture-of-experts</a> language model routes tokens across its 256 expert networks when processing religious and theological text. The study uses a read-only, fail-closed harness to record every routing decision — which experts are selected, with what gate weights, and with what activation magnitudes — for every token at every layer, across over 22 million tokens spanning nine religious traditions (the <a href="#">KJV Bible</a>, <a href="#">Qur'an</a>, <a href="#">Book of Mormon</a>, <a href="#">Bhagavad Gita</a>, <a href="#">Tao Te Ching</a>, <a href="#">Dhammapada</a>, <a href="#">Analects</a>, <a href="#">Upanishads</a>, and 1,267 books of historical <a href="#">Christian literature</a>).</p>
+
+<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector (exactly zero firings across the entire KJV Bible) — was <b>retracted</b> after an external review by Claude Opus 5 identified a <a href="#retracted">digit-density confound</a>: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits at varying densities. The finding that survives is more modest: the model's routing is driven by surface-form text statistics (digit density, predictability), not by theological content. Several controlled experiments are staged to confirm this.</p>
+</div>
+
+<!-- TOC -->
 <div class="toc">
-<b>Contents</b>
+<div class="toctitle">Contents</div>
 <ul>
-<li><a href="#abstract">1. Abstract</a></li>
-<li><a href="#hypotheses">2. Hypotheses</a></li>
-<li><a href="#questions">3. Open Questions</a></li>
-<li><a href="#model">4. Model &amp; Methods</a></li>
-<li><a href="#data">5. Data Inventory</a></li>
-<li><a href="#structures">6. Data Structures</a></li>
-<li><a href="#results">7. Results — What Survives</a></li>
-<li><a href="#retracted">8. Retracted Claims</a></li>
-<li><a href="#review">9. External Review Findings</a></li>
-<li><a href="#experiments">10. Experiment Pipeline</a></li>
-<li><a href="#invariants">11. Verification &amp; Integrity</a></li>
-<li><a href="#links">12. Resources</a></li>
+<li><span class="tocnumber">1</span> <a href="#abstract">Abstract</a></li>
+<li><span class="tocnumber">2</span> <a href="#hypotheses">Hypotheses</a></li>
+<li><span class="tocnumber">3</span> <a href="#questions">Open questions</a></li>
+<li><span class="tocnumber">4</span> <a href="#model">Model and methods</a>
+  <ul>
+  <li><span class="tocnumber">4.1</span> <a href="#model-spec">Model specification</a></li>
+  <li><span class="tocnumber">4.2</span> <a href="#harness">Observation harness</a></li>
+  <li><span class="tocnumber">4.3</span> <a href="#reap-metric">REAP metric</a></li>
+  <li><span class="tocnumber">4.4</span> <a href="#fail-closed">Fail-closed guarantees</a></li>
+  </ul>
+</li>
+<li><span class="tocnumber">5</span> <a href="#data">Data inventory</a></li>
+<li><span class="tocnumber">6</span> <a href="#structures">Data structures</a></li>
+<li><span class="tocnumber">7</span> <a href="#results">Results — what survives</a></li>
+<li><span class="tocnumber">8</span> <a href="#retracted">Retracted claims</a></li>
+<li><span class="tocnumber">9</span> <a href="#review">External review findings</a></li>
+<li><span class="tocnumber">10</span> <a href="#experiments">Experiment pipeline</a></li>
+<li><span class="tocnumber">11</span> <a href="#invariants">Verification and integrity</a></li>
+<li><span class="tocnumber">12</span> <a href="#links">Resources</a></li>
 </ul>
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="abstract">1. Abstract</h2>
+<h2 id="abstract"><span class="mw-headline">1. Abstract</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse
-mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating
-using a sqrt-softplus score function — across a large corpus of religious and theological
-texts. The corpus spans nine traditions (KJV Bible, Qur'an, Book of Mormon, Bhagavad Gita,
-Tao Te Ching, Dhammapada, Analects, Upanishads, and 1,267 books of historical Christian
-literature) plus a stratified theology selection (1,090 records covering Jesus, Lucifer,
-Judaism origins, Moloch, and Saturn worship), totalling over 22 million observed tokens.
-A read-only, fail-closed harness records per-token routing decisions (expert IDs, gate
-weights, activation norms) for every layer of every sample.</p>
+<p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating using a sqrt-softplus score function — across a large corpus of religious and theological texts. The corpus spans nine traditions plus a stratified theology selection covering Jesus, Lucifer, Judaism origins, Moloch, and Saturn worship, totalling over 22 million observed tokens. A read-only, fail-closed harness records per-token routing decisions for every layer of every sample.</p>
 
-<p>The study's original headline finding — that expert #164 at layer 42 was a
-"not-memorized-scripture" detector (exactly zero firings across the entire KJV Bible,
-heavy firings on all other religious text) — was <b>retracted</b> after external review
-identified a digit-density confound: the corpus preparation pipeline strips verse numbers
-from the Bible, making it 0.0000% digits, while all other corpora contain digits at
-varying densities. Expert #164's firing rate is perfectly monotone in digit density.
-This wiki documents what was found, what was wrong, what survives, and what experiments
-are needed to resolve the remaining questions.</p>
+<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits. Expert #164's firing rate is perfectly monotone in digit density. This wiki documents what was found, what was wrong, what survives, and what experiments are needed to resolve the remaining questions.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="hypotheses">2. Hypotheses</h2>
+<h2 id="hypotheses"><span class="mw-headline">2. Hypotheses</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
 <p>The study is organized around the following hypotheses, each with a current status:</p>
 
-<div class="hypothesis">
-<span class="h-label">H1 — Digit-Specialist Hypothesis</span>
-<p>Expert #164 at layer 42 (and a cluster of ~29 co-firing experts including e27, e68)
-is a <b>digit / citation-apparatus detector</b>, not a religious-text specialist. Its
-firing rate is driven by the density of numeric characters (verse numbers, chapter
-references, footnote markers, roman numerals) in the input, not by theological content
-or memorization status. The KJV Bible's exact-zero is an artifact of verse-number
-stripping during corpus preparation.</p>
-<p><b>Status:</b> <span class="tag tag-pending">pending Exp 11/12</span> — Strong
-circumstantial evidence (perfectly monotone in digit density, 383× range within
-Christian corpus alone), but the causal mechanism is not yet confirmed by controlled
-minimal-pair experiments.</p>
-</div>
+<dl>
+<dt>H1 — Digit-specialist hypothesis <span class="tag tag-pending">pending Exp 11/12</span></dt>
+<dd>
+<p>Expert #164 at layer 42 (and a cluster of ~29 co-firing experts including e27, e68) is a <b>digit / citation-apparatus detector</b>, not a religious-text specialist. Its firing rate is driven by the density of numeric characters (verse numbers, chapter references, footnote markers, roman numerals) in the input, not by theological content or memorization status. The KJV Bible's exact-zero is an artifact of verse-number stripping during corpus preparation.</p>
+<p>Strong circumstantial evidence (perfectly monotone in digit density, 383× range within Christian corpus alone), but the causal mechanism is not yet confirmed by controlled minimal-pair experiments.</p>
+</dd>
 
-<div class="hypothesis">
-<span class="h-label">H2 — Register-Independence Hypothesis</span>
-<p>If H1 is correct, then expert routing differences between religious traditions are
-<b>not driven by theology</b> but by surface-form features (digit density, punctuation
-patterns, sentence length, type-token ratio). Controlling for these covariates should
-eliminate most inter-tradition routing differences.</p>
-<p><b>Status:</b> <span class="tag tag-pending">pending</span> — Requires Exp 12
-(minimal-pair digit test) and regression analysis controlling for surface-form covariates.</p>
-</div>
+<dt>H2 — Register-independence hypothesis <span class="tag tag-pending">pending</span></dt>
+<dd>
+<p>If H1 is correct, then expert routing differences between religious traditions are <b>not driven by theology</b> but by surface-form features (digit density, punctuation patterns, sentence length, type-token ratio). Controlling for these covariates should eliminate most inter-tradition routing differences.</p>
+<p>Requires Exp 12 (minimal-pair digit test) and regression analysis controlling for surface-form covariates.</p>
+</dd>
 
-<div class="hypothesis">
-<span class="h-label">H3 — Effective-Expert-Count as Surprisal Proxy</span>
-<p>The effective number of experts activated (exp-Shannon entropy of the expert-frequency
-distribution) at late layers is a proxy for the model's per-token surprisal: more
-predictable text (Gita, chant-like) uses fewer experts; less predictable text (Christian
-theology, 2,000 years of arguments) uses more. This is a <b>text-statistical property</b>,
-not a religious one.</p>
-<p><b>Status:</b> <span class="tag tag-survives">survives</span> — The ordering
-(Gita 26 &lt; Qur'an 43 &lt; Bible 65 &lt; Christian 111) is reproducible and
-directionally consistent with perplexity. The 111→70 per-sample collapse (pooling
-artifact) is noted, but the ordering survives at both aggregate and per-sample levels.</p>
-</div>
+<dt>H3 — Effective-expert-count as surprisal proxy <span class="tag tag-survives">survives</span></dt>
+<dd>
+<p>The effective number of experts activated (exp-Shannon entropy of the expert-frequency distribution) at late layers is a proxy for the model's per-token surprisal: more predictable text (Gita, chant-like) uses fewer experts; less predictable text (Christian theology, 2,000 years of arguments) uses more. This is a <b>text-statistical property</b>, not a religious one.</p>
+<p>The ordering (Gita 26 &lt; Qur'an 43 &lt; Bible 65 &lt; Christian 111) is reproducible and directionally consistent with perplexity. The 111→70 per-sample collapse (pooling artifact) is noted, but the ordering survives at both aggregate and per-sample levels.</p>
+</dd>
 
-<div class="hypothesis">
-<span class="h-label">H4 — Shared-Routing Backbone</span>
-<p>A core set of high-frequency experts is shared across <i>all</i> traditions at every
-layer, forming a "routing backbone" that is tradition-agnostic. Inter-tradition
-differences are concentrated in a thin layer of specialists (like e164) and in the
-hash-routed layers (L0–2), not in the bulk of the network.</p>
-<p><b>Status:</b> <span class="tag tag-survives">survives</span> — 15 of top-20 L42
-experts shared between Bible and Qur'an; hash-routed L0–2 show corpus-invariant routing
-(by design: expert assignment is predetermined per token ID). The "layer sandwich"
-sub-claim (low-high-low overlap pattern) was retracted as a metric artifact.</p>
-</div>
+<dt>H4 — Shared-routing backbone <span class="tag tag-survives">survives</span></dt>
+<dd>
+<p>A core set of high-frequency experts is shared across <i>all</i> traditions at every layer, forming a "routing backbone" that is tradition-agnostic. Inter-tradition differences are concentrated in a thin layer of specialists (like e164) and in the hash-routed layers (L0–2), not in the bulk of the network.</p>
+<p>15 of top-20 L42 experts shared between Bible and Qur'an; hash-routed L0–2 show corpus-invariant routing (by design: expert assignment is predetermined per token ID). The "layer sandwich" sub-claim was retracted as a metric artifact.</p>
+</dd>
 
-<div class="hypothesis">
-<span class="h-label">H5 — No Religion-Specific Routing</span>
-<p>The model does not organize religious texts by tradition, doctrine, or faith. It
-organizes them by <b>what the text is doing to the model</b>: surface-form statistics,
-predictability, and digit/punctuation density. Theology is present in the shared
-mid-layer backbone, but the edges of the network respond to simpler features.</p>
-<p><b>Status:</b> <span class="tag tag-pending">pending secular null</span> — Requires
-Exp 3 (secular null baseline stratified by digit density) to confirm that non-religious
-English with matched digit density produces similar routing patterns.</p>
-</div>
+<dt>H5 — No religion-specific routing <span class="tag tag-pending">pending secular null</span></dt>
+<dd>
+<p>The model does not organize religious texts by tradition, doctrine, or faith. It organizes them by <b>what the text is doing to the model</b>: surface-form statistics, predictability, and digit/punctuation density. Theology is present in the shared mid-layer backbone, but the edges of the network respond to simpler features.</p>
+<p>Requires Exp 3 (secular null baseline stratified by digit density) to confirm that non-religious English with matched digit density produces similar routing patterns.</p>
+</dd>
+</dl>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="questions">3. Open Questions</h2>
+<h2 id="questions"><span class="mw-headline">3. Open questions</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
 <p>Questions the study is actively trying to answer, ordered by priority:</p>
 
-<div class="question">
-<span class="q-label">Q1</span>
-<p>Is e164 a <b>digit detector</b> (responds to any numeral), a
-<b>citation-structure detector</b> (responds to "N:M" verse-reference patterns
-specifically), or something else entirely?</p>
-<p><i>Test:</i> Exp 12 (digit minimal-pairs: same Bible text in 3 versions — digit-free,
-verse-numbers-restored, arbitrary-numerals) + Exp 11 (context dump of e164/e27/e68 firing
-contexts with ±20 token windows).</p>
-</div>
+<dl>
+<dt>Q1</dt>
+<dd><p>Is e164 a <b>digit detector</b> (responds to any numeral), a <b>citation-structure detector</b> (responds to "N:M" verse-reference patterns specifically), or something else entirely?</p>
+<p><i>Test:</i> Exp 12 (digit minimal-pairs: same Bible text in 3 versions — digit-free, verse-numbers-restored, arbitrary-numerals) + Exp 11 (context dump of e164/e27/e68 firing contexts with ±20 token windows).</p></dd>
 
-<div class="question">
-<span class="q-label">Q2</span>
-<p>Does e164 fire on <b>non-KJV translations of the same content</b> (Genesis 1–3 in
-WEB, ASV, BBE, WEBBE), all digit-free? If yes → content/memorization drives it; if no →
-register or digit density drives it.</p>
-<p><i>Test:</i> Exp 1 (5 public-domain translations, all verified 0.0000% digits, ready
-to deploy).</p>
-</div>
+<dt>Q2</dt>
+<dd><p>Does e164 fire on <b>non-KJV translations of the same content</b> (Genesis 1–3 in WEB, ASV, BBE, WEBBE), all digit-free? If yes → content/memorization drives it; if no → register or digit density drives it.</p>
+<p><i>Test:</i> Exp 1 (5 public-domain translations, all verified 0.0000% digits, ready to deploy).</p></dd>
 
-<div class="question">
-<span class="q-label">Q3</span>
-<p>Are the inter-tradition routing differences (Jaccard overlaps, effective-expert counts)
-<b>entirely explained</b> by surface-form covariates (digit %, punctuation %, sentence
-length, TTR)?</p>
-<p><i>Test:</i> Regression analysis on existing data (partial effects controlling for
-covariates) + Exp 3 (secular null with matched digit density).</p>
-</div>
+<dt>Q3</dt>
+<dd><p>Are the inter-tradition routing differences (Jaccard overlaps, effective-expert counts) <b>entirely explained</b> by surface-form covariates (digit %, punctuation %, sentence length, TTR)?</p>
+<p><i>Test:</i> Regression analysis on existing data (partial effects controlling for covariates) + Exp 3 (secular null with matched digit density).</p></dd>
 
-<div class="question">
-<span class="q-label">Q4</span>
-<p>Is the effective-expert-count ordering (Gita &lt; Qur'an &lt; Bible &lt; Christian)
-<b>truly a surprisal proxy</b>, or does it reflect something tradition-specific?</p>
-<p><i>Test:</i> Correlate effective-expert-count with model perplexity per sample;
-compare against secular text of matched predictability.</p>
-</div>
+<dt>Q4</dt>
+<dd><p>Is the effective-expert-count ordering (Gita &lt; Qur'an &lt; Bible &lt; Christian) <b>truly a surprisal proxy</b>, or does it reflect something tradition-specific?</p>
+<p><i>Test:</i> Correlate effective-expert-count with model perplexity per sample; compare against secular text of matched predictability.</p></dd>
 
-<div class="question">
-<span class="q-label">Q5</span>
-<p>What does the model's routing look like on <b>topic-specific theology</b> (Jesus,
-Lucifer, Moloch, Saturn worship) vs. the broad-tradition corpora? Are there
-topic-specific routing signatures, or does the same digit/predictability structure
-dominate?</p>
-<p><i>Test:</i> Theology observation (1,090 records / 9.4M tokens, staged for GPU
-deployment). Includes per-sample digit density in manifest for controlled analysis.</p>
-</div>
+<dt>Q5</dt>
+<dd><p>What does the model's routing look like on <b>topic-specific theology</b> (Jesus, Lucifer, Moloch, Saturn worship) vs. the broad-tradition corpora? Are there topic-specific routing signatures, or does the same digit/predictability structure dominate?</p>
+<p><i>Test:</i> Theology observation (1,090 records / 9.4M tokens, staged for GPU deployment). Includes per-sample digit density in manifest for controlled analysis.</p></dd>
 
-<div class="question">
-<span class="q-label">Q6</span>
-<p>Can the bounded-Jacobian probe (layer-0 leverage ≈3.9× later layers) be
-<b>systematically validated</b>, or is it an artifact of the 16-random-projection
-approximation?</p>
-<p><i>Test:</i> Increase projection count; compare against exact Jacobian norms on small
-samples. Currently low priority (Jacobian is not the headline finding).</p>
-</div>
+<dt>Q6</dt>
+<dd><p>Can the bounded-Jacobian probe (layer-0 leverage ≈3.9× later layers) be <b>systematically validated</b>, or is it an artifact of the 16-random-projection approximation?</p>
+<p><i>Test:</i> Increase projection count; compare against exact Jacobian norms on small samples. Currently low priority.</p></dd>
+</dl>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="model">4. Model &amp; Methods</h2>
+<h2 id="model"><span class="mw-headline">4. Model and methods</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>Model</h3>
-<table>
+<h3 id="model-spec"><span class="mw-headline">4.1 Model specification</span></h3>
+<table class="wikitable">
 <tr><th>Parameter</th><th>Value</th></tr>
 <tr><td>Architecture</td><td>DeepSeek-V4-Flash-0731 (sparse MoE)</td></tr>
-<tr><td>Layers</td><td>43</td></tr>
-<tr><td>Routed experts / layer</td><td>256</td></tr>
-<tr><td>Activated experts / token</td><td>6 (top-6)</td></tr>
+<tr><td>Layers</td><td class="num">43</td></tr>
+<tr><td>Routed experts / layer</td><td class="num">256</td></tr>
+<tr><td>Activated experts / token</td><td class="num">6 (top-6)</td></tr>
 <tr><td>Gate score function</td><td><code>sqrt(softplus(x))</code> — sqrt-softplus</td></tr>
-<tr><td>Route scale</td><td>1.5</td></tr>
-<tr><td>Hidden dimension</td><td>4,096</td></tr>
-<tr><td>Vocabulary</td><td>129,280</td></tr>
+<tr><td>Route scale</td><td class="num">1.5</td></tr>
+<tr><td>Hidden dimension</td><td class="num">4,096</td></tr>
+<tr><td>Vocabulary</td><td class="num">129,280</td></tr>
 <tr><td>Expert precision</td><td>fp4 (attention fp8)</td></tr>
 <tr><td>Hyper-connections</td><td>hc_head ×4</td></tr>
-<tr><td>Hash-routed layers</td><td>L0–L2 (expert IDs predetermined per token ID, <code>n_hash_layers=3</code>)</td></tr>
-<tr><td>Group-limited routing</td><td>None (o_groups=8 is attention param)</td></tr>
+<tr><td>Hash-routed layers</td><td>L0–L2 (<code>n_hash_layers=3</code>; expert IDs predetermined per token ID)</td></tr>
+<tr><td>Group-limited routing</td><td>None (o_groups=8 is an attention parameter)</td></tr>
 <tr><td>Checkpoint revision</td><td><code>9e165c30e2704aec5d9d593cce3eebd58bbef1cb</code></td></tr>
-<tr><td>Deployment</td><td>TP2 across 2 DGX Spark nodes (de5c 10.0.1.1, 557f 192.168.1.96)</td></tr>
+<tr><td>Deployment</td><td>TP2 across 2 DGX Spark nodes</td></tr>
 </table>
 
-<h3>Observation Harness</h3>
-<p>The harness (<code>observe_religious.py</code>) runs the model in read-only inference
-mode with no weight modifications. A forward hook on the router <code>Gate</code> module
-records, for every token at every layer:</p>
+<h3 id="harness"><span class="mw-headline">4.2 Observation harness</span></h3>
+<p>The harness (<code>observe_religious.py</code>) runs the model in read-only inference mode with no weight modifications. A forward hook on the router <code>Gate</code> module records, for every token at every layer:</p>
 <ul>
-<li><b>Selected expert indices</b> — the 6 experts chosen by topk (or hash-predetermined
-for L0–2)</li>
+<li><b>Selected expert indices</b> — the 6 experts chosen by topk (or hash-predetermined for L0–2)</li>
 <li><b>Gate weights</b> — the sqrt-softplus scores (normalized) for the selected experts</li>
 <li><b>Activation norms</b> — L2 norm of each expert's output vector per token</li>
 </ul>
 
-<p>From these, per-sample per-layer aggregates are computed:</p>
-<ul>
-<li><code>expert_frequencies[256]</code> — integer count of how many tokens selected each
-expert. <b>Invariant: Σ == seqlen × 6</b>, asserted per layer per record.</li>
-<li><code>activation_norms[256]</code> — mean activation magnitude per expert</li>
-<li><code>gate_weights[256]</code> — softmax diagnostic (NOT the routing score function)</li>
-<li><code>reap_score[256]</code> — gate weight × activation norm (REAP metric)</li>
-<li><code>routed_experts[]</code> — unique expert IDs per layer (NOT per-token routing —
-this limits context-dump experiments)</li>
-</ul>
+<h3 id="reap-metric"><span class="mw-headline">4.3 REAP metric</span></h3>
+<p><b>REAP</b> (Routing-weight × Expert Activation Product) is defined per expert per layer as:</p>
+<pre>REAP = mean(gate_weight) × mean(activation_norm)</pre>
+<p>computed across all tokens where the expert fired. Text profiles are defined as per-layer top-20 expert sets ranked by frequency-weighted mean REAP. Inter-text similarity is measured by <a href="#">Jaccard overlap</a> of these profiles.</p>
 
-<h3>REAP Metric</h3>
-<p><b>REAP</b> = <b>R</b>outing-weight × <b>E</b>xpert <b>A</b>ctivation <b>P</b>roduct.
-For each expert at each layer, REAP = mean(gate_weight) × mean(activation_norm) across
-all tokens where the expert fired. Text profiles are defined as per-layer top-20 expert
-sets ranked by frequency-weighted mean REAP. Inter-text similarity is measured by Jaccard
-overlap of these profiles.</p>
-
-<h3>Fail-Closed Guarantees</h3>
-<div class="survives">
+<h3 id="fail-closed"><span class="mw-headline">4.4 Fail-closed guarantees</span></h3>
+<div class="ambox ambox-survives">
+<div class="ambox-icon">✓</div>
+<div class="ambox-text">
 <p>Every record is fsynced to JSONL line-by-line. Before acceptance, the harness asserts:</p>
 <ul>
-<li><code>Σ expert_frequencies == seqlen × top_k(6)</code> on every layer of every
-record — guarantees no token routing was lost</li>
-<li><code>(category, sample_index)</code> keys are unique across the entire dataset —
-guarantees no duplicate samples</li>
+<li><code>Σ expert_frequencies == seqlen × top_k(6)</code> on every layer of every record — guarantees no token routing was lost</li>
+<li><code>(category, sample_index)</code> keys are unique across the entire dataset — guarantees no duplicate samples</li>
 <li>English-language filter via stopword regex — rejects non-English text</li>
 </ul>
-<p>All 1,482 core records and all 1,267 wave-1 Christian records pass with zero
-violations. The harness implementation was verified line-for-line against the real
-<code>Gate.forward</code> source code (sqrtsoftplus, bias-for-selection-only, hash layers,
-plain topk, no group masking).</p>
+<p>All 2,749 completed records pass with zero violations. The harness implementation was verified line-for-line against the real <code>Gate.forward</code> source code (sqrtsoftplus, bias-for-selection-only, hash layers, plain topk, no group masking).</p>
+</div>
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="data">5. Data Inventory</h2>
+<h2 id="data"><span class="mw-headline">5. Data inventory</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>Observation Corpora (deployed on GPU)</h3>
-<table>
-<tr><th>Corpus</th><th>Records</th><th>Tokens</th><th>Source / Notes</th></tr>
-<tr><td>KJV Bible</td><td class="stat">1,189</td><td class="stat">1,045,776</td><td>1189 chapters, verse numbers stripped → 0.0000% digits</td></tr>
-<tr><td>Christian literature (wave 1)</td><td class="stat">1,267</td><td class="stat">20,409,440</td><td>3,705-book Gutenberg scrape, 32 topics, 16k window/book</td></tr>
-<tr><td>Qur'an (English)</td><td class="stat">115</td><td class="stat">258,122</td><td>Gutenberg, Pickthall translation</td></tr>
-<tr><td>Book of Mormon</td><td class="stat">30</td><td class="stat">342,614</td><td>Gutenberg pg17</td></tr>
-<tr><td>Bhagavad Gita</td><td class="stat">18</td><td class="stat">29,690</td><td>Gutenberg (small n — CI imprecise)</td></tr>
-<tr><td>Tao Te Ching</td><td class="stat">81</td><td class="stat">13,852</td><td>Gutenberg</td></tr>
-<tr><td>Dhammapada</td><td class="stat">26</td><td class="stat">16,203</td><td>Gutenberg pg2017</td></tr>
-<tr><td>Analects</td><td class="stat">20</td><td class="stat">42,041</td><td>Gutenberg</td></tr>
-<tr><td>Upanishads</td><td class="stat">3</td><td class="stat">21,669</td><td>Gutenberg (n=3 — directional only)</td></tr>
-<tr><td><b>Total (core + wave-1)</b></td><td class="stat">2,749</td><td class="stat">22,179,407</td><td></td></tr>
+<h3>5.1 Observation corpora (deployed on GPU)</h3>
+<table class="wikitable">
+<tr><th>Corpus</th><th>Records</th><th>Tokens</th><th>Source / notes</th></tr>
+<tr><td>KJV Bible</td><td class="num">1,189</td><td class="num">1,045,776</td><td>1189 chapters, verse numbers stripped → 0.0000% digits</td></tr>
+<tr><td>Christian literature (wave 1)</td><td class="num">1,267</td><td class="num">20,409,440</td><td>3,705-book Gutenberg scrape, 32 topics, 16k window/book</td></tr>
+<tr><td>Qur'an (English)</td><td class="num">115</td><td class="num">258,122</td><td>Gutenberg, Pickthall translation</td></tr>
+<tr><td>Book of Mormon</td><td class="num">30</td><td class="num">342,614</td><td>Gutenberg pg17</td></tr>
+<tr><td>Bhagavad Gita</td><td class="num">18</td><td class="num">29,690</td><td>Gutenberg (small n — CI imprecise)</td></tr>
+<tr><td>Tao Te Ching</td><td class="num">81</td><td class="num">13,852</td><td>Gutenberg</td></tr>
+<tr><td>Dhammapada</td><td class="num">26</td><td class="num">16,203</td><td>Gutenberg pg2017</td></tr>
+<tr><td>Analects</td><td class="num">20</td><td class="num">42,041</td><td>Gutenberg</td></tr>
+<tr><td>Upanishads</td><td class="num">3</td><td class="num">21,669</td><td>Gutenberg (n=3 — directional only)</td></tr>
+<tr><td><b>Total (core + wave-1)</b></td><td class="num">2,749</td><td class="num">22,179,407</td><td></td></tr>
 </table>
 
-<h3>Staged Corpora (not yet observed on GPU)</h3>
-<table>
+<h3>5.2 Staged corpora (not yet observed on GPU)</h3>
+<table class="wikitable">
 <tr><th>Corpus</th><th>Records</th><th>Tokens</th><th>Status</th></tr>
-<tr><td>Christian wave-2</td><td class="stat">2,295</td><td>~37M</td><td><span class="tag tag-pending">running ~45%</span></td></tr>
-<tr><td>Theology stratified selection</td><td class="stat">1,090</td><td class="stat">9,380,481</td><td><span class="tag tag-pending">staged</span> — Jesus 400, Judaism 137, Lucifer 46, Moloch 25, Saturn 32, books 450</td></tr>
-<tr><td>Exp 12: digit minimal-pairs</td><td class="stat">111</td><td>~330k</td><td><span class="tag tag-pending">staged</span> — 12 KJV chapters × 3 digit versions</td></tr>
-<tr><td>Exp 1: multi-translation Genesis</td><td class="stat">5</td><td>~52k</td><td><span class="tag tag-pending">staged</span> — KJV, WEB, ASV, BBE, WEBBE, all 0 digits</td></tr>
+<tr><td>Christian wave-2</td><td class="num">2,295</td><td>~37M</td><td><span class="tag tag-pending">running ~45%</span></td></tr>
+<tr><td>Theology stratified selection</td><td class="num">1,090</td><td class="num">9,380,481</td><td><span class="tag tag-pending">staged</span> — Jesus 400, Judaism 137, Lucifer 46, Moloch 25, Saturn 32, books 450</td></tr>
+<tr><td>Exp 12: digit minimal-pairs</td><td class="num">111</td><td>~330k</td><td><span class="tag tag-pending">staged</span> — 12 KJV chapters × 3 digit versions</td></tr>
+<tr><td>Exp 1: multi-translation Genesis</td><td class="num">5</td><td>~52k</td><td><span class="tag tag-pending">staged</span> — KJV, WEB, ASV, BBE, WEBBE, all 0 digits</td></tr>
 </table>
 
-<h3>Source Corpus (raw, before tokenization)</h3>
-<table>
+<h3>5.3 Source corpus (raw, before tokenization)</h3>
+<table class="wikitable">
 <tr><th>Source</th><th>Volume</th><th>Notes</th></tr>
-<tr><td>Wikipedia theology articles</td><td class="stat">7,508 files</td><td>6 topics: Jesus, Lucifer, Judaism origins, Judaism, Moloch, Saturn</td></tr>
-<tr><td>Project Gutenberg theology books</td><td class="stat">3,827 books</td><td>40+ topic searches, 1.6B chars (~400M tokens)</td></tr>
-<tr><td>Project Gutenberg Christian books</td><td class="stat">3,705 books</td><td>32 topic searches (wave-1 source)</td></tr>
-<tr><td>Project Gutenberg Christian wave-2</td><td class="stat">2,295 books</td><td>Extended topic set</td></tr>
+<tr><td>Wikipedia theology articles</td><td class="num">7,508 files</td><td>6 topics: Jesus, Lucifer, Judaism origins, Judaism, Moloch, Saturn</td></tr>
+<tr><td>Project Gutenberg theology books</td><td class="num">3,827 books</td><td>40+ topic searches, 1.6B chars (~400M tokens)</td></tr>
+<tr><td>Project Gutenberg Christian books</td><td class="num">3,705 books</td><td>32 topic searches (wave-1 source)</td></tr>
+<tr><td>Project Gutenberg Christian wave-2</td><td class="num">2,295 books</td><td>Extended topic set</td></tr>
 </table>
 
-<h3>J-Lens Probe Data</h3>
-<p>80 samples across all 8 core traditions. Per-sample per-layer next-token distributions
-(logit lens) and bounded-Jacobian norms (16 random projection directions). All 80/80
-complete. Stored as compressed JSONL in <code>jlens/</code>.</p>
+<h3>5.4 J-lens probe data</h3>
+<p>80 samples across all 8 core traditions. Per-sample per-layer next-token distributions (logit lens) and bounded-Jacobian norms (16 random projection directions). All 80/80 complete. Stored as compressed JSONL.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="structures">6. Data Structures</h2>
+<h2 id="structures"><span class="mw-headline">6. Data structures</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>Layer 1 — Corpus Samples (<code>corpus/samples/*.jsonl</code>)</h3>
+<h3>6.1 Layer 1 — Corpus samples</h3>
+<p>Location: <code>corpus/samples/*.jsonl</code>. One JSON object per line, immutable, with SHA-256 and manifest sidecars.</p>
 <pre>{
   "sample_id":     "bible_gen_001",
   "category":      "bible",
@@ -355,11 +458,9 @@ complete. Stored as compressed JSONL in <code>jlens/</code>.</p>
   "digit_count":    0,
   "digit_density":  0.0
 }</pre>
-<p class="small">One JSON object per line. Immutable. SHA-256 + manifest sidecars
-(<code>bible.jsonl</code> + <code>bible.sha256</code> + <code>bible.manifest.json</code>).
-Digit density fields added after the confound was discovered.</p>
 
-<h3>Layer 2 — Observation Records (<code>full_obs.jsonl</code>, <code>christian_obs.jsonl</code>)</h3>
+<h3>6.2 Layer 2 — Observation records</h3>
+<p>Location: <code>full_obs.jsonl</code> (1,482 records, 560 MB), <code>christian_obs.jsonl</code> (1,267 records, 541 MB). Fsynced line-by-line.</p>
 <pre>{
   "sample_id":     "bible_gen_001",
   "category":      "bible",
@@ -367,49 +468,40 @@ Digit density fields added after the confound was discovered.</p>
   "seqlen":         2048,
   "layers": [
     {
-      "expert_frequencies":  [621032, 457504, 424377, ...],   // [256] int counts; Σ == seqlen×6
+      "expert_frequencies":  [621032, 457504, 424377, ...],   // [256] int; Σ == seqlen×6
       "activation_norms":     [0.0, 2.34, 1.87, ...],          // [256] mean activation magnitude
-      "gate_weights":         [0.001, 0.034, ...],             // [256] softmax diagnostic (NOT route score)
+      "gate_weights":         [0.001, 0.034, ...],             // [256] softmax diagnostic
       "reap_score":            [0.0, 0.0796, ...],              // [256] gate_weight × activation_norm
       "routed_experts":        [0, 3, 7, 12, 45, 89, ...]       // unique expert IDs (NOT per-token)
     },
     // ... 43 entries, one per layer
   ]
 }</pre>
-<p class="small">One record per sample. Fsynced line-by-line. ~560MB for 1,482 core records.
-<code>gate_weights</code> is a softmax over all 256 experts — a diagnostic, NOT the
-actual routing score function (which is sqrt-softplus). <code>routed_experts</code>
-stores unique expert IDs, not per-token routing — this is why Exp 11 (context dump)
-needs a GPU re-run with <code>--raw-budget-tokens</code>.</p>
+<p class="small"><code>gate_weights</code> is a softmax over all 256 experts — a diagnostic, NOT the routing score function (which is sqrt-softplus). <code>routed_experts</code> stores unique expert IDs, not per-token routing — this is why Exp 11 needs a GPU re-run with <code>--raw-budget-tokens</code>.</p>
 
-<h3>Layer 3 — Aggregates (<code>core_agg.json</code>, <code>christian_agg.json</code>)</h3>
+<h3>6.3 Layer 3 — Aggregates</h3>
+<p>Location: <code>core_agg.json</code>, <code>christian_agg.json</code>. Per-category sums of frequencies and mean REAP, keyed by layer.</p>
 <pre>{
-  "bible": {
-    "n":     1189,           // sample count
-    "tok":   1045776,        // total tokens
-    "freq":  {"0": [...256], "1": [...256], ...},  // per-layer frequency arrays
-    "reap":  {"0": [...256], "1": [...256], ...}   // per-layer mean REAP
-  },
-  "quran": { ... },
-  ...
+  "bible": {"n": 1189, "tok": 1045776,
+            "freq": {"0": [...256], "1": [...256], ...},
+            "reap": {"0": [...256], "1": [...256], ...}},
+  "quran": { ... }
 }</pre>
 
-<h3>Layer 4 — J-Lens (<code>jlens_output/*.jsonl</code>)</h3>
+<h3>6.4 Layer 4 — J-lens</h3>
+<p>Location: <code>jlens_output/*.jsonl</code>. Per-position per-layer next-token distributions and bounded Jacobian norms.</p>
 <pre>{
-  "sample_id":    "bible_gen_001",
-  "category":     "bible",
-  "positions":    [0, 1, 2, ...],
+  "sample_id": "bible_gen_001",
   "layers": [
     {
-      "top_tokens":   [[" Spirit", 0.7668], [" the", 0.0821], ...],  // per-position
-      "jacobian_norm": 1268.3                                        // bounded, 16 projections
-    },
-    // ... 43 entries
+      "top_tokens":   [[" Spirit", 0.7668], [" the", 0.0821], ...],
+      "jacobian_norm": 1268.3
+    }, ...
   ]
 }</pre>
 
-<h3>Layer 5 — Publication Artifacts</h3>
-<table>
+<h3>6.5 Layer 5 — Publication artifacts</h3>
+<table class="wikitable">
 <tr><th>Artifact</th><th>Location</th></tr>
 <tr><td>Technical wiki</td><td><code>wiki.html</code> (GitHub Pages)</td></tr>
 <tr><td>Narrative page</td><td><code>index.html</code> (GitHub Pages)</td></tr>
@@ -424,167 +516,117 @@ needs a GPU re-run with <code>--raw-budget-tokens</code>.</p>
 </table>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="results">7. Results — What Survives</h2>
+<h2 id="results"><span class="mw-headline">7. Results — what survives</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>7.1 Effective Expert Count <span class="tag tag-survives">survives</span></h3>
-<p>The exponential-Shannon entropy of the expert-frequency distribution at layer 40 gives
-an "effective number of experts" — how many specialists the model actually uses:</p>
-<table>
+<h3>7.1 Effective expert count <span class="tag tag-survives">survives</span></h3>
+<p>The exponential-Shannon entropy of the expert-frequency distribution at layer 40 gives an "effective number of experts" — how many specialists the model actually uses:</p>
+<table class="wikitable">
 <tr><th>Corpus</th><th>Effective experts (L40)</th><th>Per-sample collapse</th></tr>
-<tr><td>Bhagavad Gita</td><td class="stat">26</td><td class="stat">24.3</td></tr>
-<tr><td>Qur'an</td><td class="stat">43</td><td class="stat">39.5</td></tr>
-<tr><td>KJV Bible</td><td class="stat">65</td><td class="stat">54.1</td></tr>
-<tr><td>Christian literature</td><td class="stat">111</td><td class="stat">70</td></tr>
+<tr><td>Bhagavad Gita</td><td class="num">26</td><td class="num">24.3</td></tr>
+<tr><td>Qur'an</td><td class="num">43</td><td class="num">39.5</td></tr>
+<tr><td>KJV Bible</td><td class="num">65</td><td class="num">54.1</td></tr>
+<tr><td>Christian literature</td><td class="num">111</td><td class="num">70</td></tr>
 </table>
-<p>The aggregate 111 collapses to 70 per-sample (pooling artifact — rare experts that fire
-in one book but not another inflate the aggregate). But the <b>ordering survives</b> at
-both levels. This is consistent with the surprisal interpretation: the Gita (one long
-repetitive chant) is the most predictable; 2,000 years of heterogeneous Christian theology
-is the least.</p>
+<p>The aggregate 111 collapses to 70 per-sample (pooling artifact — rare experts that fire in one book but not another inflate the aggregate). But the <b>ordering survives</b> at both levels, consistent with the surprisal interpretation: the Gita (one long repetitive chant) is the most predictable; 2,000 years of heterogeneous Christian theology is the least.</p>
 
-<h3>7.2 Shared Routing Backbone <span class="tag tag-survives">survives</span></h3>
-<p>At layer 42, 15 of the top-20 experts (by frequency) are shared between Bible and
-Qur'an. The sorted frequency distributions have Pearson r = 0.99 (but this is expected —
-both are dominated by the same high-frequency backbone). The 5 non-shared experts include
-e164 (zero in Bible, heavy in Qur'an) and other specialists.</p>
-<p>Hash-routed layers L0–L2 show corpus-invariant routing by design — expert assignment
-is predetermined per token ID via <code>tid2eid</code>, so the same token always goes to
-the same expert regardless of context.</p>
+<h3>7.2 Shared routing backbone <span class="tag tag-survives">survives</span></h3>
+<p>At layer 42, 15 of the top-20 experts (by frequency) are shared between Bible and Qur'an. Hash-routed layers L0–L2 show corpus-invariant routing by design — expert assignment is predetermined per token ID via <code>tid2eid</code>, so the same token always goes to the same expert regardless of context.</p>
 
-<h3>7.3 Hard Specialists (Descriptive) <span class="tag tag-verified">verified as real</span></h3>
-<p>Several individual experts show extreme inter-corpus firing gaps, confirmed by
-matched-n bootstrap (5,000 resamples):</p>
-<table>
+<h3>7.3 Hard specialists (descriptive) <span class="tag tag-verified">verified as real</span></h3>
+<p>Several individual experts show extreme inter-corpus firing gaps, confirmed by matched-n bootstrap (5,000 resamples):</p>
+<table class="wikitable">
 <tr><th>Expert</th><th>Bible (/M tok)</th><th>Other corpus</th><th>Ratio</th><th>Bootstrap CI</th></tr>
-<tr><td>L42 e164</td><td class="stat">0.0</td><td>Qur'an 4,571 / Christian 4,565</td><td class="stat">∞</td><td>5000/5000 bootstrap = 0.000</td></tr>
-<tr><td>L41 e34</td><td class="stat">5.7</td><td>Qur'an 5,377</td><td class="stat">~940×</td><td>[21.7–26.8] at n=115</td></tr>
-<tr><td>L34 e33</td><td class="stat">2.7</td><td>Dhammapada 4,358</td><td class="stat">~1,600×</td><td>[2013–7107] at n=26</td></tr>
+<tr><td>L42 e164</td><td class="num">0.0</td><td>Qur'an 4,571 / Christian 4,565</td><td class="num">∞</td><td>5000/5000 bootstrap = 0.000</td></tr>
+<tr><td>L41 e34</td><td class="num">5.7</td><td>Qur'an 5,377</td><td class="num">~940×</td><td>[21.7–26.8] at n=115</td></tr>
+<tr><td>L34 e33</td><td class="num">2.7</td><td>Dhammapada 4,358</td><td class="num">~1,600×</td><td>[2013–7107] at n=26</td></tr>
 </table>
-<p class="small">These are real routing phenomena — not small-sample artifacts. But their
-<i>interpretation</i> is contested: e164 is now hypothesized to be a digit detector
-(H1), not a "not-memorized-scripture" detector. The other two await similar
-confound checks.</p>
+<p class="small">These are real routing phenomena — not small-sample artifacts. But their <i>interpretation</i> is contested: e164 is now hypothesized to be a digit detector (H1), not a "not-memorized-scripture" detector.</p>
 
 <h3>7.4 Bounded Jacobian <span class="tag tag-survives">survives (with caveat)</span></h3>
-<p>Layer-0 output influence (Jacobian norm ≈ 1,268) is ≈3.9× that of later layers
-(L10: 371, L20: 363, L30: 378, L42: 320). Caveat: uses only 16 random projection
-directions, not a full Jacobian. The qualitative finding (early layers have largest
-leverage) is supported but the exact magnitudes are approximate.</p>
+<p>Layer-0 output influence (Jacobian norm ≈ 1,268) is ≈3.9× that of later layers (L10: 371, L20: 363, L30: 378, L42: 320). Caveat: uses only 16 random projection directions, not a full Jacobian.</p>
 
-<h3>7.5 Inter-Tradition Jaccard (Top-20 REAP, Overall) <span class="tag tag-survives">survives</span></h3>
-<p>Pairwise Jaccard overlap of top-20 REAP experts across the 8 core traditions + Christian
-literature. Values are overall (not per-layer):</p>
-<table>
+<h3>7.5 Inter-tradition Jaccard (top-20 REAP, overall) <span class="tag tag-survives">survives</span></h3>
+<p>Pairwise Jaccard overlap of top-20 REAP experts across the 8 core traditions + Christian literature (overall, not per-layer):</p>
+<table class="wikitable">
 <tr><th></th><th>bible</th><th>quran</th><th>tao</th><th>gita</th><th>dhamma</th><th>bofm</th><th>analects</th><th>upan.</th><th>christian</th></tr>
-<tr><td>bible</td><td>1.00</td><td>0.48</td><td>0.42</td><td>0.45</td><td>0.39</td><td>0.44</td><td>0.29</td><td>0.21</td><td>0.33</td></tr>
-<tr><td>christian</td><td>0.33</td><td>0.43</td><td>0.44</td><td>0.30</td><td>0.33</td><td>0.33</td><td>0.36</td><td>0.48</td><td>1.00</td></tr>
+<tr><td>bible</td><td class="num">1.00</td><td class="num">0.48</td><td class="num">0.42</td><td class="num">0.45</td><td class="num">0.39</td><td class="num">0.44</td><td class="num">0.29</td><td class="num">0.21</td><td class="num">0.33</td></tr>
+<tr><td>christian</td><td class="num">0.33</td><td class="num">0.43</td><td class="num">0.44</td><td class="num">0.30</td><td class="num">0.33</td><td class="num">0.33</td><td class="num">0.36</td><td class="num">0.48</td><td class="num">1.00</td></tr>
 </table>
-<p class="small">Christian literature is the Bible's <i>least</i> similar partner (0.33) —
-less alike than the Tao Te Ching (0.42). This is directionally interesting but confounded
-by digit density and text length differences. Per-layer top-5 profiles give different
-numbers (Bible-BoM 0.539, Bible-Qur'an 0.525) — the metric matters.</p>
+<p class="small">Christian literature is the Bible's <i>least</i> similar partner (0.33). Per-layer top-5 profiles give different numbers — the metric matters.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="retracted">8. Retracted Claims</h2>
+<h2 id="retracted"><span class="mw-headline">8. Retracted claims</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<div class="retracted">
-<b>8.1 "Not-Memorized-Scripture" Interpretation of e164</b><br>
-<p><b>Claim:</b> Expert #164 at layer 42 never fires on the KJV Bible because the model
-has it memorized and "recites from memory," while it fires on non-memorized religious
-text (Qur'an, Christian theology).</p>
-<p><b>Retraction:</b> Claude Opus 5 review identified that <code>prepare_corpus.py</code>
-strips verse numbers from the Bible, making it 0.0000% digits. All other corpora contain
-digits. e164's firing rate is <b>perfectly monotone in digit density</b> across ten
-deciles (0 → 16,448 digits per million characters). A zero-digit Christian control fires
-at only 4.9/M. The digit-density confound fully explains the pattern. e164 is now
-hypothesized to be a digit/citation-apparatus detector (H1).</p>
+<div class="ambox ambox-retracted">
+<div class="ambox-icon">✗</div>
+<div class="ambox-text">
+<p><b>8.1 "Not-memorized-scripture" interpretation of e164.</b> <i>Claim:</i> Expert #164 at layer 42 never fires on the KJV Bible because the model has it memorized and "recites from memory." <i>Retraction:</i> Claude Opus 5 review identified that <code>prepare_corpus.py</code> strips verse numbers from the Bible, making it 0.0000% digits. All other corpora contain digits. e164's firing rate is perfectly monotone in digit density across ten deciles (0 → 16,448/M). Zero-digit Christian control fires at 4.9/M. The digit-density confound fully explains the pattern. e164 is now hypothesized to be a digit/citation-apparatus detector (H1).</p>
+</div>
 </div>
 
-<div class="retracted">
-<b>8.2 "Layer Sandwich" Pattern</b><br>
-<p><b>Claim:</b> Bible ↔ Christian literature overlap is low at L0–2 (surface form),
-high at L3–6/19 (shared meaning), and low again at L39–42 (voice selection) — a
-"sandwich" structure.</p>
-<p><b>Retraction:</b> Kimi K3 review could not reproduce this from the committed
-artifacts. The pattern is a <code>reap_score</code> artifact — per-firing mean REAP is
-dominated by noise floor from experts firing &lt;35 times in 98,304 slots. It inverts
-when computed on <code>expert_frequencies</code> instead (L0 = 0.905, highest).
-Additionally, the write-up mixed per-layer top-5 profiles (the 0.53 matrix) with a
-top-20 REAP claim (the sandwich), which is a metric inconsistency.</p>
+<div class="ambox ambox-retracted">
+<div class="ambox-icon">✗</div>
+<div class="ambox-text">
+<p><b>8.2 "Layer sandwich" pattern.</b> <i>Claim:</i> Bible ↔ Christian overlap is low at L0–2 (surface), high at L3–6/19 (meaning), low at L39–42 (voice). <i>Retraction:</i> Kimi K3 review could not reproduce this. The pattern is a <code>reap_score</code> artifact — per-firing mean REAP is dominated by noise floor from experts firing &lt;35 times in 98,304 slots. It inverts on <code>expert_frequencies</code> (L0 = 0.905, highest). The write-up also mixed per-layer top-5 profiles with a top-20 REAP claim — a metric inconsistency.</p>
+</div>
 </div>
 
-<div class="retracted">
-<b>8.3 Genesis 1:2 Logit-Lens Claim</b><br>
-<p><b>Claim:</b> Logit-lens decoding of Genesis 1 surfaces "Spirit" at 76.7% confidence
-at layer 30 — evidence that the model "knows" the KJV wording of Genesis 1:2 before
-generating it.</p>
-<p><b>Retraction:</b> Kimi K3 review found the token at position 30 is <code>' deep'</code>,
-not <code>' Spirit'</code>. The intermediate layer 30 predicts a token that appears 4
-positions later in the verse, while the final layer correctly predicts the immediate next
-token (<code>'.'</code>). The actual <code>' Spirit'</code> token is at position 34.
-This is n=3, mislabeled, cherry-picked, and uses an uncalibrated readout path. Withdrawn
-from all headline findings.</p>
+<div class="ambox ambox-retracted">
+<div class="ambox-icon">✗</div>
+<div class="ambox-text">
+<p><b>8.3 Genesis 1:2 logit-lens claim.</b> <i>Claim:</i> Logit-lens decoding surfaces "Spirit" at 76.7% at layer 30. <i>Retraction:</i> Kimi K3 review found the token at position 30 is <code>' deep'</code>, not <code>' Spirit'</code>. The actual <code>' Spirit'</code> is at position 34. The intermediate layer predicts a token 4 positions ahead while the final layer correctly predicts the immediate next token (<code>'.'</code>). This is n=3, mislabeled, cherry-picked, and uses an uncalibrated readout path.</p>
+</div>
 </div>
 
-<div class="retracted">
-<b>8.4 Effective-Expert Count = 111 (as published)</b><br>
-<p><b>Claim:</b> Christian literature uses 111 effective experts at layer 40.</p>
-<p><b>Partial retraction:</b> The 111 is a pooling artifact — it collapses to 70
-per-sample because rare experts that fire in one book inflate the aggregate. The
-<i>ordering</i> (Gita &lt; Qur'an &lt; Bible &lt; Christian) survives at both
-aggregate and per-sample levels.</p>
+<div class="ambox ambox-retracted">
+<div class="ambox-icon">✗</div>
+<div class="ambox-text">
+<p><b>8.4 Effective-expert count = 111 (as published).</b> <i>Claim:</i> Christian literature uses 111 effective experts at layer 40. <i>Partial retraction:</i> The 111 is a pooling artifact — it collapses to 70 per-sample. The <i>ordering</i> (Gita &lt; Qur'an &lt; Bible &lt; Christian) survives at both levels.</p>
+</div>
 </div>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="review">9. External Review Findings</h2>
+<h2 id="review"><span class="mw-headline">9. External review findings</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>Claude Opus 5 Review (570 lines)</h3>
+<h3>9.1 Claude Opus 5 review (570 lines)</h3>
 <p>The most consequential finding: the digit-density confound. Key points:</p>
 <ul>
-<li>Identified that <code>prepare_corpus.py</code> strips KJV verse numbers via regex,
-making Bible inputs 0.0000% digits while all other corpora contain digits</li>
-<li>Digit density deciles are perfectly monotone (0 → 16,448/M) <i>within the Christian
-corpus alone</i> — a 383× range in e164 firing rate generated entirely within one
-tradition</li>
+<li>Identified that <code>prepare_corpus.py</code> strips KJV verse numbers, making Bible 0.0000% digits while all other corpora contain digits</li>
+<li>Digit density deciles are perfectly monotone (0 → 16,448/M) <i>within the Christian corpus alone</i> — a 383× range in e164 firing rate generated entirely within one tradition</li>
 <li>Zero-digit Christian control: e164 fires at 4.9/M (vs 4,565/M at full digit density)</li>
 <li>e164 is not a singleton: e27 (twin), e68 (more extreme), ~29-expert cluster</li>
-<li>Recommended: Exp 11 (context dump) and Exp 12 (digit minimal-pairs) as decisive tests</li>
+<li>Recommended Exp 11 (context dump) and Exp 12 (digit minimal-pairs) as decisive tests</li>
 </ul>
 
-<h3>Kimi K3 Review (264 lines)</h3>
+<h3>9.2 Kimi K3 review (264 lines)</h3>
 <p>Methodological and reproducibility findings:</p>
 <ul>
-<li>Jaccard metric inconsistency: write-up mixed per-layer top-5 profiles (0.53 matrix)
-with top-20 REAP claim (sandwich) — two different metrics presented as one</li>
-<li>Logit-lens mislabel: position 30 token is <code>' deep'</code>, not
-<code>' Spirit'</code>; actual <code>' Spirit'</code> is at position 34</li>
+<li>Jaccard metric inconsistency: write-up mixed per-layer top-5 profiles (0.53 matrix) with top-20 REAP claim (sandwich) — two different metrics presented as one</li>
+<li>Logit-lens mislabel: position 30 token is <code>' deep'</code>, not <code>' Spirit'</code>; actual <code>' Spirit'</code> is at position 34</li>
 <li>Per-layer top-20 REAP Jaccard for Bible ↔ Christian = mean 0.11 (not 0.54–0.74)</li>
-<li>Recommended Exp 9 (position/length confound) as mandatory prerequisite, then Exp 1
-(multi-translation) as the interpretive killer experiment</li>
-<li>Verified: bounded Jacobian norms, effective-expert-count ordering, and e164 hard-zero
-are reproducible from committed artifacts</li>
+<li>Recommended Exp 9 (position/length confound) as mandatory prerequisite, then Exp 1 as interpretive killer</li>
+<li>Verified: bounded Jacobian norms, effective-expert-count ordering, and e164 hard-zero are reproducible from committed artifacts</li>
 </ul>
 
-<h3>GPT-5.6 / Codex Review</h3>
+<h3>9.3 GPT-5.6 / Codex review</h3>
 <p>Could not be obtained — codex CLI hit usage limit (resets Aug 20, 2026).</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="experiments">10. Experiment Pipeline</h2>
+<h2 id="experiments"><span class="mw-headline">10. Experiment pipeline</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>Prioritized Experiments (from EXPERIMENTS.md, revised post-review)</h3>
-
-<table>
-<tr><th>#</th><th>Experiment</th><th>GPU?</th><th>Status</th><th>What it settles</th></tr>
+<h3>10.1 Prioritized experiments</h3>
+<table class="wikitable">
+<tr><th>#</th><th>Experiment</th><th>GPU time</th><th>Status</th><th>What it settles</th></tr>
 <tr><td>Exp 12</td><td>Digit minimal-pairs</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>Citation-structure vs bare-numeral: same Bible text, 3 digit versions (0% / 2.23% / 2.83%)</td></tr>
 <tr><td>Exp 11</td><td>e164 context dump</td><td>Small</td><td><span class="tag tag-pending">staged</span></td><td>What tokens trigger e164/e27/e68? Needs <code>--raw-budget-tokens</code> GPU re-run</td></tr>
 <tr><td>Exp 1</td><td>Multi-translation Genesis</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>Register vs memorization: 5 public-domain translations, all 0 digits</td></tr>
 <tr><td>Exp 3</td><td>Secular null baseline</td><td>~4h</td><td><span class="tag tag-pending">not staged</span></td><td>Does non-religious English with matched digit density produce similar routing?</td></tr>
 <tr><td>Theology</td><td>Theology observation</td><td>~16h</td><td><span class="tag tag-pending">staged</span></td><td>Topic-specific routing: Jesus, Lucifer, Moloch, Saturn — 1,090 records</td></tr>
-<tr><td>Exp 8</td><td>Sorted L42 freq check</td><td>No</td><td><span class="tag tag-verified">done</span></td><td>Permutation confound killed (15/20 shared, r=0.99 but multiset differs). NOTE: tested frequencies, not the at-risk REAP channel</td></tr>
-<tr><td>Exp 9</td><td>Position/length confound</td><td>No</td><td><span class="tag tag-verified">answered</span></td><td>Length-matched bands show Bible 0 / Qur'an 4,383/M — not a length artifact</td></tr>
+<tr><td>Exp 8</td><td>Sorted L42 freq check</td><td>None</td><td><span class="tag tag-verified">done</span></td><td>Permutation confound killed (15/20 shared). Note: tested frequencies, not REAP channel</td></tr>
+<tr><td>Exp 9</td><td>Position/length confound</td><td>None</td><td><span class="tag tag-verified">answered</span></td><td>Length-matched bands: Bible 0 / Qur'an 4,383/M — not a length artifact</td></tr>
 </table>
 
-<h3>Deployment Order</h3>
+<h3>10.2 Deployment order</h3>
 <ol>
 <li><b>Exp 12</b> (111 samples, sub-hour) — highest priority, settles digit question</li>
 <li><b>Exp 1</b> (5 samples, sub-hour) — register vs memorization, all 0 digits</li>
@@ -592,91 +634,80 @@ are reproducible from committed artifacts</li>
 <li><b>Theology observation</b> (1,090 records, ~16h) — topic-specific routing</li>
 <li><b>Exp 3</b> (secular null) — after digit question is settled</li>
 </ol>
-<p>All experiments wait for wave-2 Christian observation to free the GPU nodes. The 30-minute
-cron automation monitors progress and deploys automatically.</p>
+<p>All experiments wait for wave-2 Christian observation to free the GPU nodes. The 30-minute cron automation monitors progress and deploys automatically.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="invariants">11. Verification &amp; Integrity</h2>
+<h2 id="invariants"><span class="mw-headline">11. Verification and integrity</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<div class="survives">
-<h3>Harness Faithfulness</h3>
-<p>The observation harness (<code>observe_religious.py</code>) was verified line-for-line
-against the real <code>Gate.forward</code> source code at
-<code>model.py:551-589</code>:</p>
+<h3>11.1 Harness faithfulness</h3>
+<p>The observation harness was verified line-for-line against the real <code>Gate.forward</code> source code (<code>model.py:551–589</code>):</p>
 <ul>
 <li>✓ sqrt-softplus score function: <code>F.softplus(scores).sqrt()</code></li>
 <li>✓ Bias shifts scores for topk selection only, does not affect routing weights</li>
 <li>✓ Hash routing for L0–L2 via <code>tid2eid[input_ids]</code></li>
-<li>✓ Plain topk (no group masking — o_groups=8 is an attention parameter, not routing)</li>
+<li>✓ Plain topk (no group masking)</li>
 <li>✓ Normalization: <code>weights /= weights.sum()</code> for non-softmax scores</li>
 <li>✓ Route scale: <code>weights *= route_scale</code> (1.5)</li>
 </ul>
-</div>
 
-<h3>Code-Level Caveats</h3>
+<h3>11.2 Code-level caveats</h3>
 <ul>
-<li>The harness replaces the tilelang <code>sparse_attn</code> kernel and
-<code>fast_hadamard_transform</code> with pure-PyTorch equivalents. Authors claim
-numerical equivalence; any difference would affect routing. Reasonable for an observation
-study but should be noted in methods.</li>
-<li><code>gate_weights[256]</code> in records is a softmax diagnostic — it is NOT the
-routing score function. The actual function is sqrt-softplus. Using
-<code>gate_weights</code> as if it were the route score would produce incorrect analysis.</li>
-<li><code>routed_experts</code> stores unique expert IDs per layer, not per-token
-routing. This means context-dump experiments (Exp 11) cannot be done from existing
-records — they require a GPU re-run with <code>--raw-budget-tokens</code>.</li>
+<li>The harness replaces the tilelang <code>sparse_attn</code> kernel and <code>fast_hadamard_transform</code> with pure-PyTorch equivalents. Authors claim numerical equivalence; any difference would affect routing.</li>
+<li><code>gate_weights[256]</code> in records is a softmax diagnostic — NOT the routing score function. The actual function is sqrt-softplus.</li>
+<li><code>routed_experts</code> stores unique expert IDs, not per-token routing. Context-dump experiments (Exp 11) require a GPU re-run with <code>--raw-budget-tokens</code>.</li>
 </ul>
 
-<h3>Data Integrity</h3>
+<h3>11.3 Data integrity</h3>
 <ul>
 <li>All corpus samples have SHA-256 + manifest sidecars</li>
-<li>Fail-closed invariant (Σ freq == seqlen × 6) verified on all 2,749 records, zero
-violations</li>
+<li>Fail-closed invariant (Σ freq == seqlen × 6) verified on all 2,749 records, zero violations</li>
 <li>Unique (category, sample_index) verified across all datasets</li>
 <li>All religious corpus text is English (stopword regex filter)</li>
 <li>All source texts are public-domain or freely published (Gutenberg, Wikipedia, bible-api.com)</li>
 </ul>
 
-<h3>Security Audit (2026-08-16)</h3>
+<h3>11.4 Security audit (2026-08-16)</h3>
 <ul>
 <li>✓ HuggingFace: both datasets private (anonymous access → 401)</li>
-<li>✓ GitHub: no credential values in any file or commit history (git-filter-repo purge
-of embedded password fragment, verified 0 matches across all commits)</li>
-<li>✓ Sanitizer reads password from <code>$SSHPASS</code> env var, never embedded in
-committed files</li>
-<li>⚠️ Password was publicly exposed for ~1 day before purge — rotation recommended on
-the affected LAN host</li>
+<li>✓ GitHub: no credential values in any file or commit history (git-filter-repo purge, verified 0 matches across all commits)</li>
+<li>✓ Sanitizer reads password from <code>$SSHPASS</code> env var, never embedded in committed files</li>
+<li>⚠️ Password was publicly exposed for ~1 day before purge — rotation recommended</li>
 </ul>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
-<h2 id="links">12. Resources</h2>
+<h2 id="links"><span class="mw-headline">12. Resources</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<h3>HuggingFace (private, access on request)</h3>
-<table>
+<h3>12.1 HuggingFace (private, access on request)</h3>
+<table class="wikitable">
 <tr><th>Dataset</th><th>Files</th><th>Contents</th></tr>
-<tr><td><code>0xSero/deepseek-v4-flash-reap</code></td><td class="stat">45</td><td>Consolidated: observations, J-lens, corpus manifests, analysis, sanitized code</td></tr>
-<tr><td><code>0xSero/deepseek-v4-flash-religious-reap-observations</code></td><td class="stat">11</td><td>Raw observation records (gzipped JSONL)</td></tr>
+<tr><td><code>0xSero/deepseek-v4-flash-reap</code></td><td class="num">45</td><td>Consolidated: observations, J-lens, corpus manifests, analysis, sanitized code</td></tr>
+<tr><td><code>0xSero/deepseek-v4-flash-religious-reap-observations</code></td><td class="num">11</td><td>Raw observation records (gzipped JSONL)</td></tr>
 </table>
 
-<h3>GitHub</h3>
-<table>
+<h3>12.2 GitHub</h3>
+<table class="wikitable">
 <tr><th>Repo</th><th>Contents</th></tr>
 <tr><td><code>0xSero/dsv4-reap-routing</code></td><td>Wiki, narrative page, sanitized code, manifests, analysis artifacts, Docker, external reviews</td></tr>
 <tr><td>GitHub Pages</td><td><a href="https://0xsero.github.io/dsv4-reap-routing/">https://0xsero.github.io/dsv4-reap-routing/</a></td></tr>
 </table>
 
-<h3>Docker</h3>
-<p>Base image <code>ghcr.io/anemll/dspark-vllm-gx10:0.1.1</code>. One rank per DGX Spark
-node. Environment: <code>TOKENIZER_ID</code>, <code>TOKENIZER_REV</code>,
-<code>CKPT_DIR</code>, <code>INPUT</code>, <code>OUTPUT</code>. See
-<code>docker-compose.yml</code> in the repo.</p>
+<h3>12.3 Docker</h3>
+<p>Base image <code>ghcr.io/anemll/dspark-vllm-gx10:0.1.1</code>. One rank per DGX Spark node. Environment: <code>TOKENIZER_ID</code>, <code>TOKENIZER_REV</code>, <code>CKPT_DIR</code>, <code>INPUT</code>, <code>OUTPUT</code>. See <code>docker-compose.yml</code> in the repo.</p>
 
-<hr>
-<p class="small">This wiki is a living document. Last updated 2026-08-16. All findings are
-read-only observations — no model weights were modified. The study is ongoing: wave-2
-Christian observation running, theology observation and controlled experiments queued for
-GPU deployment.</p>
-
+<!-- categories -->
+<div class="catlinks">
+<b>Categories:</b>
+<a href="#">DeepSeek-V4-Flash interpretability</a> |
+<a href="#">Mixture-of-experts routing</a> |
+<a href="#">Religious text NLP</a> |
+<a href="#">Read-only model observation</a> |
+<a href="#">Computational theology</a>
 </div>
+
+<div class="printfooter">Retrieved from "https://0xsero.github.io/dsv4-reap-routing/RESEARCH_WIKI.html"</div>
+
+</div><!-- /mw-body -->
+</div><!-- /mw-body wrapper -->
+
 </body>
 </html>
