@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code reference - DSv4-Flash REAP Wiki</title>
+<style>
+body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
+a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
+#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
+#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
+#mw-body{margin-left:11em;margin-top:3.5em}
+.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
+@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
+#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
+#mw-panel .portal{margin-bottom:1.2em}
+#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
+#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
+#mw-panel li a{display:block;padding-left:.5em}
+#mw-panel li.here a{font-weight:600}
+.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
+.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
+.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
+.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
+.mw-body p{margin:.5em 0}
+.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
+code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
+pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
+.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
+.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
+.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
+.wikitable tr:nth-child(even){background:#f8f9fa}
+.num{text-align:right;font-family:monospace}
+.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
+.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
+.ambox.warn{border-left-color:#f28500;background:#fef6e7}
+.ambox.bad{border-left-color:#d33;background:#fee7e6}
+.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
+.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
+figure{margin:1em 0;text-align:center}
+figure img{max-width:100%;border:1px solid #c8ccd0}
+figcaption{font-size:12px;color:#54595d;margin-top:.3em}
+.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
+.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
+.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
+.toc ul{list-style:none;margin:0;padding-left:1.2em}
+.small{font-size:12px;color:#54595d}
+.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
+</style>
+</head>
+<body>
+<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-panel">
+<div class="portal"><h3>Wiki</h3><ul>
+<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
+<li><a href="methods.html">Methods &amp; harness</a></li>
+<li><a href="data.html">Data &amp; corpora</a></li>
+<li><a href="results.html">Results &amp; findings</a></li>
+<li><a href="experiments.html">Experiments</a></li>
+<li class="here"><a href="code.html">Code reference</a></li>
+<li><a href="operations.html">Operations (live)</a></li>
+<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+</ul></div>
+<div class="portal"><h3>Resources</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
+</ul></div>
+<div class="portal"><h3>Reviews</h3><ul>
+<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
+<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
+</ul></div>
+</div>
+<div id="mw-body"><div class="mw-body">
+<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
+
+<h1>Code reference</h1>
+<div class="hatnote">Every script in the study, what it does, its inputs and outputs. Sanitized copies live in <a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">code/</a> on GitHub and on <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>; originals in the research directory.</div>
+
+<h2>1. Corpus acquisition</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
+<tr><td><code>scrape_christian.py</code></td><td>Gutenberg Christian-literature scrape via search-HTML enumeration (Gutendex Cloudflare-blocked), mirror fallbacks, header/footer cleaning</td><td><code>corpus/christian/raw/*.txt</code> + manifest</td></tr>
+<tr><td><code>scrape_theology_books.py</code></td><td>Same pattern, 40+ theology topics</td><td><code>corpus/theology/raw/book_*.txt</code> (3,827 books)</td></tr>
+<tr><td><code>scrape_wikipedia.py</code></td><td>MediaWiki generator API (batch 50), 3&nbsp;s delay, 429 exponential backoff; 6 seed topics with category traversal</td><td><code>corpus/theology/raw/wiki_*.txt</code> (7,508 articles)</td></tr>
+<tr><td><code>build_exp1_translations.py</code></td><td>Genesis 1&ndash;3 in 5 public-domain translations from bible-api.com, verse numbers stripped, digit density verified</td><td><code>corpus/samples/exp1_translations.jsonl</code></td></tr>
+</table>
+
+<h2>2. Corpus preparation</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
+<tr><td><code>prepare_corpus.py</code></td><td>Tokenize + window core 8 texts; English stopword filter; <b>strips KJV verse numbers</b> (the digit-confound origin); emits <code>_emit_jsonl</code> shared by later preps</td><td><code>corpus/samples/{bible,quran,...}.jsonl</code></td></tr>
+<tr><td><code>prepare_christian_corpus.py</code></td><td>Same for the Gutenberg Christian corpus, 16k first window per book</td><td><code>corpus/samples/christian.jsonl</code> (28,789)</td></tr>
+<tr><td><code>prepare_theology_corpus.py</code></td><td>Tokenize + window the theology corpus (imports <code>_emit_jsonl</code>)</td><td><code>corpus/samples/theology.jsonl</code> (29,098)</td></tr>
+<tr><td><code>select_theology.py</code></td><td>Stratified selection with topic quotas and per-sample digit density in manifest</td><td><code>corpus/samples/theology_sel.jsonl</code> (1,090)</td></tr>
+<tr><td><code>exp12_build_minimal_pairs.py</code></td><td>Digit minimal-pair corpus (asis / verseno / arbit), matched digit counts</td><td><code>corpus/samples/exp12_minimal_pairs.jsonl</code> (111)</td></tr>
+</table>
+
+<h2>3. Observation</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th><th>Notes</th></tr>
+<tr><td><code>observe_religious.py</code></td><td><b>The harness.</b> Read-only TP2 inference, Gate hooks, per-record aggregates, fail-closed assertions, fsynced JSONL. Supports <code>--raw-budget-tokens</code> for per-token capture (needed by Exp 11) and record skip-ahead on resume</td><td>Verified line-for-line vs <code>model.py</code> Gate.forward</td></tr>
+<tr><td><code>run_full_observation.sh</code></td><td>Launch both ranks (de5c via sshpass+jump, 557f via key), model load + NCCL rendezvous, orchestration logs</td><td>Credentials via env only</td></tr>
+<tr><td><code>chain_next_runs.sh</code></td><td>Chain supervisor: sequences runs, detects stalls, relaunches with skip-ahead (3 self-heals so far)</td><td>Log: <code>/tmp/chain_runs.log</code></td></tr>
+<tr><td><code>obs_christian_watch.sh</code> / <code>obs_theology_watch.sh</code></td><td>Per-run watchdogs</td><td></td></tr>
+<tr><td><code>finalize_christian.sh</code></td><td>Pull shards, merge, verify invariants, build aggregates</td><td>Run on ALL RUNS COMPLETE</td></tr>
+<tr><td><code>run_theology_observation.sh</code></td><td>Theology deployment wrapper</td><td></td></tr>
+</table>
+
+<h2>4. J-lens probes</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th></tr>
+<tr><td><code>run_jlens.py</code> / <code>jlens_dsv4.py</code></td><td>Capture per-layer per-position next-token distributions and bounded Jacobian norms</td></tr>
+<tr><td><code>run_jlens_tp2.sh</code></td><td>TP2 deployment wrapper</td></tr>
+<tr><td><code>jlens_watch.sh</code> / <code>jlens_autoheal.sh</code></td><td>Watchdog + autoheal</td></tr>
+<tr><td><code>jlens_viewer.py</code></td><td>Interactive inspection of lens records</td></tr>
+</table>
+
+<h2>5. Analysis</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
+<tr><td><code>analyze_experts.py</code></td><td>Aggregate frequencies/REAP, cross-text Jaccard, effective-expert counts</td><td><code>core_agg.json</code>, <code>christian_agg.json</code>, <code>analysis/*.csv</code></td></tr>
+<tr><td><code>generate_report.py</code></td><td>Verification report: invariant checks over all records</td><td>report</td></tr>
+<tr><td><code>exp8_sorted_freq.py</code></td><td>Permutation-confound check on sorted L42 distributions</td><td><code>analysis_all/exp8_sorted_freq_results.txt</code></td></tr>
+<tr><td><code>exp11_context_dump.py</code></td><td>Attempted context recovery from existing records &mdash; documented failure (unique-ID storage), motivating the GPU re-run</td><td>&mdash;</td></tr>
+<tr><td><code>build_wiki_site.py</code></td><td>Generates this wiki from a shared template</td><td><code>wiki/*.html</code></td></tr>
+</table>
+
+<h2>6. Publication and sync</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th></tr>
+<tr><td><code>sync_to_github.sh</code></td><td>Self-throttling 4&nbsp;h sync: analysis, gzipped J-lens, sanitized code (credential scrub via <code>$SSHPASS</code> env), manifests; commit + push</td></tr>
+<tr><td><code>upload_hf_project.py</code></td><td>Consolidated upload to <code>0xSero/deepseek-v4-flash-reap</code> (45 files: observations, J-lens, manifests, analysis, code)</td></tr>
+<tr><td><code>stream_to_hf.py</code></td><td>Streaming record upload during observation</td></tr>
+</table>
+
+<h2>7. One-shot / probe utilities</h2>
+<p class="small"><code>probe_de5c.sh</code>, <code>probe2.sh</code>, <code>probe3.sh</code>,
+<code>jump.sh</code>, <code>chk_convert.sh</code>, <code>run_convert.sh</code>,
+<code>run_r0.sh</code>, <code>run_r1.sh</code>, <code>run_tp2_2384.sh</code>,
+<code>launch_obs_rank.sh</code>, <code>launch_observe.sh</code>,
+<code>auto_recover_and_launch.sh</code>, <code>push_worker.sh</code>, <code>push2.sh</code>,
+<code>fetch_round2.py</code> &mdash; connectivity probes, rank launchers, checkpoint conversion
+checks, and recovery utilities from earlier phases. Kept for provenance; not part of the
+active pipeline.</p>
+
+<h2>8. Docker</h2>
+<pre>FROM ghcr.io/anemll/dspark-vllm-gx10:0.1.1
+ENV TOKENIZER_ID=deepseek-ai/DeepSeek-V4-Flash-0731
+ENV TOKENIZER_REV=9e165c30e2704aec5d9d593cce3eebd58bbef1cb
+ENV CKPT_DIR=/ckpt
+ENV INPUT=/in/samples.jsonl
+ENV OUTPUT=/out/obs.jsonl</pre>
+<p>One rank per DGX Spark node; <code>docker-compose.yml</code> in the repo wires the pair.</p>
+
+<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+</div></div>
+</body>
+</html>

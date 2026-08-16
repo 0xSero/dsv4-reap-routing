@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap and ideas - DSv4-Flash REAP Wiki</title>
+<style>
+body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
+a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
+#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
+#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
+#mw-body{margin-left:11em;margin-top:3.5em}
+.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
+@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
+#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
+#mw-panel .portal{margin-bottom:1.2em}
+#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
+#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
+#mw-panel li a{display:block;padding-left:.5em}
+#mw-panel li.here a{font-weight:600}
+.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
+.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
+.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
+.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
+.mw-body p{margin:.5em 0}
+.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
+code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
+pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
+.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
+.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
+.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
+.wikitable tr:nth-child(even){background:#f8f9fa}
+.num{text-align:right;font-family:monospace}
+.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
+.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
+.ambox.warn{border-left-color:#f28500;background:#fef6e7}
+.ambox.bad{border-left-color:#d33;background:#fee7e6}
+.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
+.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
+figure{margin:1em 0;text-align:center}
+figure img{max-width:100%;border:1px solid #c8ccd0}
+figcaption{font-size:12px;color:#54595d;margin-top:.3em}
+.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
+.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
+.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
+.toc ul{list-style:none;margin:0;padding-left:1.2em}
+.small{font-size:12px;color:#54595d}
+.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
+</style>
+</head>
+<body>
+<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-panel">
+<div class="portal"><h3>Wiki</h3><ul>
+<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
+<li><a href="methods.html">Methods &amp; harness</a></li>
+<li><a href="data.html">Data &amp; corpora</a></li>
+<li><a href="results.html">Results &amp; findings</a></li>
+<li><a href="experiments.html">Experiments</a></li>
+<li><a href="code.html">Code reference</a></li>
+<li><a href="operations.html">Operations (live)</a></li>
+<li class="here"><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+</ul></div>
+<div class="portal"><h3>Resources</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
+</ul></div>
+<div class="portal"><h3>Reviews</h3><ul>
+<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
+<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
+</ul></div>
+</div>
+<div id="mw-body"><div class="mw-body">
+<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
+
+<h1>Roadmap and ideas</h1>
+<div class="hatnote">What's next, in order, and the backlog of ideas not yet committed to.</div>
+
+<h2>1. Near term (next GPU block)</h2>
+<ol>
+<li>Exp 12 digit minimal-pairs &mdash; <b>decisive for H1</b></li>
+<li>Exp 1 multi-translation &mdash; register vs memorization</li>
+<li>Exp 11 context dump &mdash; see what triggers the specialist cluster</li>
+<li>Theology observation (Jesus / Lucifer / Moloch / Saturn / Judaism)</li>
+</ol>
+
+<h2>2. Medium term</h2>
+<ul>
+<li>Wave-2 finalize + combined analysis with digit-density controls on every contrast</li>
+<li>Secular null (Exp 3) stratified by digit density &mdash; the religion-vs-general-English test</li>
+<li>Covariate regression on existing records (no GPU): tradition effects controlling digit%, punctuation%, sentence length, TTR</li>
+<li>Perplexity correlation: per-sample loss vs effective-expert-count (tests H3 directly)</li>
+<li>Digit-density-controlled Jesus vs Lucifer vs Moloch vs Saturn comparison</li>
+</ul>
+
+<h2>3. Backlog (ideas, uncommitted)</h2>
+<ul>
+<li><b>Within-document quotation switch:</b> sermons quoting KJV verbatim &mdash; does routing flip at quote boundaries mid-document? The cleanest possible memorization test.</li>
+<li><b>Other specialists' confound audits:</b> e34 (Qur'an) and e33 (Dhammapada) deserve the same digit/translation scrutiny that e164 got.</li>
+<li><b>Full Jacobian:</b> replace 16-projection bound with exact norms on small samples.</li>
+<li><b>Activation patching (would break read-only constraint):</b> not in scope unless explicitly re-scoped.</li>
+<li><b>Comparative model study:</b> run the identical corpus through another MoE model's router for cross-model comparison.</li>
+<li><b>Publication:</b> per Kimi K3, the e164 observation alone is workshop-paper material <i>if</i> Exp 11/12/3 land cleanly; do not publish the older framing.</li>
+</ul>
+
+<h2>4. Known open problems</h2>
+<ul>
+<li>e164's causal trigger (numeral vs citation structure vs something correlated)</li>
+<li>Whether any religious-content signal survives digit-density controls</li>
+<li>Whether per-firing mean REAP can be salvaged as a metric (noise floor) or should be replaced</li>
+<li>Small-n traditions: Gita (n=18) and Upanishads (n=3) are too small for strong claims</li>
+</ul>
+
+<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+</div></div>
+</body>
+</html>

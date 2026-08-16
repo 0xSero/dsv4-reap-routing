@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Results and findings - DSv4-Flash REAP Wiki</title>
+<style>
+body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
+a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
+#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
+#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
+#mw-body{margin-left:11em;margin-top:3.5em}
+.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
+@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
+#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
+#mw-panel .portal{margin-bottom:1.2em}
+#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
+#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
+#mw-panel li a{display:block;padding-left:.5em}
+#mw-panel li.here a{font-weight:600}
+.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
+.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
+.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
+.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
+.mw-body p{margin:.5em 0}
+.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
+code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
+pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
+.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
+.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
+.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
+.wikitable tr:nth-child(even){background:#f8f9fa}
+.num{text-align:right;font-family:monospace}
+.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
+.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
+.ambox.warn{border-left-color:#f28500;background:#fef6e7}
+.ambox.bad{border-left-color:#d33;background:#fee7e6}
+.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
+.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
+.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
+figure{margin:1em 0;text-align:center}
+figure img{max-width:100%;border:1px solid #c8ccd0}
+figcaption{font-size:12px;color:#54595d;margin-top:.3em}
+.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
+.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
+.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
+.toc ul{list-style:none;margin:0;padding-left:1.2em}
+.small{font-size:12px;color:#54595d}
+.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
+</style>
+</head>
+<body>
+<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-panel">
+<div class="portal"><h3>Wiki</h3><ul>
+<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
+<li><a href="methods.html">Methods &amp; harness</a></li>
+<li><a href="data.html">Data &amp; corpora</a></li>
+<li class="here"><a href="results.html">Results &amp; findings</a></li>
+<li><a href="experiments.html">Experiments</a></li>
+<li><a href="code.html">Code reference</a></li>
+<li><a href="operations.html">Operations (live)</a></li>
+<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+</ul></div>
+<div class="portal"><h3>Resources</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
+<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
+</ul></div>
+<div class="portal"><h3>Reviews</h3><ul>
+<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
+<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
+</ul></div>
+</div>
+<div id="mw-body"><div class="mw-body">
+<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
+
+<h1>Results and findings</h1>
+<div class="hatnote">Every finding, with its chart, its provenance, and its current standing. Claims that failed review are in <a href="#retract">&sect;8 Retractions</a>, not here.</div>
+
+<div class="toc"><div class="toctitle">Contents</div><ul>
+<li>1 <a href="#e164">Expert 164 across corpora</a></li>
+<li>2 <a href="#effexp">Effective expert count</a></li>
+<li>3 <a href="#backbone">Shared routing backbone</a></li>
+<li>4 <a href="#specialists">Hard specialists</a></li>
+<li>5 <a href="#jaccard">Inter-tradition similarity</a></li>
+<li>6 <a href="#layers">Layer-wise structure</a></li>
+<li>7 <a href="#jlens">J-lens findings</a></li>
+<li>8 <a href="#retract">Retractions</a></li>
+</ul></div>
+
+<h2 id="e164">1. Expert 164 across corpora</h2>
+<figure><img src="../img/chart_e164_by_corpus.png" alt="e164 firing rate by corpus">
+<figcaption>e164 L42 firings per million tokens. Bible: exactly 0 across 1,045,776 tokens. Christian and Qur'an: ~4,565&ndash;4,571/M.</figcaption></figure>
+<p>The raw counts (Exp&nbsp;8, from <code>core_agg.json</code> / <code>christian_agg.json</code>):</p>
+<table class="wikitable">
+<tr><th>Corpus</th><th>e164 firings</th><th>Tokens</th><th>Rate /M</th><th>Expected under proportional routing</th></tr>
+<tr><td>KJV Bible</td><td class="num">0</td><td class="num">1,045,776</td><td class="num">0.0</td><td class="num">~24,510</td></tr>
+<tr><td>Qur'an</td><td class="num">1,180</td><td class="num">258,122</td><td class="num">4,571</td><td class="num">~6,049</td></tr>
+<tr><td>Christian wave-1</td><td class="num">93,265</td><td class="num">20,409,440</td><td class="num">4,565</td><td class="num">~478,346</td></tr>
+</table>
+<div class="ambox warn"><b>Interpretation withdrawn.</b> The original reading &mdash; "not-memorized-scripture
+expert: the model recites the KJV from memory" &mdash; was retracted after the Claude Opus 5 review
+found the digit-density confound (the corpus pipeline strips Bible verse numbers; e164 is
+perfectly monotone in digit density; zero-digit Christian control fires at 4.9/M). The
+<b>observation stands</b> (a hard exact-zero across a million tokens is real); only the
+interpretation changed. Current hypothesis: <b>H1 digit/citation-apparatus detector</b>, pending
+Exp 11/12.</div>
+<figure><img src="../img/chart_e164_by_layer.png" alt="e164 by layer">
+<figcaption>e164 rate per layer (symlog). The Bible trace hugs zero at nearly every scored layer; hash-routed L0&ndash;2 excluded.</figcaption></figure>
+
+<h2 id="effexp">2. Effective expert count</h2>
+<figure><img src="../img/chart_effexp_by_layer.png" alt="effective experts by layer">
+<figcaption>Exp-Shannon entropy of the expert-frequency distribution, all 43 layers, four key corpora.</figcaption></figure>
+<p>At layer 40:</p>
+<table class="wikitable">
+<tr><th>Corpus</th><th>Aggregate</th><th>Per-sample</th><th>Reading</th></tr>
+<tr><td>Bhagavad Gita</td><td class="num">26</td><td class="num">24.3</td><td>most predictable &mdash; chant-like repetition</td></tr>
+<tr><td>Qur'an</td><td class="num">43</td><td class="num">39.5</td><td></td></tr>
+<tr><td>KJV Bible</td><td class="num">65</td><td class="num">54.1</td><td></td></tr>
+<tr><td>Christian literature</td><td class="num">111</td><td class="num">70</td><td>least predictable &mdash; 2,000 years of heterogeneous prose</td></tr>
+</table>
+<p>The aggregate 111 is inflated by pooling (rare experts firing in one book but not another);
+per-sample it collapses to 70. <b>The ordering survives at both levels</b> &mdash; the finding
+is the ordering, not the absolute number. Consistent with the surprisal-proxy hypothesis (H3).</p>
+
+<h2 id="backbone">3. Shared routing backbone</h2>
+<figure><img src="../img/chart_l42_sorted.png" alt="sorted L42 distributions">
+<figcaption>Sorted L42 frequency distributions (normalized). The shapes track closely &mdash; both corpora ride the same high-frequency backbone.</figcaption></figure>
+<ul>
+<li>15 of the top-20 L42 experts (by frequency) shared between Bible and Qur'an (Exp 8).</li>
+<li>19 layer-42 experts sit in the top-40 for <i>every</i> corpus.</li>
+<li>Hash-routed L0&ndash;2 are corpus-invariant <b>by construction</b> (per-token-ID assignment).</li>
+<li>Sorted-distribution check (Exp 8) rules out a shard-index permutation artifact: cross-corpus
+expert ID consistency holds for the backbone; e164's rank differs (152 vs 255) in a way a
+permutation cannot produce.</li>
+</ul>
+
+<h2 id="specialists">4. Hard specialists (verified real, interpretation open)</h2>
+<table class="wikitable">
+<tr><th>Expert</th><th>Bible (/M)</th><th>Contrast corpus</th><th>Ratio</th><th>Matched-n bootstrap</th></tr>
+<tr><td>L42 e164</td><td class="num">0.0</td><td>Qur'an 4,571 / Christian 4,565 / BoM 158</td><td class="num">&infin;</td><td>5000/5000 Bible subsets &rarr; 0.000</td></tr>
+<tr><td>L41 e34</td><td class="num">5.7</td><td>Qur'an 5,377</td><td class="num">~940&times;</td><td>Bible [5.57&ndash;5.85], Qur'an [21.7&ndash;26.8] /1k</td></tr>
+<tr><td>L34 e33</td><td class="num">2.7</td><td>Dhammapada 4,358</td><td class="num">~1,600&times;</td><td>Bible [2.5&ndash;2.9], Dhamma [2013&ndash;7107] at n=26</td></tr>
+</table>
+<p>These are not small-sample artifacts. But the e164 digit confound warns that extreme
+firing gaps can have mundane causes &mdash; e34 and e33 need the same digit-density and
+surface-form controls before any "tradition detector" language is used.</p>
+
+<h2 id="jaccard">5. Inter-tradition similarity</h2>
+<figure><img src="../img/chart_jaccard_heatmap.png" alt="Jaccard heatmap">
+<figcaption>Top-20 REAP expert Jaccard overlap, overall. Bible&ndash;Christian (0.33) is the lowest pair involving either &mdash; Christian literature is the Bible's least-similar partner of all nine traditions.</figcaption></figure>
+<p>Metric caution (Kimi K3): the earlier write-up mixed <b>per-layer top-5 profiles</b>
+(Bible&ndash;BoM 0.539, Bible&ndash;Qur'an 0.525, BoM&ndash;Qur'an 0.544) with <b>overall top-20 REAP</b>
+(Bible&ndash;BoM 0.212) &mdash; two different metrics. The heatmap above is overall top-20 REAP.
+Directional claim that survives: core-expert overlap is tradition-agnostic (0.52&ndash;0.54
+across Bible/BoM/Qur'an on the top-5 per-layer metric), and Christian literature diverges
+most from the Bible.</p>
+
+<h2 id="layers">6. Layer-wise structure</h2>
+<ul>
+<li><b>L0&ndash;2 (hash-routed):</b> corpus-invariant by design; any "difference" here is token-frequency
+composition, not routing decisions.</li>
+<li><b>Mid layers:</b> the shared backbone dominates; this is where the tradition-agnostic
+overlap is highest.</li>
+<li><b>Late layers (39&ndash;42):</b> specialists live here &mdash; e164 (L42), e34 (L41), e33 (L34)
+all fire in the topmost scored layers.</li>
+</ul>
+<div class="ambox bad"><b>Retracted:</b> the "layer sandwich" (low&ndash;high&ndash;low Bible&ndash;Christian
+overlap) was a <code>reap_score</code> noise-floor artifact that <b>inverts</b> on
+<code>expert_frequencies</code>. See retraction 8.2.</div>
+
+<h2 id="jlens">7. J-lens findings</h2>
+<ul>
+<li><b>Bounded Jacobian:</b> L0 output influence &asymp;1,268 &asymp; 3.9&times; later layers
+(L10 371, L20 363, L30 378, L42 320). Reproducible from committed artifacts (Kimi K3 verified).
+Caveat: 16 random projections only.</li>
+<li><b>Logit lens:</b> the Genesis 1:2 "Spirit at layer 30" claim was withdrawn &mdash; mislabeled
+position, cherry-picked, uncalibrated readout. No surviving logit-lens headline.</li>
+</ul>
+
+<h2 id="retract">8. Retractions</h2>
+<div class="ambox bad"><b>8.1 "Not-memorized-scripture" e164.</b> Digit-density confound
+(pipeline strips Bible verse numbers; perfectly monotone deciles 0&rarr;16,448/M; zero-digit
+Christian control 4.9/M; ~29-expert cluster incl. e27, e68). Found by Claude Opus 5 review.</div>
+<div class="ambox bad"><b>8.2 Layer sandwich.</b> REAP noise-floor artifact; inverts on
+frequencies; write-up mixed two Jaccard metrics. Found by Kimi K3 review.</div>
+<div class="ambox bad"><b>8.3 Genesis 1:2 logit lens.</b> Position 30 token is ' deep' not
+' Spirit'; predicts 4 positions ahead; n=3; uncalibrated. Found by Kimi K3 review.</div>
+<div class="ambox bad"><b>8.4 Effective experts = 111.</b> Pooling artifact (111&rarr;70
+per-sample). The ordering survives; the absolute aggregate does not.</div>
+
+<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+</div></div>
+</body>
+</html>

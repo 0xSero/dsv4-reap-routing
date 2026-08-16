@@ -187,7 +187,20 @@
 <!-- sidebar -->
 <div id="mw-panel">
   <div class="portal">
-    <h3>Navigation</h3>
+    <h3>Wiki pages</h3>
+    <ul>
+      <li class="here"><a href="RESEARCH_WIKI.html">Main page</a></li>
+      <li><a href="wiki/methods.html">Methods &amp; harness</a></li>
+      <li><a href="wiki/data.html">Data &amp; corpora</a></li>
+      <li><a href="wiki/results.html">Results &amp; findings</a></li>
+      <li><a href="wiki/experiments.html">Experiments</a></li>
+      <li><a href="wiki/code.html">Code reference</a></li>
+      <li><a href="wiki/operations.html">Operations (live)</a></li>
+      <li><a href="wiki/roadmap.html">Roadmap &amp; ideas</a></li>
+    </ul>
+  </div>
+  <div class="portal">
+    <h3>On this page</h3>
     <ul>
       <li><a href="#abstract">Abstract</a></li>
       <li><a href="#hypotheses">Hypotheses</a></li>
@@ -204,12 +217,12 @@
     </ul>
   </div>
   <div class="portal">
-    <h3>Tools</h3>
+    <h3>Resources</h3>
     <ul>
       <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
       <li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
       <li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
-      <li><a href="EXPERIMENTS.md">Experiment specs</a></li>
+      <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
     </ul>
   </div>
   <div class="portal">
@@ -230,6 +243,17 @@
 <h1>DeepSeek-V4-Flash-0731 expert routing on religious texts</h1>
 
 <div class="hatnote">This is a <b>research wiki</b> for an ongoing read-only interpretability study. It documents findings, retractions, open questions, and experimental plans. For the narrative summary see <a href="https://0xsero.github.io/dsv4-reap-routing/">the main page</a>; for the full technical writeup see <a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">the technical wiki</a>.</div>
+
+<table class="wikitable" style="font-size:13px">
+<tr><th colspan="2">Wiki pages</th></tr>
+<tr><td><a href="wiki/methods.html"><b>Methods &amp; harness</b></a></td><td>How the study works: model spec, the Gate source, read-only hooks, REAP metric, fail-closed guarantees, faithfulness verification, infrastructure</td></tr>
+<tr><td><a href="wiki/data.html"><b>Data &amp; corpora</b></a></td><td>Every corpus (observed, staged, raw sources), record formats, aggregates, HuggingFace and GitHub artifacts</td></tr>
+<tr><td><a href="wiki/results.html"><b>Results &amp; findings</b></a></td><td>All findings with charts: e164 across corpora, effective expert counts, shared backbone, hard specialists, Jaccard, retractions</td></tr>
+<tr><td><a href="wiki/experiments.html"><b>Experiments</b></a></td><td>All 12 experiments: hypothesis, design, status, results, priority queue</td></tr>
+<tr><td><a href="wiki/code.html"><b>Code reference</b></a></td><td>Every script in the study: purpose, inputs, outputs</td></tr>
+<tr><td><a href="wiki/operations.html"><b>Operations (live)</b></a></td><td>What's running now, deployment queue, runbook, incident log</td></tr>
+<tr><td><a href="wiki/roadmap.html"><b>Roadmap &amp; ideas</b></a></td><td>What's next, backlog, known open problems</td></tr>
+</table>
 
 <!-- infobox -->
 <table class="infobox">
@@ -532,6 +556,7 @@
 <h3>7.2 Shared routing backbone <span class="tag tag-survives">survives</span></h3>
 <p>At layer 42, 15 of the top-20 experts (by frequency) are shared between Bible and Qur'an. Hash-routed layers L0–L2 show corpus-invariant routing by design — expert assignment is predetermined per token ID via <code>tid2eid</code>, so the same token always goes to the same expert regardless of context.</p>
 
+<figure style="margin:1em 0;text-align:center"><img src="img/chart_e164_by_corpus.png" alt="e164 by corpus" style="max-width:100%;border:1px solid #c8ccd0"><figcaption style="font-size:12px;color:#54595d">e164 L42 firings per million tokens by corpus (generated from core_agg.json / christian_agg.json). More charts on the <a href="wiki/results.html">results page</a>.</figcaption></figure>
 <h3>7.3 Hard specialists (descriptive) <span class="tag tag-verified">verified as real</span></h3>
 <p>Several individual experts show extreme inter-corpus firing gaps, confirmed by matched-n bootstrap (5,000 resamples):</p>
 <table class="wikitable">
