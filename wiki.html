@@ -194,10 +194,12 @@
 <ul>
 <li>Qur'an and Gita corpora are translation-English; register findings may partly measure translationese, not the source tradition.</li>
 <li>Upanishads (n=3) and Gita (n=18) support directional claims only.</li>
-<li>Christian wave 2 (2,295 books, 35.5 M tokens) and the full J-lens grid (~80 samples) are still running; §5.2–5.3 numbers are wave-1.</li>
 <li>REAP is a router-statistic; causal claims about expert function would require activation patching, which this read-only protocol excludes.</li>
 <li>Finite-difference Jacobians bound influence along 16 random directions only.</li>
 </ul>
+
+<h3 id="exp8">7.1 Robustness check: expert-permutation confound ruled out (2026-08-15)</h3>
+<p>The sharpest alternative explanation for the e164 exact-zero finding (§5) was a bookkeeping bug: a permuted expert-ID→TP-shard map satisfies the Σfreq = seqlen×6 invariant perfectly while scrambling labels. We tested it directly by comparing sorted L42 frequency histograms across corpora. <b>Result: 15 of the top-20 L42 experts share the same expert IDs across Bible↔Qur'an and Bible↔Christian literature</b> (e119, e205, e190, e236, e63…). A per-shard permutation would destroy this cross-corpus alignment, so the ID mapping is consistent. The sorted distributions' high shape correlation (r = 0.99) reflects the universal heavy-tailed routing profile, not a bug — the cross-corpus ID overlap is the decisive check. <b>The e164 exact-zero in 1.05 M Bible tokens (expected ~24,510 under proportional routing) is a genuine model property.</b> Full check: <a href="analysis_all/exp8_sorted_freq_results.txt">exp8_sorted_freq_results.txt</a>, code: <a href="code/exp8_sorted_freq.py">exp8_sorted_freq.py</a>.</p>
 
 <h2 id="data">8 Data and reproducibility</h2>
 <ul>
@@ -226,14 +228,18 @@
 <p>When the L42 specialists fire they do so densely: e164 averages ~13 firings per Qur'an sample (up to 13 of every 6×seqlen routings) with mean activation norm ≈2,666 — comparable to backbone expert e26 (norm ≈1,590, ~19 firings/sample). Specialists are not rare, weak units; they are high-magnitude units gated off entirely outside their register.</p>
 
 
-<h2 id="jlens-data">11 J-lens probe data — early release</h2>
-<p>Raw logit-lens and bounded-Jacobian probe records are published below as gzipped JSONL (24 of a planned 80 samples; the remaining 56 across six more traditions are <b>coming soon</b> — the run is in progress). Each record contains the input token strings, per-layer top-decoded tokens at 3 sampled positions for all 43 layers, final logits, and 16-direction finite-difference Jacobian norms from source layers {0, 10, 20, 30, 42}.</p>
+<h2 id="jlens-data">11 J-lens probe data — complete release</h2>
+<p>Raw logit-lens and bounded-Jacobian probe records are published below as gzipped JSONL — <b>all 80 planned samples across all 8 traditions, complete</b> (run finished 2026-08-15). Each record contains the input token strings, per-layer top-decoded tokens at 3 sampled positions for all 43 layers, final logits, and 16-direction finite-difference Jacobian norms from source layers {0, 10, 20, 30, 42}.</p>
 <table>
 <tr><th>File</th><th>Samples</th><th>Tradition</th></tr>
 <tr><td><a href="jlens/bible_jlens.jsonl.gz">bible_jlens.jsonl.gz</a></td><td>11</td><td>Bible (KJV)</td></tr>
 <tr><td><a href="jlens/quran_jlens.jsonl.gz">quran_jlens.jsonl.gz</a></td><td>11</td><td>Qur'an (English)</td></tr>
-<tr><td><a href="jlens/tao_jlens.jsonl.gz">tao_jlens.jsonl.gz</a></td><td>2</td><td>Tao Te Ching</td></tr>
-<tr><td colspan="3"><b>Coming soon:</b> gita, dhamma, bofm, analects, upanishads (+ remaining bible/quran/tao)</td></tr>
+<tr><td><a href="jlens/tao_jlens.jsonl.gz">tao_jlens.jsonl.gz</a></td><td>11</td><td>Tao Te Ching</td></tr>
+<tr><td><a href="jlens/gita_jlens.jsonl.gz">gita_jlens.jsonl.gz</a></td><td>11</td><td>Bhagavad Gita</td></tr>
+<tr><td><a href="jlens/dhamma_jlens.jsonl.gz">dhamma_jlens.jsonl.gz</a></td><td>11</td><td>Dhammapada</td></tr>
+<tr><td><a href="jlens/bofm_jlens.jsonl.gz">bofm_jlens.jsonl.gz</a></td><td>11</td><td>Book of Mormon</td></tr>
+<tr><td><a href="jlens/analects_jlens.jsonl.gz">analects_jlens.jsonl.gz</a></td><td>11</td><td>Analects</td></tr>
+<tr><td><a href="jlens/upanishads_jlens.jsonl.gz">upanishads_jlens.jsonl.gz</a></td><td>3</td><td>Upanishads</td></tr>
 </table>
 <p><b>Prompts:</b> the exact input texts (public-domain scripture openings, ≤2k tokens each) are listed in <a href="jlens_prompts.json">jlens_prompts.json</a> — e.g. Genesis 1 KJV ("In the beginning God created the heaven and the earth…"), Quran 1:1–…, Tao Te Ching chapter 1.</p>
 <p><b>Exact code</b> (read-only harness, no weight edits; credentials never in source):</p>
