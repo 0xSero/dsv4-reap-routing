@@ -200,6 +200,8 @@
       <li><a href="wiki/operations.html">Operations (live)</a></li>
       <li><a href="wiki/roadmap.html">Roadmap &amp; ideas</a></li>
       <li><a href="wiki/narrative.html">Narrative (correctness-first)</a></li>
+      <li><a href="wiki/exp4.html">Exp 4 results</a></li>
+      <li><a href="wiki/forward_plan.html">Forward plan</a></li>
     </ul>
   </div>
   <div class="portal">
@@ -259,6 +261,8 @@
 <tr><td><a href="wiki/operations.html"><b>Operations (live)</b></a></td><td>What's running now, deployment queue, runbook, incident log</td></tr>
 <tr><td><a href="wiki/roadmap.html"><b>Roadmap &amp; ideas</b></a></td><td>What's next, backlog, known open problems</td></tr>
 <tr><td><a href="wiki/narrative.html"><b>Narrative (correctness-first)</b></a></td><td>Plain-language story of what the data says, with every claim verified against raw data. Retractions, agreed hypotheses, experiment rankings.</td></tr>
+<tr><td><a href="wiki/exp4.html"><b>Exp 4: Quotation switch</b></a></td><td>The decisive within-document test — does H6 fire on quoted verse or surrounding commentary? Pilot results: H6 fires on prose context, not verse content (10,911&times; ratio).</td></tr>
+<tr><td><a href="wiki/forward_plan.html"><b>Forward plan</b></a></td><td>Next experimental phase designed by GPT-5.6-terra: Exp 4b (per-token capture), Exp 13 (ablation), Exps 15-20 (format-edit factorial, secular factorial, lens robustness).</td></tr>
 </table>
 
 <!-- infobox -->
@@ -269,9 +273,9 @@
 <tr><th>Model</th><td>DeepSeek-V4-Flash-0731</td></tr>
 <tr><th>Architecture</th><td>Sparse MoE (43 layers, 256 experts, top-6)</td></tr>
 <tr><th>Gate function</th><td>sqrt(softplus(x))</td></tr>
-<tr><th>Corpora</th><td>9 religious traditions + theology corpus</td></tr>
+<tr><th>Corpora</th><td>9 religious traditions + 3,562 Christian books</td></tr>
 <tr><th>Tokens observed</th><td>57,670,937 (all waves complete)</td></tr>
-<tr><th>Records</th><td>5,044 completed (1,482 core + 3,562 Christian)</td></tr>
+<tr><th>Records</th><td>5,044 (1,482 core + 3,562 Christian) + 29 Exp 4 pilot</td></tr>
 <tr><th>Checkpoint rev</th><td><code>9e165c30</code></td></tr>
 <tr><th>Started</th><td>August 2026</td></tr>
 <tr><th>Status</th><td>Ongoing</td></tr>
@@ -281,7 +285,7 @@
 </table>
 
 <div class="lead">
-<p><b>DeepSeek-V4-Flash-0731 expert routing on religious texts</b> is an ongoing <a href="#">interpretability</a> study that observes how a sparse <a href="#">mixture-of-experts</a> language model routes tokens across its 256 expert networks when processing religious and theological text. The study uses a read-only, fail-closed harness to record every routing decision — which experts are selected, with what gate weights, and with what activation magnitudes — for every token at every layer, across over 22 million tokens spanning nine religious traditions (the <a href="#">KJV Bible</a>, <a href="#">Qur'an</a>, <a href="#">Book of Mormon</a>, <a href="#">Bhagavad Gita</a>, <a href="#">Tao Te Ching</a>, <a href="#">Dhammapada</a>, <a href="#">Analects</a>, <a href="#">Upanishads</a>, and 1,267 books of historical <a href="#">Christian literature</a>).</p>
+<p><b>DeepSeek-V4-Flash-0731 expert routing on religious texts</b> is an ongoing <a href="#">interpretability</a> study that observes how a sparse <a href="#">mixture-of-experts</a> language model routes tokens across its 256 expert networks when processing religious and theological text. The study uses a read-only, fail-closed harness to record every routing decision — which experts are selected, with what gate weights, and with what activation magnitudes — for every token at every layer, across 57.7 million tokens spanning nine religious traditions (the <a href="#">KJV Bible</a>, <a href="#">Qur'an</a>, <a href="#">Book of Mormon</a>, <a href="#">Bhagavad Gita</a>, <a href="#">Tao Te Ching</a>, <a href="#">Dhammapada</a>, <a href="#">Analects</a>, <a href="#">Upanishads</a>, and 3,562 books of historical <a href="#">Christian literature</a>).</p>
 
 <p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector (exactly zero firings across the entire KJV Bible) — was <b>retracted</b> after an external review by Claude Opus 5 identified a <a href="#retracted">digit-density confound</a>: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits at varying densities. The finding that survives is more modest: the model's routing is driven by surface-form text statistics (digit density, verse-vs-prose format), not by theological content. Several controlled experiments are staged to confirm this.</p>
 </div>
@@ -299,7 +303,7 @@
 <li><b>Prediction emerges late and sharply.</b> The model's next-token prediction is flat at ~1% accuracy through layer 18, jumps to 2.8% at layer 19, and 70% of the final accuracy forms in the last 5 layers (L42 = 87.4%).</li>
 <li><b>Routing concentration is NOT predictability.</b> We initially claimed more predictable text uses fewer experts. Wrong — the sign is backwards and the gap was a window-length artifact.</li>
 </ol>
-<p>For the full narrative with all data verified against raw records, see <a href="wiki/narrative.html">the narrative page</a>. For the redesigned experiment plan, see <a href="https://0xsero.github.io/dsv4-reap-routing/EXPERIMENTS_V2.md">EXPERIMENTS_V2.md</a>.</p>
+<p>For the full narrative with all data verified against raw records, see <a href="wiki/narrative.html">the narrative page</a>. For the Exp 4 quotation-switch results, see <a href="wiki/exp4.html">Exp 4 results</a>. For the next-phase plan designed by GPT-5.6-terra, see <a href="wiki/forward_plan.html">the forward plan</a>.</p>
 </div>
 </div>
 
@@ -316,6 +320,7 @@
 <tr><td><b>Dhammapada fooled us</b></td><td>L41 e34 was labeled a "Qur'an specialist." Actually Dhammapada fires it 5&times; harder (26,631/M vs 5,888/M). Dhammapada has the highest digit density (2.6%). It was digits all along.</td></tr>
 <tr><td><b>A bookkeeping bug lied</b></td><td>The robustness file claimed L34 e33 fires at 2.7/M on the Bible. Actual: 9,670/M — 3,600&times; off, in the opposite direction. Regenerated from raw data.</td></tr>
 <tr><td><b>57.7 million tokens</b></td><td>Total observed: 1.05M KJV + 55.9M Christian literature + 0.7M other traditions. All verified: &Sigma;freq == tokens&times;6 on every layer of every record, zero violations.</td></tr>
+<tr><td><b>Verse quotes don't switch routing</b></td><td>Exp 4: Christian commentary windows with embedded KJV Bible quotes fire H6 at 44,822/M &mdash; same as pure commentary (41,894/M). The verse quotes are <b>ignored</b> by H6. It routes on the prose context, not the quoted content. A 10,911&times; ratio over pure Bible verse.</td></tr>
 </table>
 
 <!-- Key Visualizations -->
@@ -329,6 +334,9 @@
 <tr><td>Routing concentration (matched)</td><td>Effective expert count, length-controlled — H3 retraction evidence</td><td><a href="img/chart_effk_matched.png">view</a></td></tr>
 <tr><td>e164 by corpus</td><td>The digit detector that started it all</td><td><a href="img/chart_e164_by_corpus.png">view</a></td></tr>
 <tr><td>Jaccard heatmap</td><td>Inter-tradition routing similarity — no religion clustering</td><td><a href="img/chart_jaccard_heatmap.png">view</a></td></tr>
+<tr><td>Exp 4: H6 comparison</td><td>H6 firing rates: Bible verse vs KJV files vs commentary vs Christian prose (log scale)</td><td><a href="img/chart_exp4_h6_comparison.png">view</a></td></tr>
+<tr><td>Exp 4: Per-anchor comparison</td><td>Per-anchor H6 rates showing verse vs commentary context effect</td><td><a href="img/chart_exp4_per_anchor.png">view</a></td></tr>
+<tr><td>Exp 4: Digit density scatter</td><td>Digit density vs H6 composite, colored by text type</td><td><a href="img/chart_exp4_digit_scatter.png">view</a></td></tr>
 </table>
 
 <!-- TOC -->
@@ -360,9 +368,9 @@
 <!-- ════════════════════════════════════════════════════════════════ -->
 <h2 id="abstract"><span class="mw-headline">1. Abstract</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
 
-<p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating using a sqrt-softplus score function — across a large corpus of religious and theological texts. The corpus spans nine traditions plus a stratified theology selection covering Jesus, Lucifer, Judaism origins, Moloch, and Saturn worship, totalling over 22 million observed tokens. A read-only, fail-closed harness records per-token routing decisions for every layer of every sample.</p>
+<p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating using a sqrt-softplus score function — across a large corpus of religious and theological texts. The corpus spans nine traditions plus 3,562 books of Christian literature, totalling 57.7 million observed tokens across 5,044 records. A read-only, fail-closed harness records per-token routing decisions for every layer of every sample.</p>
 
-<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits. Expert #164's firing rate is perfectly monotone in digit density. This wiki documents what was found, what was wrong, what survives, and what experiments are needed to resolve the remaining questions.</p>
+<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits. Expert #164's firing rate is perfectly monotone in digit density. What survives is a large format-associated routing effect (the H6 verse/prose axis: 13+ experts fire at up to 90,000/M on prose and ~0 on verse, Cohen's d = 1.38–2.79) and a well-supported absence of religion-specific routing. The <a href="wiki/exp4.html">Exp 4 pilot</a> confirmed that H6 fires on prose context, not verse content — commentary windows with embedded Bible quotes fire H6 at 44,822/M vs 4.1/M for pure Bible verse, a 10,911× ratio. The <a href="wiki/forward_plan.html">forward plan</a> outlines the next phase including per-token capture (Exp 4b), ablation (Exp 13), and six new controlled experiments.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
 <h2 id="hypotheses"><span class="mw-headline">2. Hypotheses</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
