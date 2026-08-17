@@ -62,6 +62,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
 <li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="narrative.html">Narrative</a></li>
 </ul></div>
 <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
@@ -120,7 +121,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><b>Logit lens</b></td><td>Model's running next-token guess at each layer</td><td>Unembed residual stream at each layer &rarr; top-10 tokens + probabilities per position</td><td class="num">80</td></tr>
 <tr><td><b>Bounded Jacobian</b></td><td>Output sensitivity to input perturbation</td><td>Perturb input embedding (&epsilon;=0.01) along 16 random directions; measure &Delta;output at layers 0, 10, 20, 30, 42</td><td class="num">80</td></tr>
 </table>
-<p><b>Key finding:</b> L0 Jacobian norm &asymp; 1,152&ndash;1,388 across traditions, dropping to ~320&ndash;600 at later layers. Consistent ~2.5&ndash;3.5&times; early-layer leverage. <b>Caveat:</b> 16 projections only.</p>
+<p><b>Key findings:</b> (1) Lens top-1 agreement: flat at ~1% through L18, discrete step at L19 (2.8%), L42 = 87.4% &mdash; the cleanest result in the study. (2) L0 Jacobian norm &asymp; 1,152&ndash;1,388 across traditions, dropping to ~320&ndash;600 at later layers. Consistent ~2.5&ndash;3.5&times; early-layer leverage. <b>Caveats:</b> 16 projections only; "Jacobian" is misnamed (uniform-shift sensitivity, not per-position derivative); L0 inflation is an &epsilon;-normalization artifact.</p>
 <p><b>Retracted:</b> Genesis 1:2 "Spirit at layer 30" claim (mislabeled position, cherry-picked, uncalibrated).</p>
 <p><a href="jspace.html">&rarr; Full J-space page</a> &middot; <a href="../jlens_viewer.html">&rarr; Interactive viewer</a></p>
 
@@ -207,6 +208,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>Operations (live)</td><td>GitHub Pages</td><td><a href="operations.html">wiki/operations.html</a></td></tr>
 <tr><td>Roadmap</td><td>GitHub Pages</td><td><a href="roadmap.html">wiki/roadmap.html</a></td></tr>
 <tr><td>Master index (this page)</td><td>GitHub Pages</td><td><a href="index.html">wiki/index.html</a></td></tr>
+<tr><td>Narrative (correctness-first)</td><td>GitHub Pages</td><td><a href="narrative.html">wiki/narrative.html</a></td></tr>
 <tr><td>Interactive J-space viewer</td><td>GitHub Pages</td><td><a href="../jlens_viewer.html">jlens_viewer.html</a></td></tr>
 <tr><td>Technical wiki (original)</td><td>GitHub Pages</td><td><a href="../wiki.html">wiki.html</a></td></tr>
 <tr><td>Narrative page</td><td>GitHub Pages</td><td><a href="../index.html">index.html</a></td></tr>

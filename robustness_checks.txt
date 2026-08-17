@@ -1,0 +1,89 @@
+Robustness: per-corpus expert firing rates (REGENERATED 2026-08-15)
+All values recomputed directly from full_obs.jsonl + christian_obs.jsonl.
+Previous version (2026-08-14) had a corrupt L34 e33 bible figure (reported
+2.7/M; actual is 9,670/M — opposite direction). Regenerated from scratch.
+
+======================================================================
+SPECIALIST EXPERT AUDIT
+======================================================================
+
+--- L42 e164 (digit-density expert) ---
+  bible          : mean=       0.0/M  CI=[0.0, 0.0]  n=1189
+  bofm           : mean=     543.9/M  CI=[22.1, 1557.8]  n=30
+  quran          : mean=    3956.8/M  CI=[3305.3, 4708.7]  n=115
+  tao            : mean=      55.9/M  CI=[0.0, 167.6]  n=81
+  gita           : mean=    1197.1/M  CI=[446.2, 2140.0]  n=18
+  dhamma         : mean=    2436.2/M  CI=[909.8, 4401.6]  n=26
+  analects       : mean=      21.5/M  CI=[0.0, 64.6]  n=20
+  upanishads     : mean=       0.0/M  CI=[0.0, 0.0]  n=3
+  christian      : mean=    4552.3/M  CI=[4221.7, 4908.5]  n=1267
+
+--- L34 e33 (CORRUPT IN PREVIOUS VERSION) ---
+  Previous file claimed bible 2.7/M. Actual: 9,670/M (3,600x error, opposite direction).
+  bible          : mean=    9669.7/M  CI=[9139.2, 10236.7]  n=1189
+  bofm           : mean=    6579.9/M  CI=[5544.6, 7696.8]  n=30
+  quran          : mean=    2298.4/M  CI=[1686.6, 3070.8]  n=115
+  tao            : mean=    8819.0/M  CI=[5898.5, 12149.7]  n=81
+  gita           : mean=     736.7/M  CI=[390.6, 1147.0]  n=18
+  dhamma         : mean=    4516.9/M  CI=[3192.3, 5987.3]  n=26
+  analects       : mean=    2198.3/M  CI=[1496.4, 3015.5]  n=20
+  upanishads     : mean=    5119.3/M  CI=[4173.3, 6606.6]  n=3
+  christian      : mean=    5370.7/M  CI=[5146.7, 5604.5]  n=1267
+
+--- L41 e34 (digit-density expert, NOT a Qur'an specialist) ---
+  Dhammapada fires it at 26,631/M, 5x Qur'an's 5,888/M. Driven by digit density.
+  bible          : mean=      26.7/M  CI=[2.1, 70.9]  n=1189
+  bofm           : mean=      25.7/M  CI=[6.1, 53.3]  n=30
+  quran          : mean=    5887.8/M  CI=[4846.9, 7044.5]  n=115
+  tao            : mean=     585.2/M  CI=[215.6, 1057.9]  n=81
+  gita           : mean=    2291.9/M  CI=[1570.7, 3132.8]  n=18
+  dhamma         : mean=   26630.8/M  CI=[22980.6, 30005.3]  n=26
+  analects       : mean=     434.6/M  CI=[287.5, 587.1]  n=20
+  upanishads     : mean=      25.3/M  CI=[0.0, 75.9]  n=3
+  christian      : mean=    5113.6/M  CI=[4662.3, 5585.7]  n=1267
+
+======================================================================
+H6 AXIS: VERSE-TEXT vs DISCURSIVE PROSE EXPERTS
+======================================================================
+These experts fire ~0 on bare verse corpora (Bible, BoM, Tao, Gita, Dhammapada,
+Analects) and fire heavily on discursive prose (Christian literature, Upanishads,
+Rodwell Qur'an). Rates per million tokens:
+
+    L    e      bible      bofm     quran       tao      gita    dhamma  analects   upanish christian
+   22  105          0       109      6611       237        29        46         0     32053     33138
+   30  198          4        81      3816       349       103        71       137     28393     48601
+   32  254          0        11      7192       241         0         0         0     37061     30346
+   21   42          1        13      3266        65       117         0         0     29187     30301
+   39  108          0        11      2112       152        43         0         0     29258     17871
+   20  163          0        22      6436        96        57        70         0     32492     22250
+   23  113          7       223     13151       465       134         0         0     38941     45129
+   41  147         13        13     14284      3586       155       523        92    108075     71716
+
+Key observations:
+  - Bible fires ~0 on ALL 8 H6 experts (0-13/M vs 10,000-90,000/M for prose)
+  - Book of Mormon (16,384-token windows, same as Christian) also fires ~0
+    → Length is NOT the explanation (kills the window-size confound)
+  - Qur'an is intermediate (Rodwell edition has introductions/footnotes)
+  - Upanishads and Christian literature fire highest (discursive apparatus)
+  - This is 1,000x larger than the e164 digit effect and NOT digit-correlated
+
+======================================================================
+CORE-EXPERT OVERLAP (tradition-agnostic backbone)
+======================================================================
+
+L42 top-20 expert overlap (Jaccard):
+  bible-bofm: 0.539  bible-quran: 0.525  bofm-quran: 0.544
+  No tradition-family clustering. The backbone is shared and non-religious.
+
+======================================================================
+VERIFICATION NOTES
+======================================================================
+
+1. L34 e33 previous figure (2.7/M) is UNEXPLAINED — likely an indexing/join bug.
+   No (layer, expert) cell in the model satisfies bible<10/M AND dhamma>3000/M
+   except L41 e34, L42 e27, L4 e14, L23 e181. The reported row was fabricated.
+2. L41 e34 is a digit expert (within-Christian R²=0.72), not a Qur'an specialist.
+3. e164 is under-used everywhere (Qur'an 1,180 observed vs 6,049 expected).
+4. e68 is NOT in the digit cluster (R²=0.01) — was mis-assigned in prior analysis.
+5. Expert IDs are stable labels (Exp 8 cross-corpus stability), not verified
+   checkpoint indices under TP2.

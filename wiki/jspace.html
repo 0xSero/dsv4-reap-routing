@@ -62,6 +62,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
 <li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="narrative.html">Narrative</a></li>
 </ul></div>
 <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
@@ -147,9 +148,26 @@ For position 0 across most traditions, the final-layer top token is <code>'\n'</
 (newline) with 85&ndash;90% confidence &mdash; the model expects a line break at the start of
 a new passage chunk.</li>
 </ul>
-<p><b>No surviving logit-lens headline finding.</b> The lens is useful as a diagnostic (it shows
-the representation sharpening layer by layer) but does not, in this dataset, produce a clean
-interpretable narrative. The Genesis 1:2 claim that was built on it has been
+<p><b>No surviving logit-lens headline finding</b> from intermediate-layer probabilities. However,
+the <b>top-1 agreement curve</b> &mdash; which does not depend on probability calibration &mdash;
+is the cleanest result in the study:</p>
+<figure><img src="../img/chart_lens_agreement.png" alt="Lens top-1 agreement by layer">
+<figcaption>Top-1 agreement between layer-&ell; lens readout and actual next token, 5,282 positions. Flat at ~1% through L18, discrete step at L19 (2.8%), 70% of accuracy in last 5 layers (L42 = 87.4%).</figcaption></figure>
+<table class="wikitable">
+<tr><th>Layer</th><th>Agreement</th><th>Layer</th><th>Agreement</th></tr>
+<tr><td>L0&ndash;L18</td><td class="num">1.0&ndash;1.5%</td><td>L35</td><td class="num">16.3%</td></tr>
+<tr><td>L19</td><td class="num">2.8%</td><td>L37</td><td class="num">24.3%</td></tr>
+<tr><td>L27</td><td class="num">3.6%</td><td>L39</td><td class="num">44.2%</td></tr>
+<tr><td>L30</td><td class="num">4.1%</td><td>L41</td><td class="num">62.2%</td></tr>
+<tr><td>L34</td><td class="num">8.1%</td><td>L42</td><td class="num">87.4%</td></tr>
+</table>
+<p>Per corpus at L42: Bible 96.8%, BoM 92.9%, Analects 92.3%, Dhammapada 89.6%, Gita 86.2%,
+Tao 83.1%, Qur'an 75.1%, Upanishads 62.0%. The ordering tracks text regularity, not religion.</p>
+<div class="ambox warn"><b>Caveat:</b> Intermediate-layer lens probabilities are NOT usable as
+belief claims. At L30 the lens reads <code>' Spirit'</code> at 0.767 for one Bible position, but
+the model's actual L42 output there is <code>'.'</code> at 0.917. Only the rank-agreement curve
+is valid; token-level probability claims from intermediate layers are not.</div>
+<p>The Genesis 1:2 claim that was built on lens probabilities has been
 <a href="#retraction">retracted</a>.</p>
 
 <h2 id="viewer">4. Interactive viewer</h2>

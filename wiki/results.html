@@ -62,6 +62,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
 <li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="narrative.html">Narrative</a></li>
 </ul></div>
 <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
@@ -123,8 +124,11 @@ Exp 11/12.</div>
 <tr><td>Christian literature</td><td class="num">111</td><td class="num">70</td><td>least predictable &mdash; 2,000 years of heterogeneous prose</td></tr>
 </table>
 <p>The aggregate 111 is inflated by pooling (rare experts firing in one book but not another);
-per-sample it collapses to 70. <b>The ordering survives at both levels</b> &mdash; the finding
-is the ordering, not the absolute number. Consistent with the surprisal-proxy hypothesis (H3).</p>
+per-sample it collapses to 70. <b>The ordering survives at both levels</b> &mdash; but it is
+<b>not a predictability proxy</b> (H3 retracted). The 65 vs 111 gap is a window-length artifact
+(Bible ~825-token windows vs Christian 16k); at matched draw budget, Bible and Christian are
+within ~2 units. Against lens-measured predictability, the correlation is <i>positive</i>
+(Pearson +0.47), not negative as H3 predicted. Call it what it measures: routing concentration.</p>
 
 <h2 id="backbone">3. Shared routing backbone</h2>
 <figure><img src="../img/chart_l42_sorted.png" alt="sorted L42 distributions">
@@ -138,16 +142,27 @@ expert ID consistency holds for the backbone; e164's rank differs (152 vs 255) i
 permutation cannot produce.</li>
 </ul>
 
-<h2 id="specialists">4. Hard specialists (verified real, interpretation open)</h2>
+<h2 id="specialists">4. Hard specialists (corrected after audit)</h2>
+<div class="ambox bad"><b>L34 e33 figure was corrupt.</b> The previous version reported "bible 2.7/M"
+&mdash; the actual rate is 9,670/M (opposite direction). Regenerated from raw data on 2026-08-15.
+See <a href="narrative.html#integrity">narrative &sect;8</a> for details.</div>
 <table class="wikitable">
-<tr><th>Expert</th><th>Bible (/M)</th><th>Contrast corpus</th><th>Ratio</th><th>Matched-n bootstrap</th></tr>
-<tr><td>L42 e164</td><td class="num">0.0</td><td>Qur'an 4,571 / Christian 4,565 / BoM 158</td><td class="num">&infin;</td><td>5000/5000 Bible subsets &rarr; 0.000</td></tr>
-<tr><td>L41 e34</td><td class="num">5.7</td><td>Qur'an 5,377</td><td class="num">~940&times;</td><td>Bible [5.57&ndash;5.85], Qur'an [21.7&ndash;26.8] /1k</td></tr>
-<tr><td>L34 e33</td><td class="num">2.7</td><td>Dhammapada 4,358</td><td class="num">~1,600&times;</td><td>Bible [2.5&ndash;2.9], Dhamma [2013&ndash;7107] at n=26</td></tr>
+<tr><th>Expert</th><th>Bible (/M)</th><th>Dhammapada (/M)</th><th>Qur'an (/M)</th><th>Christian (/M)</th><th>Classification</th></tr>
+<tr><td>L42 e164</td><td class="num">0.0</td><td class="num">varies</td><td class="num">4,571</td><td class="num">4,565</td><td><b>Digit detector</b> (R&sup2;=0.77 within Christian). Retracted as religion claim.</td></tr>
+<tr><td>L41 e34</td><td class="num">26.7</td><td class="num">26,631</td><td class="num">5,888</td><td class="num">5,114</td><td><b>Digit detector</b> (R&sup2;=0.72). Dhammapada fires it 5&times; Qur'an. Not a "Qur'an specialist."</td></tr>
+<tr><td>L34 e33</td><td class="num">9,670</td><td class="num">4,517</td><td class="num">2,298</td><td class="num">5,371</td><td>Bible fires it <b>highest</b>, 2&times; Dhammapada. Previous "bible 2.7/M" was a bookkeeping bug.</td></tr>
 </table>
-<p>These are not small-sample artifacts. But the e164 digit confound warns that extreme
-firing gaps can have mundane causes &mdash; e34 and e33 need the same digit-density and
-surface-form controls before any "tradition detector" language is used.</p>
+<p>None of these are tradition-specific. All three are digit-density experts. The audit protocol:
+(a) within-Christian OLS on digit fraction &rarr; R&sup2;; (b) rate in &le;10th-percentile digit
+slice; (c) full 9-corpus profile; (d) length-matched comparator (BoM at 16k); (e) split-half
+stability.</p>
+
+<h2 id="h6axis">4a. The verse-vs-prose axis (H6)</h2>
+<figure><img src="../img/chart_h6_axis.png" alt="H6 verse-vs-prose axis">
+<figcaption>H6 axis: 8 expert cells where verse-text corpora (green) fire ~0 and discursive-prose corpora (red) fire at 10,000&ndash;90,000/M. 1,000&times; larger than the digit effect, and digit-independent.</figcaption></figure>
+<p>See <a href="narrative.html#h6">narrative &sect;4</a> for the full table and discussion. This is
+the study's primary positive finding: a large, digit-independent, length-independent routing axis
+that separates bare verse-text from discursive prose, cutting across all religious traditions.</p>
 
 <h2 id="jaccard">5. Inter-tradition similarity</h2>
 <figure><img src="../img/chart_jaccard_heatmap.png" alt="Jaccard heatmap">
