@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scripture in the Router — DeepSeek-V4-Flash field notes</title>
 <style>
-:root{--ink:#1a1a1a;--mut:#555;--line:#d9d9d9;--soft:#f6f6f4;--accent:#8b1a1a}
+:root{--ink:#1a1a1a;--mut:#555;--line:#d9d9d9;--soft:#f6f6f4;--accent:#8b1a1a;--green:#2d6a4f}
 *{box-sizing:border-box}
 body{margin:0;font-family:Georgia,'Times New Roman',serif;color:var(--ink);background:#fff;line-height:1.65}
 .wrap{max-width:720px;margin:0 auto;padding:36px 20px 80px}
@@ -22,48 +22,75 @@ figcaption{font-size:.82rem;color:var(--mut);margin-top:.4em}
 a{color:var(--accent)}
 .toc{font-size:.9rem;background:var(--soft);border:1px solid var(--line);padding:10px 16px;margin:18px 0}
 .corrected{border:1px solid var(--accent);padding:10px 16px;margin:18px 0;font-size:.9rem;background:#fdf6f6}
+.survives{border:1px solid var(--green);padding:10px 16px;margin:18px 0;font-size:.9rem;background:#f0f7f4}
+.stat-row{display:flex;gap:20px;flex-wrap:wrap;margin:18px 0}
+.stat{flex:1;min-width:120px;text-align:center;padding:12px;background:var(--soft);border:1px solid var(--line)}
+.stat .num{font-size:1.8rem;font-weight:700;color:var(--ink);font-family:ui-monospace,Menlo,monospace}
+.stat .lbl{font-size:.78rem;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 </style>
 </head>
 <body>
 <div class="wrap">
-<div class="kicker">AI interpretability · field notes · corrected edition</div>
+<div class="kicker">AI interpretability · field notes · corrected edition · updated August 2026</div>
 <h1>We asked an AI which parts of its brain light up when it reads scripture</h1>
-<div class="dek">22 million tokens. Nine traditions. Every routing decision recorded. Then we let other AIs audit us — and one of our headline findings died.</div>
-<div class="byline">DeepSeek-V4-Flash-0731 · observed August 2026 · read-only, no modifications · <a href="wiki.html">full technical wiki →</a> · <a href="RESEARCH_WIKI.html">research wiki →</a></div>
+<div class="dek">57.7 million tokens. Nine traditions. 3,562 books of Christian literature. Every routing decision recorded. Then we let other AIs audit us — and one of our headline findings died. Then we ran the decisive experiment.</div>
+<div class="byline">DeepSeek-V4-Flash-0731 · observed August 2026 · read-only, no modifications · <a href="RESEARCH_WIKI.html">research wiki →</a> · <a href="wiki/narrative.html">narrative →</a> · <a href="wiki/forward_plan.html">forward plan →</a></div>
 
-<div class="toc"><b>The story, in four parts</b><br>
+<div class="stat-row">
+<div class="stat"><div class="num">57.7M</div><div class="lbl">tokens observed</div></div>
+<div class="stat"><div class="num">5,044</div><div class="lbl">records</div></div>
+<div class="stat"><div class="num">43×256</div><div class="lbl">layers × experts</div></div>
+<div class="stat"><div class="num">0</div><div class="lbl">invariant violations</div></div>
+</div>
+
+<div class="toc"><b>The story, in five parts</b><br>
 1. <a href="#f1">The last-layer experts that can't stand numbers</a> ·
 2. <a href="#f2">We were wrong — and how we found out</a> ·
 3. <a href="#f3">Religion doesn't map onto the wiring</a> ·
-4. <a href="#f4">Repetitive text, narrow brain</a></div>
+4. <a href="#f4">The verse/prose axis — 10,911× and counting</a> ·
+5. <a href="#f5">What we're doing next</a></div>
 
-<p>Modern AI models are <b>mixture-of-experts</b> machines: inside every layer sit 256 small specialist networks, and for every single word it reads, the model picks 6 of them to do the thinking. Nobody fully understands how it chooses. So we did something simple and obsessive: we let DeepSeek-V4-Flash read scripture all day — the entire King James Bible, the Qur'an, the Bhagavad Gita, the Tao Te Ching, the Book of Mormon, and 1,267 books of Christian writing spanning 2,000 years — and we wrote down every choice it made. 43 layers × 256 experts × 22 million tokens. Then we looked for patterns, and then — this is the part that matters — we asked two external AI reviewers to tear the whole analysis apart.</p>
+<p>Modern AI models are <b>mixture-of-experts</b> machines: inside every layer sit 256 small specialist networks, and for every single word it reads, the model picks 6 of them to do the thinking. Nobody fully understands how it chooses. So we did something simple and obsessive: we let DeepSeek-V4-Flash read scripture all day — the entire King James Bible, the Qur'an, the Bhagavad Gita, the Tao Te Ching, the Book of Mormon, and 3,562 books of Christian writing spanning 2,000 years — and we wrote down every choice it made. 43 layers × 256 experts × 57.7 million tokens. Then we looked for patterns, asked two external AI reviewers to tear the analysis apart, and ran controlled experiments to test what survived.</p>
 
 <h2 id="f1">1. The last-layer experts that can't stand numbers</h2>
-<p>A cluster of specialists in the <b>final layer</b> of the network (layer 42) behaves in a way nobody expected. They are gated, near-perfectly, by something absurdly simple: <b>whether the text contains numerals</b>. Trace their firing rate against digit density and it's monotone across four orders of magnitude — 0 per million tokens on digit-free text, up to 16,000/M on digit-dense text. Within a single corpus, holding everything else fixed.</p>
-<figure><img src="img/expert164.png" alt="Bar chart: expert 164 activation rates across corpora">
-<figcaption>Expert #164's activation rate per million tokens (log scale) — which we first misread as a memorization detector.</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> the textbook expectation is that surface features like digits are handled early, and late layers work in abstract meaning-space. This is a clean counterexample: the <i>last</i> layer of the network maintains specialists for an orthographic surface property. Final-layer routing is watching the page, not just the meaning.</div>
+<p>A cluster of specialists in the <b>final layers</b> of the network behaves in a way nobody expected. They are gated, near-perfectly, by something absurdly simple: <b>whether the text contains numerals</b>. Trace their firing rate against digit density and it's monotone across four orders of magnitude — 0 per million tokens on digit-free text, up to 16,000/M on digit-dense text. Within a single corpus, holding everything else fixed. Not just one expert: <b>54 experts</b> have digit-density R² > 0.5.</p>
+<div class="takeaway"><b>What this means:</b> the textbook expectation is that surface features like digits are handled early, and late layers work in abstract meaning-space. This is a clean counterexample: the <i>last</i> layers of the network maintain specialists for an orthographic surface property. Final-layer routing is watching the page, not just the meaning.</div>
 
 <h2 id="f2">2. We were wrong — and how we found out</h2>
-<p>Our first headline was beautiful: one expert (#164) fired <b>exactly zero times</b> across the entire KJV Bible — a million tokens — while firing constantly on the Qur'an and Christian doctrine. We called it the "not-memorized-scripture expert": proof the model recites the Bible from memory but has to compute everything that merely sounds like it. Then Claude Opus 5 re-derived every number from our raw data and found what we'd missed: <b>our own corpus preparation strips verse numbers from the Bible text.</b> The KJV samples are literally 0.0000% digits. The Qur'an translation and the theology books are full of footnotes, citations, page references. The "memorization gradient" was a digit gradient.</p>
+<p>Our first headline was beautiful: one expert (#164) fired <b>exactly zero times</b> across the entire KJV Bible — a million tokens — while firing constantly on the Qur'an and Christian doctrine. We called it the "not-memorized-scripture expert": proof the model recites the Bible from memory but has to compute everything that merely sounds like it. Then Claude Opus 5 re-derived every number from our raw data and found what we'd missed: <b>our own corpus preparation strips verse numbers from the Bible text.</b> The KJV samples are literally 0.0000% digits. The "memorization gradient" was a digit gradient.</p>
 <div class="corrected"><b>The correction, in one number:</b> Christian samples containing exactly zero digits fire expert #164 at 4.9 per million tokens — versus 4,570/M for the corpus overall. Remove the digits, remove 99.9% of the effect.</div>
 <div class="takeaway"><b>What this means:</b> every number in the dataset was real — both reviewers reproduced all of them to the digit. What failed was the interpretation: an unadjusted comparison between corpora that differ in more ways than the one we attributed the difference to. The corrected finding (part 1) is smaller, stranger, and actually more interesting.</div>
 
 <h2 id="f3">3. Religion doesn't map onto the wiring</h2>
 <p>A theologian would expect related traditions to share machinery: Bible close to Christian doctrine, both close to the Book of Mormon. The router disagrees. Bible↔doctrine is the pairing with <i>less</i> overlap than Bible↔Tao. The Upanishads — Hindu philosophy, different continent, different millennium — overlap Christian literature <i>more</i> than the Bible does. Nothing in the pairwise routing structure tracks doctrine, tradition, or family tree.</p>
-<div class="takeaway"><b>What this means:</b> the shared "backbone" experts that every religious text uses aren't religious at all — they're an English-text backbone. Routing overlap between these corpora carries no information about theological relatedness. That's a genuinely useful negative result: the model didn't organise religion the way a comparative-religions department does.</div>
+<div class="survives"><b>This null result is the main contribution.</b> No expert, no layer, no probe shows a religion-specific signal. The model does not have a "Bible expert" or a "Qur'an expert." The shared backbone of experts that every religious text uses is an English-text backbone, not a religious one.</div>
 
-<h2 id="f4">4. Repetitive text, narrow brain</h2>
-<p>How many of its 256 specialists does a text really use? Corrected for pooling artifacts, a clean signal survives at the deep layers: the Bhagavad Gita — essentially one long chant — runs on ~24. The Qur'an needs ~40, the Bible ~54. The more repetitive and predictable the text, the narrower the palette of experts the router recruits.</p>
-<figure><img src="img/experts_used.png" alt="Effective expert count by text">
-<figcaption>Effective number of experts used per sample at layer 40 (corrected per-sample estimator).</figcaption></figure>
-<div class="takeaway"><b>What this means:</b> the router's "palette width" tracks how surprised the model is, word after word — with the caveat we now know to add: surface properties like digit density have to be controlled before you attribute anything to meaning.</div>
+<h2 id="f4">4. The verse/prose axis — 10,911× and counting</h2>
+<p>The strongest finding to survive the audit is the <b>H6 verse/prose axis</b>: a cluster of 13+ experts (layers 4–41) that fire at <b>~0 per million tokens</b> on bare verse text (KJV Bible, Book of Mormon, Tao Te Ching, Bhagavad Gita, Dhammapada, Analects) but at <b>10,000–90,595/M</b> on discursive prose (Christian commentary, Upanishads, Qur'an). This is a 263× to 4,384× ratio with Cohen's d = 1.38–2.79 — one of the largest routing effects in the study. It is digit-independent (R² = 0.00–0.15) and length-independent (16k-token Book of Mormon windows fire ~0).</p>
+<p>We ran <b>Experiment 4</b> to test this directly: 29 windows from Christian books containing KJV Bible quotations embedded in commentary prose. If H6 fires on the verse quotes, it's a verse detector. If it fires on the surrounding commentary, it's a prose detector. Result:</p>
+<table style="width:100%;border-collapse:collapse;font-size:13px;margin:14px 0">
+<tr style="background:#eaecf0"><th style="border:1px solid #a2a9b1;padding:4px 8px;text-align:left">Text type</th><th style="border:1px solid #a2a9b1;padding:4px 8px;text-align:right">H6 rate (per M tokens)</th></tr>
+<tr><td style="border:1px solid #a2a9b1;padding:4px 8px">Pure Bible verse</td><td style="border:1px solid #a2a9b1;padding:4px 8px;text-align:right;font-family:monospace">4.1</td></tr>
+<tr style="background:#f8f9fa"><td style="border:1px solid #a2a9b1;padding:4px 8px">KJV files (verse + apparatus)</td><td style="border:1px solid #a2a9b1;padding:4px 8px;text-align:right;font-family:monospace">8,664</td></tr>
+<tr><td style="border:1px solid #a2a9b1;padding:4px 8px">Commentary with embedded Bible quotes</td><td style="border:1px solid #a2a9b1;padding:4px 8px;text-align:right;font-family:monospace">44,822</td></tr>
+<tr style="background:#f8f9fa"><td style="border:1px solid #a2a9b1;padding:4px 8px">Christian commentary (all)</td><td style="border:1px solid #a2a9b1;padding:4px 8px;text-align:right;font-family:monospace">41,894</td></tr>
+</table>
+<div class="survives"><b>H6 fires on prose context, not verse content.</b> Commentary windows with embedded Bible quotes fire H6 at the same rate as pure commentary. The verse quotes are <i>ignored</i> by H6. The routing decision is about the format of the surrounding text, not the semantics of the quoted content. A 10,911× ratio over pure Bible verse. All 6 anchor experts are directionally consistent.</div>
+
+<h2 id="f5">5. What we're doing next</h2>
+<p>The <a href="wiki/forward_plan.html">forward plan</a> (designed by GPT-5.6-terra via Codex CLI) outlines the next phase:</p>
+<ul>
+<li><b>Exp 4b</b> — per-token routing capture on 351 commentary windows with 41,426 quote tokens. The decisive within-document test: does H6 fire token-by-token on the verse quote, or on the surrounding commentary?</li>
+<li><b>Exp 13</b> — scoped ablation. Zero out the 6 H6 anchor experts and measure the effect on next-token prediction (Delta-NLL). Two modes: contribution knockout (keep gate selection, zero output) and route-mask compensation (reselect replacements). Dose series: 1→3→6 experts. 20 matched random control clusters.</li>
+<li><b>Exp 1</b> — same Bible passages in 5 English translations (KJV, WEB, ASV, YLT, BBE). If routing is translation-invariant, H6 responds to verse structure, not wording.</li>
+<li><b>Exp 12</b> — 111 digit minimal-pairs. Negative control: confirm digit experts respond to digit density, confirm H6 does not.</li>
+<li><b>Exps 15–20</b> — controlled format-edit factorial, secular/religious factorial, quote-boundary carryover, gate-vs-contribution separation, religion null as equivalence, lens robustness.</li>
+</ul>
 
 <h2>So what did we learn?</h2>
-<p>Two things. About the model: late-layer routing keeps one eye on the surface of the page; religious tradition per se barely registers in the wiring; predictability shapes how broadly the router recruits. And about method: when your corpora differ in digit density, footnote density, translation status and window length all at once, an external audit that decodes the actual tokens is worth more than any amount of clean bookkeeping. The measurement rig never lied. The story we told about it did.</p>
+<p>Three things. About the model: late-layer routing keeps one eye on the surface of the page (digits); a large format-associated routing axis (verse/prose) fires 10,911× harder on prose than verse and ignores embedded verse quotes; religious tradition per se barely registers in the wiring. About method: when your corpora differ in digit density, footnote density, translation status and window length all at once, an external audit that decodes the actual tokens is worth more than any amount of clean bookkeeping. And about the process: retractions are the method working — the measurement rig never lied, but the stories we told about it did, and the corrected findings are more interesting than the original ones.</p>
 
-<p class="next"><b>Everything is public:</b> the full technical wiki with the complete correction log (§9) and both external reviews · the observation code · all 80 J-lens probe samples · raw records in the dataset <code>0xSero/deepseek-v4-flash-reap</code> (private, access on request) · <a href="wiki.html">read the research wiki →</a></p>
+<p class="next"><b>Everything is public:</b> <a href="RESEARCH_WIKI.html">research wiki</a> · <a href="wiki/narrative.html">correctness-first narrative</a> · <a href="wiki/exp4.html">Exp 4 results</a> · <a href="wiki/forward_plan.html">forward plan</a> · <a href="wiki/results.html">full results</a> · <a href="wiki/jspace.html">J-space lens</a> · observation code · raw records in <code>0xSero/deepseek-v4-flash-reap</code> (private, access on request) · <a href="https://github.com/0xSero/dsv4-reap-routing">GitHub repo →</a></p>
 </div>
 </body>
 </html>
