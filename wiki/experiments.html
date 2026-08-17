@@ -64,6 +64,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
 <li><a href="narrative.html">Narrative</a></li>
 <li><a href="exp4.html">Exp 4 results</a></li>
+<li><a href="exp13.html">Exp 13 ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
 </ul></div>
 <div class="portal"><h3>Resources</h3><ul>
@@ -91,16 +92,18 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li>5 <a href="#e3">Exp 3 &mdash; Secular null baseline</a></li>
 <li>6 <a href="#e8">Exp 8 &mdash; Sorted L42 frequency check</a> <span class="tag tag-ok">done</span></li>
 <li>7 <a href="#e9">Exp 9 &mdash; Position/length confound</a> <span class="tag tag-ok">answered</span></li>
-<li>8 <a href="#other">Other planned experiments</a></li>
+<li>8 <a href="#e4b">Exp 4b &mdash; Quotation-switch test</a> <span class="tag tag-run">running</span></li>
+<li>9 <a href="#e13">Exp 13 &mdash; H6 ablation</a> <span class="tag tag-pending">staged</span></li>
+<li>10 <a href="#other">Other planned experiments</a></li>
 </ul></div>
 
 <h2 id="priority">1. Current priority queue</h2>
 <p>Deployment order when GPU nodes free (after wave-2 completes):</p>
 <ol>
-<li><b>Exp 12</b> &mdash; 111 samples, sub-hour. Decisive for the digit question.</li>
-<li><b>Exp 1</b> &mdash; 5 samples, sub-hour. Register vs memorization, all-0-digit.</li>
-<li><b>Exp 11</b> &mdash; small GPU run with <code>--raw-budget-tokens</code>.</li>
-<li><b>Theology observation</b> &mdash; 1,090 records, ~16&nbsp;h.</li>
+<li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-run">running now</span> Decisive within-document verse-quote vs commentary test.</li>
+<li><b>Exp 12</b> &mdash; 222 samples (111 pairs), ~438k tokens. Decisive for the digit question.</li>
+<li><b>Exp 1</b> &mdash; 149 samples, ~191k tokens. Translation invariance, all-0-digit controlled.</li>
+<li><b>Exp 13</b> &mdash; Ablation hook designed, corpus to build. Causal test of H6 contribution.</li>
 <li><b>Exp 3</b> &mdash; secular null, staged after digit question settles.</li>
 </ol>
 
@@ -157,10 +160,31 @@ position-dependent, explaining the zero?</p>
 <p><b>Result:</b> No &mdash; length-matched comparison bands show Bible 0 / Qur'an 4,383/M at
 comparable window sizes. The zero is not a length artifact.</p>
 
-<h2 id="other">8. Other planned experiments</h2>
+<h2 id="e4b">8. Exp 4b &mdash; Quotation-switch within-document test <span class="tag tag-run">running</span></h2>
+<table class="wikitable">
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Hypothesis tested</td><td>H6: do the verse/prose axis experts fire on <i>prose context</i> rather than <i>verse content</i>? Within the same document, do H6 rates drop at quote boundaries?</td></tr>
+<tr><td>Design</td><td>351 commentary windows containing embedded KJV verse quotes (41,426 quote tokens across 18 sources). Each quote span has start/end token positions for per-token routing analysis. Character-window approach (60k chars ~16k tokens) to avoid tokenizing entire files.</td></tr>
+<tr><td>Corpus</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code> &mdash; 351 records, 5.2M tokens</td></tr>
+<tr><td>Pilot result (Exp 4)</td><td>H6 fires on prose context at 44,822/M vs verse content at 4.1/M &mdash; a 10,911&times; ratio. But only 419 quote tokens (pilot); Exp 4b scales to 41,426 for decisive test.</td></tr>
+<tr><td>Primary endpoint</td><td>Binary event <code>I(layer, expert, token in top-6)</code>; beta-binomial model at block level with document and window random effects</td></tr>
+</table>
+
+<h2 id="e13">9. Exp 13 &mdash; Scoped H6 ablation <span class="tag tag-pending">hook designed</span></h2>
+<table class="wikitable">
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Hypothesis tested</td><td>Causal: does knocking out H6 anchor experts damage prose processing more than verse processing?</td></tr>
+<tr><td>Design</td><td>Two intervention modes: (1) <b>contribution knockout</b> &mdash; zero expert output, keep gate selection; (2) <b>route-mask compensation</b> &mdash; mask before top-k, reselect, renormalize. Dose series: each anchor singly, then cumulative sets of 1, 3, and all 6.</td></tr>
+<tr><td>H6 anchors (frozen)</td><td>L21e42, L22e105, L23e113, L30e198, L32e254, L41e147</td></tr>
+<tr><td>Corpus</td><td>4 cells: verse/prose &times; religious/secular, 100+ blocks each, 512&ndash;1024 tokens, held-out material</td></tr>
+<tr><td>Primary outcome</td><td>Per-block <code>Delta-NLL = NLL(ablation) - NLL(baseline)</code> in nats/token</td></tr>
+<tr><td>Controls</td><td>Sham hook (~0 delta), 20 random six-expert control clusters matched on routing frequency, digit-cluster positive control</td></tr>
+<tr><td>Hook code</td><td><code>exp13_ablation_hook.py</code> &mdash; deployed to both TP2 nodes</td></tr>
+</table>
+
+<h2 id="other">10. Other planned experiments</h2>
 <table class="wikitable">
 <tr><th>Idea</th><th>Status</th><th>Notes</th></tr>
-<tr><td>Within-document KJV quotation switch</td><td>planned</td><td>Sermons quoting scripture verbatim: does routing flip mid-document at quote boundaries?</td></tr>
 <tr><td>Jesus vs Lucifer routing comparison</td><td>staged (in theology selection)</td><td>400 Jesus vs 46 Lucifer records, digit-controlled</td></tr>
 <tr><td>Moloch / Saturn routing analysis</td><td>staged (in theology selection)</td><td>25 + 32 records</td></tr>
 <tr><td>Covariate regression</td><td>planned</td><td>Partial effects of tradition controlling digit%, punctuation%, sentence length, TTR &mdash; no GPU needed, uses existing records</td></tr>
