@@ -199,6 +199,7 @@
       <li><a href="wiki/code.html">Code reference</a></li>
       <li><a href="wiki/operations.html">Operations (live)</a></li>
       <li><a href="wiki/roadmap.html">Roadmap &amp; ideas</a></li>
+      <li><a href="wiki/narrative.html">Narrative (correctness-first)</a></li>
     </ul>
   </div>
   <div class="portal">
@@ -257,6 +258,7 @@
 <tr><td><a href="wiki/code.html"><b>Code reference</b></a></td><td>Every script in the study: purpose, inputs, outputs</td></tr>
 <tr><td><a href="wiki/operations.html"><b>Operations (live)</b></a></td><td>What's running now, deployment queue, runbook, incident log</td></tr>
 <tr><td><a href="wiki/roadmap.html"><b>Roadmap &amp; ideas</b></a></td><td>What's next, backlog, known open problems</td></tr>
+<tr><td><a href="wiki/narrative.html"><b>Narrative (correctness-first)</b></a></td><td>Plain-language story of what the data says, with every claim verified against raw data. Retractions, agreed hypotheses, experiment rankings.</td></tr>
 </table>
 
 <!-- infobox -->
@@ -268,8 +270,8 @@
 <tr><th>Architecture</th><td>Sparse MoE (43 layers, 256 experts, top-6)</td></tr>
 <tr><th>Gate function</th><td>sqrt(softplus(x))</td></tr>
 <tr><th>Corpora</th><td>9 religious traditions + theology corpus</td></tr>
-<tr><th>Tokens observed</th><td>22,179,407 (completed)<br>~37M (wave-2 running)</td></tr>
-<tr><th>Records</th><td>2,749 completed + 2,295 running</td></tr>
+<tr><th>Tokens observed</th><td>57,670,937 (all waves complete)</td></tr>
+<tr><th>Records</th><td>5,044 completed (1,482 core + 3,562 Christian)</td></tr>
 <tr><th>Checkpoint rev</th><td><code>9e165c30</code></td></tr>
 <tr><th>Started</th><td>August 2026</td></tr>
 <tr><th>Status</th><td>Ongoing</td></tr>
@@ -281,8 +283,53 @@
 <div class="lead">
 <p><b>DeepSeek-V4-Flash-0731 expert routing on religious texts</b> is an ongoing <a href="#">interpretability</a> study that observes how a sparse <a href="#">mixture-of-experts</a> language model routes tokens across its 256 expert networks when processing religious and theological text. The study uses a read-only, fail-closed harness to record every routing decision — which experts are selected, with what gate weights, and with what activation magnitudes — for every token at every layer, across over 22 million tokens spanning nine religious traditions (the <a href="#">KJV Bible</a>, <a href="#">Qur'an</a>, <a href="#">Book of Mormon</a>, <a href="#">Bhagavad Gita</a>, <a href="#">Tao Te Ching</a>, <a href="#">Dhammapada</a>, <a href="#">Analects</a>, <a href="#">Upanishads</a>, and 1,267 books of historical <a href="#">Christian literature</a>).</p>
 
-<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector (exactly zero firings across the entire KJV Bible) — was <b>retracted</b> after an external review by Claude Opus 5 identified a <a href="#retracted">digit-density confound</a>: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits at varying densities. The finding that survives is more modest: the model's routing is driven by surface-form text statistics (digit density, predictability), not by theological content. Several controlled experiments are staged to confirm this.</p>
+<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector (exactly zero firings across the entire KJV Bible) — was <b>retracted</b> after an external review by Claude Opus 5 identified a <a href="#retracted">digit-density confound</a>: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits at varying densities. The finding that survives is more modest: the model's routing is driven by surface-form text statistics (digit density, verse-vs-prose format), not by theological content. Several controlled experiments are staged to confirm this.</p>
 </div>
+
+<!-- TL;DR / Simple Conclusions -->
+<h2 id="tldr"><span class="mw-headline">Simple conclusions</span></h2>
+<div class="ambox ambox-survives">
+<div class="ambox-icon">&#9989;</div>
+<div class="ambox-text">
+<p><b>What we found, in plain English:</b></p>
+<ol>
+<li><b>The model does NOT route by religion.</b> No expert, no layer, no probe shows a religion-specific signal. The KJV, Qur'an, Tao Te Ching, and Book of Mormon all ride the same backbone of core experts. This null result is the main contribution.</li>
+<li><b>It DOES route by text format.</b> A population of 13+ experts (the "H6 cluster") fires at up to <b>90,000 firings per million tokens</b> on discursive prose (commentary, scholarly editions, introductions) and at <b>~0</b> on bare verse text (KJV, Tao, BoM, Gita, Dhammapada, Analects). This is a <b>4,384&times;</b> ratio with Cohen's d = 2.61 — one of the largest routing effects in the study.</li>
+<li><b>It also routes by digit density.</b> 54 experts (including e164) are digit detectors. The KJV's zero-digit property (caused by our pipeline stripping verse numbers) made e164 look like a "scripture detector." It was reading digits, not scripture.</li>
+<li><b>Prediction emerges late and sharply.</b> The model's next-token prediction is flat at ~1% accuracy through layer 18, jumps to 2.8% at layer 19, and 70% of the final accuracy forms in the last 5 layers (L42 = 87.4%).</li>
+<li><b>Routing concentration is NOT predictability.</b> We initially claimed more predictable text uses fewer experts. Wrong — the sign is backwards and the gap was a window-length artifact.</li>
+</ol>
+<p>For the full narrative with all data verified against raw records, see <a href="wiki/narrative.html">the narrative page</a>. For the redesigned experiment plan, see <a href="https://0xsero.github.io/dsv4-reap-routing/EXPERIMENTS_V2.md">EXPERIMENTS_V2.md</a>.</p>
+</div>
+</div>
+
+<!-- Interesting Facts -->
+<h2 id="facts"><span class="mw-headline">Interesting facts</span></h2>
+<table class="wikitable" style="font-size:13px">
+<tr><th>Fact</th><th>Detail</th></tr>
+<tr><td><b>Zero is not magic</b></td><td>The KJV Bible has 48 exact-zero (layer, expert) cells across 11,008 total. e164 being zero is a coincidence with a 0.4% base rate, not a miracle.</td></tr>
+<tr><td><b>54 digit experts</b></td><td>Not just e164 — 54 experts have digit-density R&sup2; &gt; 0.5 within the Christian corpus. Digit detection is a major routing axis, not a single expert.</td></tr>
+<tr><td><b>1,000&times; larger than digits</b></td><td>The verse-vs-prose axis (H6) fires at up to 90,595/M vs ~0. The digit effect maxes out around 5,000/M. H6 is 1,000&times; bigger.</td></tr>
+<tr><td><b>Length doesn't matter</b></td><td>Book of Mormon uses 16,384-token windows (same as Christian literature) yet fires ~0 on H6 experts. The axis is format, not window size.</td></tr>
+<tr><td><b>L19 is a switch</b></td><td>Layers 0-18 produce nonsense (1% accuracy). Layer 19 jumps to 2.8%. Something turns on at exactly layer 19 — a discrete computational phase transition.</td></tr>
+<tr><td><b>Bible is easiest to predict</b></td><td>L42 agreement: Bible 96.8%, Upanishads 62.0%. The more formulaic the text, the better the model predicts it. Religion is irrelevant; regularity is everything.</td></tr>
+<tr><td><b>Dhammapada fooled us</b></td><td>L41 e34 was labeled a "Qur'an specialist." Actually Dhammapada fires it 5&times; harder (26,631/M vs 5,888/M). Dhammapada has the highest digit density (2.6%). It was digits all along.</td></tr>
+<tr><td><b>A bookkeeping bug lied</b></td><td>The robustness file claimed L34 e33 fires at 2.7/M on the Bible. Actual: 9,670/M — 3,600&times; off, in the opposite direction. Regenerated from raw data.</td></tr>
+<tr><td><b>57.7 million tokens</b></td><td>Total observed: 1.05M KJV + 55.9M Christian literature + 0.7M other traditions. All verified: &Sigma;freq == tokens&times;6 on every layer of every record, zero violations.</td></tr>
+</table>
+
+<!-- Key Visualizations -->
+<h2 id="viz"><span class="mw-headline">Key visualizations</span></h2>
+<table class="wikitable" style="font-size:13px">
+<tr><th>Chart</th><th>What it shows</th><th>Link</th></tr>
+<tr><td>H6 verse-vs-prose heatmap</td><td>13 expert cells &times; 9 corpora — the clean separation between verse (green) and prose (red)</td><td><a href="img/chart_h6_heatmap.png">view</a></td></tr>
+<tr><td>H6 verse vs prose boxplot</td><td>Distributions per expert — how cleanly the two groups separate</td><td><a href="img/chart_h6_boxplot.png">view</a></td></tr>
+<tr><td>Lens agreement curve</td><td>Top-1 accuracy by layer — the L19 step and late-layer emergence</td><td><a href="img/chart_lens_full.png">view</a></td></tr>
+<tr><td>Expert utilization</td><td>L42 distribution histograms for all 9 corpora — the shared backbone</td><td><a href="img/chart_expert_utilization.png">view</a></td></tr>
+<tr><td>Routing concentration (matched)</td><td>Effective expert count, length-controlled — H3 retraction evidence</td><td><a href="img/chart_effk_matched.png">view</a></td></tr>
+<tr><td>e164 by corpus</td><td>The digit detector that started it all</td><td><a href="img/chart_e164_by_corpus.png">view</a></td></tr>
+<tr><td>Jaccard heatmap</td><td>Inter-tradition routing similarity — no religion clustering</td><td><a href="img/chart_jaccard_heatmap.png">view</a></td></tr>
+</table>
 
 <!-- TOC -->
 <div class="toc">
