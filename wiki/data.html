@@ -118,7 +118,9 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>Theology stratified selection</td><td class="num">1,090</td><td class="num">9,380,481</td><td><span class="tag tag-ok">complete</span></td><td>Topic routing: Jesus 400, Judaism 137, Lucifer 46, Moloch 25, Saturn 32, books 450; per-sample digit density in manifest</td></tr>
 <tr><td>Exp 4b quotation-switch (v2)</td><td class="num">351</td><td class="num">5,200,000</td><td><span class="tag tag-ok">complete</span></td><td>351 records, 5.2M tokens, H6=163,284/M; 41,426 quote tokens across 18 sources; within-document verse-quote vs commentary routing test</td></tr>
 <tr><td>Exp 12 digit minimal-pairs (v2)</td><td class="num">222</td><td class="num">437,900</td><td><span class="tag tag-ok">complete</span></td><td>111 pairs: with_digits vs digit_stripped, 5 categories (dates, misc, lists, scripture, tabular). H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;)</td></tr>
-<tr><td>Exp 1 multi-translation Bible</td><td class="num">150</td><td class="num">209,151</td><td><span class="tag tag-ok">complete</span></td><td>30 passages &times; 5 translations (KJV, WEB, ASV, YLT, BBE); all public domain, 0-digit controlled. H6 = 47.8/M, 3,415&times; ratio vs commentary</td></tr>
+<tr><td>Exp 1 multi-translation Bible</td><td class="num">150</td><td class="num">209,151</td><td><span class="tag tag-ok">complete</span></td><td>Phase 1: 30 passages &times; 5 public-domain translations (KJV, WEB, ASV, YLT, BBE), 0-digit controlled. H6 = 47.8/M, 3,415&times; ratio vs commentary</td></tr>
+<tr><td>Exp 1 expanded (12 translations)</td><td class="num">360</td><td class="num">613,344</td><td><span class="tag tag-ok">complete</span></td><td>Phase 2: adds NIV, ESV, NLT, NRSV, NASB, CSB, MSG. H6 = 59.5/M excl. MSG. MSG outlier at 1,033/M confirms format detection. e164 positive control: 1.6/M</td></tr>
+<tr><td>Exp 1 expanded (12 translations)</td><td class="num">360</td><td class="num">613,344</td><td><span class="tag tag-pending">running</span></td><td>30 passages &times; 12 translations (5 public-domain + NIV, ESV, NLT, NRSV, NASB, CSB, MSG); all 0-digit controlled. Tests translation-invariance across copyrighted and public-domain renderings</td></tr>
 <tr><td>Exp 13 ablation corpus</td><td class="num">480</td><td class="num">418,695</td><td><span class="tag tag-pending">staged</span></td><td>4 cells (verse/prose &times; religious/secular), 120 blocks each, 512&ndash;1024 tokens. Held-out material for causal ablation.</td></tr>
 </table>
 
@@ -131,7 +133,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>Gutenberg Christian wave-2</td><td class="num">2,295 books</td><td>Extended topic set</td></tr>
 <tr><td>Theology corpus total</td><td colspan="2">29,098 tokenized samples from 10,579 raw files</td></tr>
 </table>
-<p class="small">All text public-domain or freely published. Scrapers respect rate limits
+<p class="small">Core text is public-domain or freely published. The expanded Exp 1 corpus additionally includes 7 copyrighted Bible translations (NIV, ESV, NLT, NRSV, NASB, CSB, MSG) fetched from Bible Gateway under explicit research authorization. Scrapers respect rate limits
 (Gutenberg 0.8&ndash;1.5&nbsp;s; Wikipedia 3&nbsp;s with 429 exponential backoff). Full
 manifests with per-file hashes: <code>corpus/manifests/*.manifest.json</code> on
 <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>.</p>

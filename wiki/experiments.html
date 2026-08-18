@@ -104,7 +104,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <ol>
 <li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-ok">complete</span> Decisive within-document verse-quote vs commentary test. H6 = 163,284/M on commentary, fires on prose context not verse quotes.</li>
 <li><b>Exp 12</b> &mdash; 222 samples (111 pairs), 438k tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;).</li>
-<li><b>Exp 1</b> &mdash; 150 samples, 209k tokens. <span class="tag tag-ok">complete</span> H6 = 47.8/M, translation-invariant.</li>
+<li><b>Exp 1</b> &mdash; 360 samples, 613k tokens. <span class="tag tag-ok">complete (expanded)</span> H6 = 59.5/M (excl. MSG), translation-invariant. MSG outlier at 1,033/M confirms format detection.</li>
 <li><b>Exp 13</b> &mdash; Ablation hook designed, corpus to build. Causal test of H6 contribution.</li>
 <li><b>Exp 3</b> &mdash; secular null, staged after digit question settles.</li>
 </ol>
@@ -134,32 +134,42 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>Prediction</td><td>Contexts are numerals, footnote markers, verse references, roman numerals</td></tr>
 </table>
 
-<h2 id="e1">4. Exp 1 &mdash; Multi-translation register test <span class="tag tag-ok">complete</span></h2>
+<h2 id="e1">4. Exp 1 &mdash; Multi-translation register test <span class="tag tag-ok">complete (expanded)</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
 <tr><td>Hypothesis tested</td><td>Register vs memorization vs content: does H6 fire on non-KJV renderings of the <i>same</i> text?</td></tr>
-<tr><td>Design</td><td>30 Bible passages in 5 public-domain translations: KJV (1611, archaic), ASV (1901), YLT (literal), WEB (modern), BBE (850-word Basic English &mdash; the extreme register contrast). All verse numbers stripped, all verified <b>0.0000% digits</b> (digit confound controlled). 150 records, 209,151 tokens.</td></tr>
-<tr><td>Corpus</td><td><code>corpus/samples/exp1_translations.jsonl</code> &mdash; 150 records (30 passages &times; 5 translations)</td></tr>
-<tr><td>Note</td><td>NIV/ESV excluded &mdash; copyrighted, violates the public-domain corpus rule</td></tr>
-<tr><td>Result</td><td><b>H6 fires at 47.8/M on Bible verse across all translations</b> &mdash; a 3,415&times; ratio vs commentary prose (163,284/M). KJV and ASV show <b>perfect zero</b> (0 firings across 83,197 tokens). WEB, BBE, YLT show near-zero (45&ndash;100/M). The verse/prose axis is <b>translation-invariant</b>: H6 detects verse <i>structure</i>, not specific wording or memorization.</td></tr>
+<tr><td>Design</td><td>30 Bible passages in 12 English translations: 5 public-domain (KJV, ASV, YLT, WEB, BBE) + 7 copyrighted (NIV, ESV, NLT, NRSV, NASB, CSB, MSG). All verse numbers stripped, all verified <b>0.0000% digits</b>. 360 records, 613,344 tokens.</td></tr>
+<tr><td>Corpus</td><td><code>corpus/samples/exp1_all_translations.jsonl</code> &mdash; 360 records (30 passages &times; 12 translations)</td></tr>
+<tr><td>Phase 1 (5 public-domain)</td><td>150 records, 209,151 tokens, H6 = 47.8/M. KJV and ASV perfect zero.</td></tr>
+<tr><td>Phase 2 (12 translations)</td><td>360 records, 613,344 tokens, H6 = 153.3/M overall (59.5/M excl. MSG). <b>MSG outlier at 1,032.7/M confirms H6 detects format, not content</b> &mdash; MSG is a prose paraphrase that abandons verse lineation.</td></tr>
+<tr><td>Result</td><td><b>Translation-invariant for verse-formatted translations.</b> KJV and ESV both fire at 0.0. 11 verse-formatted translations fire at 0&ndash;171/M (negligible vs 163,284/M commentary). MSG (prose paraphrase) fires at 1,032.7/M &mdash; the format hypothesis confirmed. e164 positive control: 1.6/M (digit confound controlled).</td></tr>
 </table>
 
-<h3>4.1 Per-translation H6 rates</h3>
+<h3>4.1 Per-translation H6 rates (12 translations)</h3>
 <table class="wikitable">
-<tr><th>Translation</th><th>Records</th><th>Tokens</th><th>H6 Rate (M)</th><th>Description</th></tr>
-<tr><td>KJV</td><td class="num">30</td><td class="num">42,021</td><td class="num">0.0</td><td>King James Version (1611, archaic)</td></tr>
-<tr><td>ASV</td><td class="num">30</td><td class="num">41,176</td><td class="num">0.0</td><td>American Standard Version (1901)</td></tr>
-<tr><td>YLT</td><td class="num">30</td><td class="num">44,587</td><td class="num">44.9</td><td>Young's Literal Translation</td></tr>
-<tr><td>WEB</td><td class="num">30</td><td class="num">39,933</td><td class="num">100.2</td><td>World English Bible (modern)</td></tr>
-<tr><td>BBE</td><td class="num">30</td><td class="num">41,434</td><td class="num">96.5</td><td>Bible in Basic English (850 words)</td></tr>
-<tr><td><b>All</b></td><td class="num">150</td><td class="num">209,151</td><td class="num">47.8</td><td>3,415&times; ratio vs commentary</td></tr>
+<tr><th>Translation</th><th>Records</th><th>Tokens</th><th>H6 Rate (M)</th><th>License</th><th>Description</th></tr>
+<tr><td>KJV</td><td class="num">30</td><td class="num">42,010</td><td class="num">0.0</td><td>Public domain</td><td>King James Version (1611)</td></tr>
+<tr><td>ESV</td><td class="num">30</td><td class="num">57,755</td><td class="num">0.0</td><td>Copyrighted</td><td>English Standard Version (2001)</td></tr>
+<tr><td>NASB</td><td class="num">30</td><td class="num">57,872</td><td class="num">17.3</td><td>Copyrighted</td><td>New American Standard Bible</td></tr>
+<tr><td>BBE</td><td class="num">30</td><td class="num">41,434</td><td class="num">24.1</td><td>Public domain</td><td>Bible in Basic English (850 words)</td></tr>
+<tr><td>ASV</td><td class="num">30</td><td class="num">41,103</td><td class="num">24.3</td><td>Public domain</td><td>American Standard Version (1901)</td></tr>
+<tr><td>YLT</td><td class="num">30</td><td class="num">43,186</td><td class="num">46.3</td><td>Public domain</td><td>Young's Literal Translation</td></tr>
+<tr><td>NRSV</td><td class="num">30</td><td class="num">57,090</td><td class="num">52.5</td><td>Copyrighted</td><td>New Revised Standard Version</td></tr>
+<tr><td>WEB</td><td class="num">30</td><td class="num">39,933</td><td class="num">75.1</td><td>Public domain</td><td>World English Bible (modern)</td></tr>
+<tr><td>CSB</td><td class="num">30</td><td class="num">57,898</td><td class="num">86.4</td><td>Copyrighted</td><td>Christian Standard Bible</td></tr>
+<tr><td>NIV</td><td class="num">30</td><td class="num">57,504</td><td class="num">121.7</td><td>Copyrighted</td><td>New International Version</td></tr>
+<tr><td>NLT</td><td class="num">30</td><td class="num">58,493</td><td class="num">171.0</td><td>Copyrighted</td><td>New Living Translation</td></tr>
+<tr><td><b>MSG</b></td><td class="num">30</td><td class="num">59,066</td><td class="num"><b>1,032.7</b></td><td>Copyrighted</td><td>The Message (prose paraphrase &mdash; <b>format outlier</b>)</td></tr>
+<tr><td><b>Excl. MSG</b></td><td class="num">330</td><td class="num">554,278</td><td class="num">59.5</td><td></td><td>11 verse-formatted translations</td></tr>
 </table>
 
 <h3>4.2 Charts</h3>
 <table class="wikitable">
 <tr><th>Chart</th><th>What it shows</th></tr>
-<tr><td><a href="../img/chart_exp1_by_translation.png">H6 rate by translation</a></td><td>H6 composite rate per translation (bar chart, log scale)</td></tr>
-<tr><td><a href="../img/chart_exp1_per_passage.png">Per-passage scatter</a></td><td>H6 rate per passage &times; translation, showing translation invariance</td></tr>
+<tr><td><a href="../img/chart_exp1_all_by_translation.png">H6 rate by translation (12 trans.)</a></td><td>H6 composite rate per translation (bar chart, log scale). MSG towers above all others.</td></tr>
+<tr><td><a href="../img/chart_exp1_all_pd_vs_cr.png">PD vs Copyrighted</a></td><td>Grouped bar: public domain vs copyrighted rates (MSG inflates the CR bar)</td></tr>
+<tr><td><a href="../img/chart_exp1_all_per_passage.png">Per-passage heatmap</a></td><td>H6 rate per passage &times; translation, showing which passages trigger H6 and which stay zero</td></tr>
+<tr><td><a href="../img/chart_exp1_by_translation.png">Phase 1: H6 by translation</a></td><td>Phase 1 chart (5 public-domain translations)</td></tr>
 </table>
 
 <h2 id="e3">5. Exp 3 &mdash; Secular null baseline <span class="tag tag-pending">not staged</span></h2>

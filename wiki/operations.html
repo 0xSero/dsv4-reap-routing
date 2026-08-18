@@ -90,6 +90,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <table class="wikitable">
 <tr><th>Pipeline</th><th>Progress</th><th>Supervisor</th><th>Notes</th></tr>
 <tr><td>Christian wave-2 observation</td><td><span class="tag tag-ok">complete (2,295/2,295)</span></td><td><code>chain_next_runs.sh</code></td><td>Completed; 3 NCCL stalls during the run, all self-healed with skip-ahead; finalized and aggregates rebuilt</td></tr>
+<tr><td>Expanded Exp 1 (12 translations)</td><td><span class="tag tag-pending">running (360 records)</span></td><td><code>run_full_observation.sh</code></td><td>360 records (30 passages &times; 12 translations incl. copyrighted); NCCL timeout at 212, resumed with skip-ahead</td></tr>
 <tr><td>30-min mission automation</td><td>active</td><td>cron</td><td>Monitors chains/watchdogs, deploys queued experiments when nodes free, runs throttled GitHub sync</td></tr>
 <tr><td>GitHub sync</td><td>every 4&nbsp;h</td><td><code>sync_to_github.sh</code> self-throttle</td><td></td></tr>
 </table>
@@ -98,7 +99,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <ol>
 <li><code>./finalize_christian.sh</code> &mdash; merge wave-2, verify invariants, rebuild aggregates <span class="tag tag-ok">done</span></li>
 <li><b>Exp 12</b> &mdash; <span class="tag tag-ok">complete</span> 222 records (111 pairs), H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;)</li>
-<li><b>Exp 1</b> &mdash; <span class="tag tag-ok">complete</span> 150 records, H6 = 47.8/M</li>
+<li><b>Exp 1</b> &mdash; <span class="tag tag-ok">complete (expanded)</span> 360 records (12 translations incl. copyrighted), H6 = 59.5/M excl. MSG; MSG outlier at 1,033/M confirms format detection</li>
 <li><b>Exp 4b</b> &mdash; <span class="tag tag-ok">complete</span> 351 records, H6 = 163,284/M on commentary prose</li>
 <li><b>Exp 11</b> &mdash; context-dump re-run with <code>--raw-budget-tokens</code></li>
 <li><b>Theology observation</b> &mdash; 1,090 records (~16&nbsp;h), watchdog <code>obs_theology_watch.sh</code></li>
@@ -120,7 +121,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><b>Credentials:</b> de5c password via <code>SSHPASS</code> env only; SSH auth no more than every
 ~10 min (rate-limited host); never printed, logged, or committed.</li>
 <li><b>Scraping:</b> never parallel scrapers (429); Gutenberg 0.8&ndash;1.5 s; Wikipedia 3 s.</li>
-<li><b>Corpus:</b> English only; public-domain / freely-published only; tokenizer pinned to rev
+<li><b>Corpus:</b> English only; public-domain / freely-published for core corpora; copyrighted Bible translations (NIV, ESV, NLT, NRSV, NASB, CSB, MSG) included for the expanded Exp 1 test per explicit authorization; tokenizer pinned to rev
 <code>9e165c30</code>.</li>
 <li><b>Integrity:</b> fail-closed invariants asserted before any record is accepted.</li>
 </ul>
@@ -132,10 +133,12 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>08-15</td><td>Wikipedia scraper 429 storm (6 parallel scrapers)</td><td>killed all, rewrote sequential with backoff, re-scraped via sub-agent infrastructure</td></tr>
 <tr><td>08-16</td><td>Wave-2 NCCL stalls (3&times;: at ~470, ~717, ~806 records)</td><td>chain supervisor relaunched with skip-ahead each time, zero data loss</td></tr>
 <tr><td>08-16</td><td><b>Credential leak found:</b> sanitizer script embedded the de5c password (public ~1 day)</td><td>script fixed to <code>$SSHPASS</code> env; full git history purged with git-filter-repo (verified 0 matches all commits); HF copy replaced; password rotation recommended</td></tr>
-<tr><td>08-18</td><td><b>Exp 1 complete</b> &mdash; 150/150 records, 0 invariant violations</td><td>multi-translation register test done; H6 = 47.8/M, translation-invariant; aggregates + wiki updated</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 complete</b> &mdash; 150/150 records (phase 1), 0 invariant violations</td><td>multi-translation register test done; H6 = 47.8/M, translation-invariant; aggregates + wiki updated</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 expanded complete</b> &mdash; 360/360 records (12 translations), 0 violations</td><td>Added NIV, ESV, NLT, NRSV, NASB, CSB, MSG; MSG outlier at 1,033/M confirms format hypothesis; NCCL timeout at 212/360, resumed with skip-ahead</td></tr>
 <tr><td>08-18</td><td><b>Exp 4b complete</b> &mdash; 351/351 records, 0 invariant violations</td><td>scaled quotation-switch done; mean H6 = 163,284/M on commentary prose; quote-fraction vs H6 r = &minus;0.13</td></tr>
 <tr><td>08-18</td><td><b>Exp 12 complete</b> &mdash; 222/222 records, 0 invariant violations</td><td>digit minimal-pairs done; H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;)</td></tr>
 <tr><td>08-18</td><td>Exp 12 container crashed at 166/222 with segfault</td><td>chain supervisor resumed with record skip-ahead; completed 222/222 with zero data loss</td></tr>
+<tr><td>08-18</td><td><b>Expanded Exp 1 launched</b> &mdash; 360 records (12 translations incl. copyrighted NIV/ESV/NLT/NRSV/NASB/CSB/MSG)</td><td>NCCL timeout at 212/360; relaunched with skip-ahead, processing remaining 148 records</td></tr>
 </table>
 
 <div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>

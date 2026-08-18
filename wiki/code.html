@@ -92,7 +92,8 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>scrape_christian.py</code></td><td>Gutenberg Christian-literature scrape via search-HTML enumeration (Gutendex Cloudflare-blocked), mirror fallbacks, header/footer cleaning</td><td><code>corpus/christian/raw/*.txt</code> + manifest</td></tr>
 <tr><td><code>scrape_theology_books.py</code></td><td>Same pattern, 40+ theology topics</td><td><code>corpus/theology/raw/book_*.txt</code> (3,827 books)</td></tr>
 <tr><td><code>scrape_wikipedia.py</code></td><td>MediaWiki generator API (batch 50), 3&nbsp;s delay, 429 exponential backoff; 6 seed topics with category traversal</td><td><code>corpus/theology/raw/wiki_*.txt</code> (7,508 articles)</td></tr>
-<tr><td><code>build_exp1_translations.py</code></td><td>Genesis 1&ndash;3 in 5 public-domain translations from bible-api.com, verse numbers stripped, digit density verified</td><td><code>corpus/samples/exp1_translations.jsonl</code></td></tr>
+<tr><td><code>build_exp1_translations.py</code></td><td>30 Bible passages in 5 public-domain translations from bible-api.com + YLT GitHub repo, verse numbers stripped, digit density verified</td><td><code>corpus/samples/exp1_translations.jsonl</code> (150 records)</td></tr>
+<tr><td><code>build_exp1_copyrighted.py</code></td><td>Fetches 7 copyrighted Bible translations (NIV, ESV, NLT, NRSV, NASB, CSB, MSG) from Bible Gateway for the same 30 passages; merges with public-domain corpus and strips all digits to 0.0000%</td><td><code>corpus/samples/exp1_all_translations.jsonl</code> (360 records, 12 translations)</td></tr>
 </table>
 
 <h2>2. Corpus preparation</h2>
@@ -146,6 +147,8 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>analyze_exp4.py</code></td><td>Analyzes Exp 4 pilot results: H6 rates by group (KJV files vs commentary), per-anchor breakdowns, digit density correlation</td><td>Exp 4 pilot analysis</td></tr>
 <tr><td><code>analyze_exp4b.py</code></td><td>Analyzes Exp 4b record-level results: H6 composite rates, per-anchor stats, quote_fraction vs H6 correlation, quartile analysis, source variation</td><td>Input: <code>exp4b_obs.jsonl</code>; Output: <code>EXP4B_RESULTS.md</code>, charts</td></tr>
 <tr><td><code>analyze_exp12.py</code></td><td>Analyzes Exp 12 digit minimal-pair results: H6 and e164 rates by condition (with_digits vs digit_stripped), per-category breakdown, per-pair comparison, digit density correlation</td><td>Input: <code>exp12_obs.jsonl</code> + <code>exp12_digit_minimal_pairs.jsonl</code></td></tr>
+<tr><td><code>analyze_exp1_all.py</code></td><td>Analyzes expanded Exp 1 (12-translation) results: H6 rates per translation, public-domain vs copyrighted comparison, per-passage breakdown, translation-invariance statistics (CV, range), e164 positive control</td><td>Input: <code>exp1_all_obs.jsonl</code> + <code>exp1_all_translations.jsonl</code></td></tr>
+<tr><td><code>chart_exp1_all.py</code></td><td>Generates 3 expanded Exp 1 charts: H6 by translation (bar, log scale), public-domain vs copyrighted (grouped bar), per-passage &times; translation heatmap</td><td>Input: <code>exp1_all_obs.jsonl</code>; Output: <code>chart_exp1_all_*.png</code></td></tr>
 <tr><td><code>build_wiki_site.py</code></td><td>Generates this wiki from a shared template</td><td><code>wiki/*.html</code></td></tr>
 </table>
 
