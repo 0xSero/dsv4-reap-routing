@@ -90,7 +90,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li>1 <a href="#streams">Data streams</a></li>
 <li>2 <a href="#reap">REAP observations</a></li>
 <li>3 <a href="#jlens">J-space probes</a></li>
-<li>4 <a href="#experiments">All experiments (1&ndash;12)</a></li>
+<li>4 <a href="#experiments">All experiments (1&ndash;13 incl. 4b)</a></li>
 <li>5 <a href="#analysis">Analysis artifacts</a></li>
 <li>6 <a href="#merger">REAP &times; J-space merger</a></li>
 <li>7 <a href="#corpora">Corpus registry</a></li>
@@ -101,7 +101,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <p>The study has three independent data pipelines that feed into the wiki:</p>
 <table class="wikitable">
 <tr><th>Stream</th><th>What it captures</th><th>Harness</th><th>Records</th><th>Status</th><th>Where</th></tr>
-<tr><td><a href="#reap"><b>REAP observation</b></a></td><td>Per-token expert routing: which 6 of 256 experts fire, gate weights, activation norms, per layer</td><td><code>observe_religious.py</code></td><td class="num">2,749 done + 2,295 running</td><td><span class="tag tag-run">wave-2 running</span></td><td><code>full_obs.jsonl</code>, <code>christian_obs.jsonl</code></td></tr>
+<tr><td><a href="#reap"><b>REAP observation</b></a></td><td>Per-token expert routing: which 6 of 256 experts fire, gate weights, activation norms, per layer</td><td><code>observe_religious.py</code></td><td class="num">5,044 done (core + wave-1 + wave-2)</td><td><span class="tag tag-ok">wave-2 complete</span></td><td><code>full_obs.jsonl</code>, <code>christian_obs.jsonl</code></td></tr>
 <tr><td><a href="#jlens"><b>J-space lens</b></a></td><td>Per-layer next-token distributions (logit lens) + bounded Jacobian norms</td><td><code>run_jlens.py</code></td><td class="num">80/80</td><td><span class="tag tag-ok">complete</span></td><td><code>jlens_output/*.jsonl</code></td></tr>
 <tr><td><a href="#corpora"><b>Corpus pipeline</b></a></td><td>Raw text &rarr; tokenized windows &rarr; stratified selections</td><td><code>prepare_*.py</code>, <code>select_*.py</code></td><td>22M+ tokens observed; ~400M staged</td><td><span class="tag tag-ok">scraping done</span></td><td><code>corpus/samples/*.jsonl</code></td></tr>
 </table>
@@ -112,7 +112,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><th>Run</th><th>Corpora</th><th>Records</th><th>Tokens</th><th>Status</th><th>Output file</th></tr>
 <tr><td>Core 8-text</td><td>Bible, Qur'an, BoM, Gita, Tao, Dhammapada, Analects, Upanishads</td><td class="num">1,482</td><td class="num">1,769,967</td><td><span class="tag tag-ok">done</span></td><td><code>full_obs.jsonl</code> (560 MB)</td></tr>
 <tr><td>Christian wave-1</td><td>1,267 Gutenberg Christian books</td><td class="num">1,267</td><td class="num">20,409,440</td><td><span class="tag tag-ok">done</span></td><td><code>christian_obs.jsonl</code> (541 MB)</td></tr>
-<tr><td>Christian wave-2</td><td>2,295 extended Christian books</td><td class="num">~1,041 / 2,295</td><td>~17M / ~37M</td><td><span class="tag tag-run">running ~45%</span></td><td><code>christian2_obs.jsonl</code> (on GPU)</td></tr>
+<tr><td>Christian wave-2</td><td>2,295 extended Christian books</td><td class="num">2,295 / 2,295</td><td class="num">~37M</td><td><span class="tag tag-ok">complete</span></td><td><code>christian2_obs.jsonl</code></td></tr>
 <tr><td>Theology (staged)</td><td>Jesus, Lucifer, Judaism, Moloch, Saturn</td><td class="num">1,090</td><td class="num">9,380,481</td><td><span class="tag tag-pending">staged</span></td><td><code>theology_sel.jsonl</code></td></tr>
 </table>
 <p><b>Aggregates:</b> <code>core_agg.json</code> (8 traditions), <code>christian_agg.json</code> (wave-1). Each contains per-category n, token count, per-layer frequency arrays [256], and per-layer REAP arrays [256].</p>
@@ -130,11 +130,11 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <p><b>Retracted:</b> Genesis 1:2 "Spirit at layer 30" claim (mislabeled position, cherry-picked, uncalibrated).</p>
 <p><a href="jspace.html">&rarr; Full J-space page</a> &middot; <a href="../jlens_viewer.html">&rarr; Interactive viewer</a></p>
 
-<h2 id="experiments">4. All experiments (1&ndash;12)</h2>
+<h2 id="experiments">4. All experiments (1&ndash;13 incl. 4b)</h2>
 <p>Every experiment from <code>EXPERIMENTS.md</code>, with current status:</p>
 <table class="wikitable">
 <tr><th>#</th><th>Name</th><th>Tests</th><th>GPU?</th><th>Status</th><th>Result</th></tr>
-<tr><td>1</td><td><a href="experiments.html#e1">Multi-translation Genesis</a></td><td>Register vs memorization (same content, 5 translations, all 0 digits)</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>&mdash;</td></tr>
+<tr><td>1</td><td><a href="experiments.html#e1">Multi-translation Genesis</a></td><td>Register vs memorization (same content, 5 translations, all 0 digits)</td><td>Sub-hour</td><td><span class="tag tag-ok">complete</span></td><td>150 records, 209k tokens; H6 = 47.8/M, translation-invariant (3,415&times; vs commentary). See <a href="exp1.html">Exp 1 results</a>.</td></tr>
 <tr><td>2</td><td>e164 context dump (original)</td><td>What tokens trigger e164?</td><td>2&ndash;3 h</td><td>Superseded by Exp 11</td><td>&mdash;</td></tr>
 <tr><td>3</td><td><a href="experiments.html#e3">Secular null baseline</a></td><td>Is routing religion-specific or general-English?</td><td>4&ndash;6 h</td><td><span class="tag tag-pending">not staged</span></td><td>&mdash;</td></tr>
 <tr><td>4</td><td>Within-document KJV quotation switch</td><td>Does e164 turn off mid-document at KJV quote boundaries?</td><td>2&ndash;3 h</td><td><span class="tag tag-pending">planned</span></td><td>&mdash;</td></tr>
@@ -145,9 +145,11 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td>9</td><td><a href="experiments.html#e9">Position/length confound</a></td><td>Is e164 zero a windowing artifact?</td><td>None</td><td><span class="tag tag-ok">answered</span></td><td>Not a length artifact (Bible 0 / Qur'an 4,383/M at matched window sizes).</td></tr>
 <tr><td>10</td><td>Causal ablation of e164</td><td>Force e164 out/in, measure &Delta;NLL</td><td>4&ndash;6 h</td><td><span class="tag tag-bad">deprioritized</span></td><td>Requires code modification (violates read-only constraint unless re-scoped)</td></tr>
 <tr><td>11</td><td><a href="experiments.html#e11">e164/e27/e68 context dump (revised)</a></td><td>What tokens trigger the specialist cluster? (per-token routing capture)</td><td>Small</td><td><span class="tag tag-pending">staged</span></td><td>Needs <code>--raw-budget-tokens</code> GPU re-run</td></tr>
-<tr><td>12</td><td><a href="experiments.html#e12">Digit minimal-pairs</a></td><td>Digit detector vs citation-structure detector (same text, 3 digit versions)</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>111 samples ready; <b>highest priority</b></td></tr>
+<tr><td>12</td><td><a href="experiments.html#e12">Digit minimal-pairs</a></td><td>Digit detector vs citation-structure detector (same text, with_digits vs digit_stripped)</td><td>Sub-hour</td><td><span class="tag tag-ok">complete</span></td><td>222 records (111 pairs); H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;). See <a href="exp12.html">Exp 12 results</a>.</td></tr>
+<tr><td>4b</td><td><a href="experiments.html#e4b">Quotation-switch (scaled)</a></td><td>Within-document verse-quote vs commentary routing (H6 fires on prose context?)</td><td>Sub-hour</td><td><span class="tag tag-ok">complete</span></td><td>351 records, 5.2M tokens; mean H6 = 163,284/M on commentary prose; quote-fraction vs H6 r = &minus;0.13. See <a href="exp4.html#exp4b">Exp 4b results</a>.</td></tr>
+<tr><td>13</td><td><a href="experiments.html#e13">Scoped H6 ablation</a></td><td>Causal: does knocking out H6 anchors damage prose more than verse?</td><td>Moderate</td><td><span class="tag tag-pending">hook designed</span></td><td>Hook deployed to both TP2 nodes; ablation corpus (480 records) staged.</td></tr>
 </table>
-<p><b>Priority queue:</b> Exp 12 &rarr; Exp 1 &rarr; Exp 11 &rarr; theology observation &rarr; Exp 3. See <a href="experiments.html">experiments page</a> for details and <a href="operations.html">operations page</a> for deployment status.</p>
+<p><b>Priority queue:</b> <b>Exp 12 complete</b> &rarr; <b>Exp 1 complete</b> &rarr; <b>Exp 4b complete</b> &rarr; Exp 11 &rarr; theology observation &rarr; Exp 3. See <a href="experiments.html">experiments page</a> for details and <a href="operations.html">operations page</a> for deployment status.</p>
 
 <h2 id="analysis">5. Analysis artifacts</h2>
 <table class="wikitable">
@@ -192,11 +194,16 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>analects.jsonl</code></td><td class="num">20</td><td class="num">229 KB</td><td>low</td><td>Gutenberg</td><td><span class="tag tag-ok">yes</span></td></tr>
 <tr><td><code>upanishads.jsonl</code></td><td class="num">3</td><td class="num">119 KB</td><td>low</td><td>Gutenberg (n=3)</td><td><span class="tag tag-ok">yes</span></td></tr>
 <tr><td><code>christian_sel.jsonl</code></td><td class="num">1,267</td><td class="num">11 MB</td><td>~1.1% median</td><td>Gutenberg 3,705 books, 32 topics</td><td><span class="tag tag-ok">yes (wave-1)</span></td></tr>
-<tr><td><code>christian2_sel.jsonl</code></td><td class="num">2,295</td><td class="num">191 MB</td><td>varies</td><td>Gutenberg extended topics</td><td><span class="tag tag-run">running (wave-2)</span></td></tr>
+<tr><td><code>christian2_sel.jsonl</code></td><td class="num">2,295</td><td class="num">191 MB</td><td>varies</td><td>Gutenberg extended topics</td><td><span class="tag tag-ok">yes (wave-2)</span></td></tr>
 <tr><td><code>theology.jsonl</code></td><td class="num">29,098</td><td class="num">2.1 GB</td><td>varies</td><td>Wikipedia 7,508 + Gutenberg 3,827 books</td><td><span class="tag tag-pending">staged</span></td></tr>
 <tr><td><code>theology_sel.jsonl</code></td><td class="num">1,090</td><td class="num">51 MB</td><td>per-sample in manifest</td><td>Stratified: Jesus 400, Judaism 137, Lucifer 46, Moloch 25, Saturn 32, books 450</td><td><span class="tag tag-pending">staged</span></td></tr>
-<tr><td><code>exp12_minimal_pairs.jsonl</code></td><td class="num">111</td><td class="num">8.2 MB</td><td>0% / 2.23% / 2.83%</td><td>12 KJV chapters &times; 3 digit versions</td><td><span class="tag tag-pending">staged</span></td></tr>
-<tr><td><code>exp1_translations.jsonl</code></td><td class="num">5</td><td class="num">52 KB</td><td class="num">0.0000%</td><td>bible-api.com: KJV, WEB, ASV, BBE, WEBBE</td><td><span class="tag tag-pending">staged</span></td></tr>
+<tr><td><code>exp12_minimal_pairs.jsonl</code></td><td class="num">111</td><td class="num">8.2 MB</td><td>0% / 2.23% / 2.83%</td><td>111 matched pairs, 5 categories (with_digits vs digit_stripped)</td><td><span class="tag tag-ok">yes</span></td></tr>
+<tr><td><code>exp1_translations.jsonl</code></td><td class="num">150</td><td class="num">209k tokens</td><td class="num">0.0000%</td><td>bible-api.com: 30 passages &times; 5 translations (KJV, WEB, ASV, YLT, BBE)</td><td><span class="tag tag-ok">yes</span></td></tr>
+<tr><td><code>exp4b_quotation_switch.jsonl</code></td><td class="num">351</td><td class="num">28 MB</td><td>varies</td><td>Commentary windows with embedded KJV quotes, 18 sources</td><td><span class="tag tag-ok">yes</span></td></tr>
+<tr><td><code>exp13_ablation_corpus.jsonl</code></td><td class="num">480</td><td class="num">4.0 MB</td><td>varies</td><td>4 cells (verse/prose &times; religious/secular), 120 blocks each</td><td><span class="tag tag-pending">staged</span></td></tr>
+<tr><td><code>exp1_obs.jsonl</code></td><td class="num">150</td><td class="num">58 MB</td><td>&mdash;</td><td>Exp 1 observation output (per-record routing)</td><td><span class="tag tag-ok">output</span></td></tr>
+<tr><td><code>exp12_obs.jsonl</code></td><td class="num">222</td><td class="num">90 MB</td><td>&mdash;</td><td>Exp 12 observation output (with_digits + digit_stripped)</td><td><span class="tag tag-ok">output</span></td></tr>
+<tr><td><code>exp4b_obs.jsonl</code></td><td class="num">351</td><td class="num">150 MB</td><td>&mdash;</td><td>Exp 4b observation output (commentary + quote spans)</td><td><span class="tag tag-ok">output</span></td></tr>
 <tr><td><code>all_religious.jsonl</code></td><td class="num">1,482</td><td class="num">7.9 MB</td><td colspan="2">Combined 8 core traditions (for observation input)</td><td><span class="tag tag-ok">yes</span></td></tr>
 </table>
 
