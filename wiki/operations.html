@@ -3,109 +3,82 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Operations (live) - DSv4-Flash REAP Wiki</title>
-<style>
-body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
-a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
-#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
-#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
-#mw-body{margin-left:11em;margin-top:3.5em}
-.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
-@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
-#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
-#mw-panel .portal{margin-bottom:1.2em}
-#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
-#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
-#mw-panel li a{display:block;padding-left:.5em}
-#mw-panel li.here a{font-weight:600}
-.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
-.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
-.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
-.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
-.mw-body p{margin:.5em 0}
-.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
-code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
-pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
-.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
-.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
-.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
-.wikitable tr:nth-child(even){background:#f8f9fa}
-.num{text-align:right;font-family:monospace}
-.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
-.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
-.ambox.warn{border-left-color:#f28500;background:#fef6e7}
-.ambox.bad{border-left-color:#d33;background:#fee7e6}
-.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
-.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
-.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
-figure{margin:1em 0;text-align:center}
-figure img{max-width:100%;border:1px solid #c8ccd0}
-figcaption{font-size:12px;color:#54595d;margin-top:.3em}
-.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
-.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
-.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
-.toc ul{list-style:none;margin:0;padding-left:1.2em}
-.small{font-size:12px;color:#54595d}
-.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
-</style>
+<title>Operations (live) — DSv4-Flash REAP Wiki</title>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-head">
+  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
+</div>
 <div id="mw-panel">
-<div class="portal"><h3>Wiki</h3><ul>
-<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
-<li><a href="methods.html">Methods &amp; harness</a></li>
-<li><a href="data.html">Data &amp; corpora</a></li>
-<li><a href="results.html">Results &amp; findings</a></li>
+  <div class="portal"><h3>Wiki pages</h3><ul>
+<li><a href="../index.html">Main page</a></li>
+<li><a href="index.html">Master index</a></li>
+<li><a href="methods.html">Methods & harness</a></li>
+<li><a href="data.html">Data & corpora</a></li>
+<li><a href="results.html">Results & findings</a></li>
 <li><a href="jspace.html">J-space lens</a></li>
 <li><a href="experiments.html">Experiments</a></li>
 <li><a href="code.html">Code reference</a></li>
 <li class="here"><a href="operations.html">Operations (live)</a></li>
-<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="roadmap.html">Roadmap & ideas</a></li>
 <li><a href="narrative.html">Narrative</a></li>
-<li><a href="exp4.html">Exp 4 results</a></li>
-<li><a href="exp13.html">Exp 13 ablation</a></li>
-<li><a href="exp1.html">Exp 1 results</a></li>
-<li><a href="exp12.html">Exp 12 results</a></li>
+<li><a href="exp1.html">Exp 1: 12-translation</a></li>
+<li><a href="exp4.html">Exp 4: Quotation switch</a></li>
+<li><a href="exp12.html">Exp 12: Digit pairs</a></li>
+<li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
-</ul></div>
-<div class="portal"><h3>Resources</h3><ul>
+  </ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#running">1. Running now</a></li>
+<li><a href="#queue">2. Deployment queue</a></li>
+<li><a href="#runbook">3. Runbook (each 30-min automation cycle)</a></li>
+<li><a href="#constraints">4. Operational constraints</a></li>
+<li><a href="#incidents">5. Incident log</a></li></ul></div>
+  <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
-<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
-</ul></div>
-<div class="portal"><h3>Reviews</h3><ul>
-<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
-<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
-</ul></div>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">HuggingFace (raw obs)</a></li>
+<li><a href="jlens_viewer.html" target="_blank">Interactive J-space viewer</a></li>
+  </ul></div>
+  <div class="portal"><h3>External review</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">Claude Opus 5 review</a></li>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">Kimi K3 review</a></li>
+  </ul></div>
 </div>
 <div id="mw-body"><div class="mw-body">
-<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
+<p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
+<div class="toc"><div class="toctitle">Contents</div><ul>
+<li><a href="#running">1. Running now</a></li>
+<li><a href="#queue">2. Deployment queue</a></li>
+<li><a href="#runbook">3. Runbook (each 30-min automation cycle)</a></li>
+<li><a href="#constraints">4. Operational constraints</a></li>
+<li><a href="#incidents">5. Incident log</a></li>
+</ul></div>
 
 <h1>Operations (live)</h1>
-<div class="hatnote">What is running right now, what is queued, and the runbook the 30-minute automation follows. Status on this page reflects 2026-08-18.</div>
+<div class="hatnote">What is running, what is queued, and the runbook. Status reflects 2026-08-18.</div>
 
-<h2>1. Running now</h2>
+<h2 id="running">1. Running now</h2>
 <table class="wikitable">
 <tr><th>Pipeline</th><th>Progress</th><th>Supervisor</th><th>Notes</th></tr>
-<tr><td>Christian wave-2 observation</td><td><span class="tag tag-ok">complete (2,295/2,295)</span></td><td><code>chain_next_runs.sh</code></td><td>Completed; 3 NCCL stalls during the run, all self-healed with skip-ahead; finalized and aggregates rebuilt</td></tr>
-<tr><td>Expanded Exp 1 (12 translations)</td><td><span class="tag tag-pending">running (360 records)</span></td><td><code>run_full_observation.sh</code></td><td>360 records (30 passages &times; 12 translations incl. copyrighted); NCCL timeout at 212, resumed with skip-ahead</td></tr>
-<tr><td>30-min mission automation</td><td>active</td><td>cron</td><td>Monitors chains/watchdogs, deploys queued experiments when nodes free, runs throttled GitHub sync</td></tr>
-<tr><td>GitHub sync</td><td>every 4&nbsp;h</td><td><code>sync_to_github.sh</code> self-throttle</td><td></td></tr>
+<tr><td>Christian wave-2 observation</td><td><span class="tag tag-ok">complete (2,295/2,295)</span></td><td><code>chain_next_runs.sh</code></td><td>3 NCCL stalls, all self-healed with skip-ahead</td></tr>
+<tr><td>Expanded Exp 1 (12 translations)</td><td><span class="tag tag-ok">complete (360/360)</span></td><td><code>run_full_observation.sh</code></td><td>NCCL timeout at 212/360, resumed with skip-ahead</td></tr>
+<tr><td>30-min mission automation</td><td>active</td><td>cron</td><td>Monitors chains/watchdogs, deploys queued experiments, throttled GitHub sync</td></tr>
 </table>
 
-<h2>2. Deployment queue (on ALL RUNS COMPLETE)</h2>
+<h2 id="queue">2. Deployment queue</h2>
 <ol>
-<li><code>./finalize_christian.sh</code> &mdash; merge wave-2, verify invariants, rebuild aggregates <span class="tag tag-ok">done</span></li>
-<li><b>Exp 12</b> &mdash; <span class="tag tag-ok">complete</span> 222 records (111 pairs), H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;)</li>
-<li><b>Exp 1</b> &mdash; <span class="tag tag-ok">complete (expanded)</span> 360 records (12 translations incl. copyrighted), H6 = 59.5/M excl. MSG; MSG outlier at 1,033/M confirms format detection</li>
-<li><b>Exp 4b</b> &mdash; <span class="tag tag-ok">complete</span> 351 records, H6 = 163,284/M on commentary prose</li>
-<li><b>Exp 11</b> &mdash; context-dump re-run with <code>--raw-budget-tokens</code></li>
-<li><b>Theology observation</b> &mdash; 1,090 records (~16&nbsp;h), watchdog <code>obs_theology_watch.sh</code></li>
+<li><code>./finalize_christian.sh</code> — merge wave-2, verify invariants, rebuild aggregates <span class="tag tag-ok">done</span></li>
+<li><b>Exp 12</b> — <span class="tag tag-ok">complete</span> 222 records</li>
+<li><b>Exp 1</b> — <span class="tag tag-ok">complete</span> 360 records (12 translations)</li>
+<li><b>Exp 4b</b> — <span class="tag tag-ok">complete</span> 351 records</li>
+<li><b>Exp 13</b> — <span class="tag tag-pending">staged</span> ablation hook deployed, corpus ready</li>
+<li><b>Exp 11</b> — context-dump re-run with <code>--raw-budget-tokens</code></li>
+<li><b>Theology observation</b> — 1,090 records (~16h)</li>
 </ol>
 
-<h2>3. Runbook (each 30-min automation cycle)</h2>
+<h2 id="runbook">3. Runbook (each 30-min automation cycle)</h2>
 <pre>1. tail /tmp/chain_runs.log            # run status
 2. pgrep -f 'chain_next|obs_christian_watch|jlens_watch|obs_theology_watch'
                                        # restart any dead supervisor
@@ -114,34 +87,31 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 5. On completed observation: pull via scp, verify fail-closed invariants,
    run analyze_experts.py, update wiki + site, sync</pre>
 
-<h2>4. Operational constraints</h2>
+<h2 id="constraints">4. Operational constraints</h2>
 <ul>
 <li><b>Read-only:</b> no weight edits, no pruning, no quantization. Observation only.</li>
 <li><b>Host exclusions:</b> spark-2822 (100.83.190.2) is out of scope, never touched.</li>
-<li><b>Credentials:</b> de5c password via <code>SSHPASS</code> env only; SSH auth no more than every
-~10 min (rate-limited host); never printed, logged, or committed.</li>
-<li><b>Scraping:</b> never parallel scrapers (429); Gutenberg 0.8&ndash;1.5 s; Wikipedia 3 s.</li>
-<li><b>Corpus:</b> English only; public-domain / freely-published for core corpora; copyrighted Bible translations (NIV, ESV, NLT, NRSV, NASB, CSB, MSG) included for the expanded Exp 1 test per explicit authorization; tokenizer pinned to rev
-<code>9e165c30</code>.</li>
+<li><b>Credentials:</b> de5c password via <code>SSHPASS</code> env only; never printed, logged, or committed.</li>
+<li><b>Scraping:</b> never parallel scrapers (429); Gutenberg 0.8–1.5s; Wikipedia 3s.</li>
+<li><b>Corpus:</b> English only; public-domain for core corpora; copyrighted Bible translations included for Exp 1 per explicit authorization.</li>
 <li><b>Integrity:</b> fail-closed invariants asserted before any record is accepted.</li>
 </ul>
 
-<h2>5. Incident log</h2>
+<h2 id="incidents">5. Incident log</h2>
 <table class="wikitable">
 <tr><th>Date</th><th>Event</th><th>Resolution</th></tr>
-<tr><td>08-14</td><td>J-lens NCCL stalls (2&times;)</td><td>autoheal + resume; completed 80/80</td></tr>
-<tr><td>08-15</td><td>Wikipedia scraper 429 storm (6 parallel scrapers)</td><td>killed all, rewrote sequential with backoff, re-scraped via sub-agent infrastructure</td></tr>
-<tr><td>08-16</td><td>Wave-2 NCCL stalls (3&times;: at ~470, ~717, ~806 records)</td><td>chain supervisor relaunched with skip-ahead each time, zero data loss</td></tr>
-<tr><td>08-16</td><td><b>Credential leak found:</b> sanitizer script embedded the de5c password (public ~1 day)</td><td>script fixed to <code>$SSHPASS</code> env; full git history purged with git-filter-repo (verified 0 matches all commits); HF copy replaced; password rotation recommended</td></tr>
-<tr><td>08-18</td><td><b>Exp 1 complete</b> &mdash; 150/150 records (phase 1), 0 invariant violations</td><td>multi-translation register test done; H6 = 47.8/M, translation-invariant; aggregates + wiki updated</td></tr>
-<tr><td>08-18</td><td><b>Exp 1 expanded complete</b> &mdash; 360/360 records (12 translations), 0 violations</td><td>Added NIV, ESV, NLT, NRSV, NASB, CSB, MSG; MSG outlier at 1,033/M confirms format hypothesis; NCCL timeout at 212/360, resumed with skip-ahead</td></tr>
-<tr><td>08-18</td><td><b>Exp 4b complete</b> &mdash; 351/351 records, 0 invariant violations</td><td>scaled quotation-switch done; mean H6 = 163,284/M on commentary prose; quote-fraction vs H6 r = &minus;0.13</td></tr>
-<tr><td>08-18</td><td><b>Exp 12 complete</b> &mdash; 222/222 records, 0 invariant violations</td><td>digit minimal-pairs done; H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;)</td></tr>
-<tr><td>08-18</td><td>Exp 12 container crashed at 166/222 with segfault</td><td>chain supervisor resumed with record skip-ahead; completed 222/222 with zero data loss</td></tr>
-<tr><td>08-18</td><td><b>Expanded Exp 1 launched</b> &mdash; 360 records (12 translations incl. copyrighted NIV/ESV/NLT/NRSV/NASB/CSB/MSG)</td><td>NCCL timeout at 212/360; relaunched with skip-ahead, processing remaining 148 records</td></tr>
+<tr><td>08-14</td><td>J-lens NCCL stalls (2×)</td><td>autoheal + resume; completed 80/80</td></tr>
+<tr><td>08-15</td><td>Wikipedia scraper 429 storm (6 parallel scrapers)</td><td>killed all, rewrote sequential with backoff</td></tr>
+<tr><td>08-16</td><td>Wave-2 NCCL stalls (3×)</td><td>chain supervisor relaunched with skip-ahead, zero data loss</td></tr>
+<tr><td>08-16</td><td><b>Credential leak found:</b> sanitizer embedded de5c password</td><td>fixed to $SSHPASS env; git history purged with git-filter-repo; HF copy replaced</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 complete</b> — 150/150 (phase 1)</td><td>H6 = 47.8/M, translation-invariant</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 expanded complete</b> — 360/360 (12 translations)</td><td>MSG outlier at 1,033/M; NCCL timeout at 212, resumed</td></tr>
+<tr><td>08-18</td><td><b>Exp 4b complete</b> — 351/351</td><td>H6 = 163,284/M on commentary prose</td></tr>
+<tr><td>08-18</td><td><b>Exp 12 complete</b> — 222/222</td><td>H6 digit-independent, e164 digit detector</td></tr>
+<tr><td>08-18</td><td>Exp 12 container crashed at 166/222 with segfault</td><td>resumed with skip-ahead, zero data loss</td></tr>
 </table>
 
-<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

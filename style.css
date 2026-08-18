@@ -1,0 +1,192 @@
+/* ════════════════════════════════════════════════════════════════
+   DSv4-Flash REAP Research Wiki — Wikipedia Vector skin approximation
+   Single shared stylesheet for all pages.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Reset & base ── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 100%; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+  font-size: 14.5px; line-height: 1.6;
+  color: #202122; background: #f8f9fa;
+}
+
+a { color: #3366cc; text-decoration: none; }
+a:hover { text-decoration: underline; }
+a.new { color: #ba0000; }
+
+/* ── Top bar ── */
+#mw-head {
+  position: fixed; top: 0; left: 0; right: 0; height: 2.6em;
+  background: #fff; border-bottom: 1px solid #a7d7f9;
+  z-index: 100; display: flex; align-items: center; padding: 0 1em;
+}
+#mw-head .brand { font-size: 13px; color: #54595d; font-weight: 600; }
+#mw-head .search { margin-left: auto; }
+#mw-head .search input {
+  font-size: 12px; padding: 2px 6px; border: 1px solid #c8ccd1;
+  border-radius: 2px; width: 180px;
+}
+#mw-head .search button {
+  font-size: 12px; padding: 2px 8px; cursor: pointer;
+  border: 1px solid #c8ccd1; border-radius: 2px; background: #f8f9fa;
+}
+
+/* ── Sidebar ── */
+#mw-panel {
+  position: fixed; top: 2.6em; left: 0; bottom: 0; width: 11em;
+  padding: 0.5em 0.5em 0 0; font-size: 12.5px; overflow-y: auto;
+  background: #f8f9fa; border-right: 1px solid #eaecf0;
+}
+#mw-panel .portal { margin-bottom: 1em; }
+#mw-panel h3 {
+  font-size: 12px; font-weight: bold; color: #54595d;
+  padding: 0 0 0 0.6em; margin-bottom: 0.3em; cursor: default;
+}
+#mw-panel ul { list-style: none; }
+#mw-panel li { padding: 0.1em 0 0.1em 0.6em; }
+#mw-panel li a { color: #3366cc; }
+#mw-panel li.here > a { font-weight: bold; color: #202122; }
+#mw-panel li.here > a::before { content: "▸ "; color: #3366cc; }
+
+/* ── Content area ── */
+#mw-body { margin-left: 11em; margin-top: 2.6em; padding: 0; }
+.mw-body {
+  max-width: 900px; margin: 1em auto; padding: 1.5em 2em;
+  background: #fff; border: 1px solid #a7d7f9; border-radius: 2px;
+}
+
+/* ── Typography ── */
+.mw-body h1 {
+  font-family: "Linux Libertine", Georgia, "Times New Roman", serif;
+  font-size: 28px; font-weight: normal; border-bottom: 1px solid #a2a9b1;
+  padding-bottom: 0.2em; margin-bottom: 0.5em;
+}
+.mw-body h2 {
+  font-family: "Linux Libertine", Georgia, serif;
+  font-size: 22px; font-weight: normal; border-bottom: 1px solid #a2a9b1;
+  padding-bottom: 0.15em; margin-top: 1.5em; margin-bottom: 0.5em;
+}
+.mw-body h3 { font-size: 17px; font-weight: bold; margin-top: 1em; }
+.mw-body h4 { font-size: 14.5px; font-weight: bold; margin-top: 0.8em; }
+.mw-body p { margin: 0.5em 0; }
+.mw-body ul, .mw-body ol { margin: 0.5em 0 0.5em 1.6em; }
+.mw-body li { margin: 0.2em 0; }
+.mw-body dl { margin: 0.5em 0; }
+.mw-body dt { font-weight: bold; margin-top: 0.5em; }
+.mw-body dd { margin: 0.2em 0 0.5em 1.5em; }
+.mw-body code {
+  font-family: "SF Mono", Monaco, Menlo, Consolas, monospace;
+  font-size: 13px; background: #f0f0f0; padding: 1px 4px; border-radius: 2px;
+}
+.mw-body pre {
+  font-family: "SF Mono", Monaco, Menlo, Consolas, monospace;
+  font-size: 12.5px; background: #f8f8f8; border: 1px solid #eaecf0;
+  border-radius: 2px; padding: 0.8em; overflow-x: auto; line-height: 1.45;
+  margin: 0.5em 0;
+}
+.mw-body pre code { background: none; padding: 0; }
+
+/* ── Subtitle ── */
+.subtitle { color: #54595d; font-size: 13px; font-style: italic; margin-bottom: 1em; }
+
+/* ── Lead ── */
+.mw-body .lead { font-size: 15.5px; line-height: 1.7; }
+
+/* ── Tables ── */
+.wikitable {
+  border-collapse: collapse; width: 100%; margin: 0.5em 0;
+  font-size: 13px; border: 1px solid #a2a9b1;
+}
+.wikitable th {
+  background: #eaecf0; border: 1px solid #a2a9b1;
+  padding: 4px 8px; text-align: left; font-weight: bold;
+}
+.wikitable td {
+  border: 1px solid #a2a9b1; padding: 4px 8px; vertical-align: top;
+}
+.wikitable tr:nth-child(even) td { background: #f8f9fa; }
+.num { text-align: right; font-family: "SF Mono", Monaco, monospace; white-space: nowrap; }
+
+/* ── Hatnote ── */
+.hatnote {
+  font-style: italic; color: #54595d; font-size: 13px;
+  margin: 0.5em 0 1em 0; padding-left: 1.5em; border-left: 3px solid #eaecf0;
+}
+
+/* ── Ambox (article message boxes) ── */
+.ambox {
+  margin: 0.5em 0; padding: 0.5em 1em; border: 1px solid #a2a9b1;
+  border-left: 10px solid #fc3; background: #fef6e7; font-size: 13.5px;
+  display: flex; gap: 0.8em; align-items: flex-start;
+}
+.ambox.bad { border-left-color: #d33; background: #fee7e7; }
+.ambox.ok { border-left-color: #3c3; background: #e7f7e7; }
+.ambox.warn { border-left-color: #f93; background: #fff4e6; }
+.ambox-survives { border-left-color: #3c3; background: #e7f7e7; }
+.ambox-retracted { border-left-color: #d33; background: #fee7e7; }
+
+/* ── Status tags ── */
+.tag {
+  display: inline-block; font-size: 11px; font-weight: bold; padding: 1px 7px;
+  border-radius: 10px; color: #fff; white-space: nowrap;
+}
+.tag-ok { background: #3c3; }
+.tag-pending { background: #69f; }
+.tag-bad { background: #d33; }
+.tag-run { background: #f90; }
+.tag-survives { background: #3c3; }
+.tag-retracted { background: #d33; }
+.tag-verified { background: #090; }
+
+/* ── Figures ── */
+figure { margin: 1em 0; text-align: center; }
+figure img { max-width: 100%; height: auto; border: 1px solid #eaecf0; }
+figcaption { font-size: 12.5px; color: #54595d; margin-top: 0.4em; font-style: italic; }
+
+/* ── TOC ── */
+.toc {
+  border: 1px solid #a2a9b1; background: #f8f9fa; padding: 0.5em 1em;
+  margin: 1em 0; font-size: 13px; display: inline-block; min-width: 300px;
+}
+.toc .toctitle { font-weight: bold; font-size: 14px; margin-bottom: 0.3em; }
+.toc ul { list-style: none; margin-left: 0; }
+.toc ul ul { margin-left: 1.2em; }
+.toc li { margin: 0.15em 0; }
+
+/* ── Infobox ── */
+.infobox {
+  float: right; clear: right; width: 280px; border: 1px solid #a2a9b1;
+  background: #f8f9fa; font-size: 12.5px; margin: 0.5em 0 0.5em 1em;
+  border-radius: 2px;
+}
+.infobox .ib-title {
+  background: #eaecf0; text-align: center; font-size: 15px;
+  font-weight: bold; padding: 0.5em; border-bottom: 2px solid #a2a9b1;
+}
+.infobox .ib-subtitle { text-align: center; padding: 0.3em; font-size: 13px; color: #54595d; }
+.infobox table { width: 100%; }
+.infobox th, .infobox td { padding: 3px 6px; border-top: 1px solid #eaecf0; }
+
+/* ── Catlinks ── */
+.catlinks {
+  border: 1px solid #a2a9b1; background: #f8f9fa; padding: 0.4em 0.8em;
+  margin-top: 2em; font-size: 12.5px; clear: both;
+}
+
+/* ── Misc ── */
+.small { font-size: 12px; color: #54595d; }
+.stat { font-size: 24px; font-weight: bold; color: #202122; }
+.mw-editsection { font-size: 11px; font-weight: normal; margin-left: 0.5em; }
+.mw-editsection a { color: #3366cc; }
+.printfooter { display: none; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  #mw-panel { display: none; }
+  #mw-body { margin-left: 0; }
+  .mw-body { padding: 1em; margin: 0.5em; }
+  .infobox { float: none; width: 100%; margin: 0.5em 0; }
+}

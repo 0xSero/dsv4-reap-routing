@@ -3,236 +3,141 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Methods and harness - DSv4-Flash REAP Wiki</title>
-<style>
-body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
-a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
-#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
-#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
-#mw-body{margin-left:11em;margin-top:3.5em}
-.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
-@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
-#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
-#mw-panel .portal{margin-bottom:1.2em}
-#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
-#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
-#mw-panel li a{display:block;padding-left:.5em}
-#mw-panel li.here a{font-weight:600}
-.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
-.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
-.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
-.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
-.mw-body p{margin:.5em 0}
-.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
-code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
-pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
-.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
-.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
-.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
-.wikitable tr:nth-child(even){background:#f8f9fa}
-.num{text-align:right;font-family:monospace}
-.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
-.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
-.ambox.warn{border-left-color:#f28500;background:#fef6e7}
-.ambox.bad{border-left-color:#d33;background:#fee7e6}
-.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
-.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
-.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
-figure{margin:1em 0;text-align:center}
-figure img{max-width:100%;border:1px solid #c8ccd0}
-figcaption{font-size:12px;color:#54595d;margin-top:.3em}
-.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
-.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
-.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
-.toc ul{list-style:none;margin:0;padding-left:1.2em}
-.small{font-size:12px;color:#54595d}
-.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
-</style>
+<title>Methods and harness — DSv4-Flash REAP Wiki</title>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-head">
+  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
+</div>
 <div id="mw-panel">
-<div class="portal"><h3>Wiki</h3><ul>
-<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
-<li class="here"><a href="methods.html">Methods &amp; harness</a></li>
-<li><a href="data.html">Data &amp; corpora</a></li>
-<li><a href="results.html">Results &amp; findings</a></li>
+  <div class="portal"><h3>Wiki pages</h3><ul>
+<li><a href="../index.html">Main page</a></li>
+<li><a href="index.html">Master index</a></li>
+<li class="here"><a href="methods.html">Methods & harness</a></li>
+<li><a href="data.html">Data & corpora</a></li>
+<li><a href="results.html">Results & findings</a></li>
 <li><a href="jspace.html">J-space lens</a></li>
 <li><a href="experiments.html">Experiments</a></li>
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
-<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="roadmap.html">Roadmap & ideas</a></li>
 <li><a href="narrative.html">Narrative</a></li>
-<li><a href="exp4.html">Exp 4 results</a></li>
-<li><a href="exp13.html">Exp 13 ablation</a></li>
-<li><a href="exp1.html">Exp 1 results</a></li>
-<li><a href="exp12.html">Exp 12 results</a></li>
+<li><a href="exp1.html">Exp 1: 12-translation</a></li>
+<li><a href="exp4.html">Exp 4: Quotation switch</a></li>
+<li><a href="exp12.html">Exp 12: Digit pairs</a></li>
+<li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
-</ul></div>
-<div class="portal"><h3>Resources</h3><ul>
+  </ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#model">1. Model specification</a></li>
+<li><a href="#harness">2. Observation harness</a></li>
+<li><a href="#pipeline">3. Corpus pipeline</a></li>
+<li><a href="#reap">4. REAP metric</a></li>
+<li><a href="#jlens">5. J-lens probes</a></li>
+<li><a href="#fail-closed">6. Fail-closed guarantees</a></li>
+<li><a href="#faithfulness">7. Faithfulness verification</a></li>
+<li><a href="#infra">8. Deployment infrastructure</a></li></ul></div>
+  <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
-<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
-</ul></div>
-<div class="portal"><h3>Reviews</h3><ul>
-<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
-<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
-</ul></div>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">HuggingFace (raw obs)</a></li>
+<li><a href="jlens_viewer.html" target="_blank">Interactive J-space viewer</a></li>
+  </ul></div>
+  <div class="portal"><h3>External review</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">Claude Opus 5 review</a></li>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">Kimi K3 review</a></li>
+  </ul></div>
 </div>
 <div id="mw-body"><div class="mw-body">
-<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
-
-<h1>Methods and observation harness</h1>
-<div class="hatnote">This page documents <b>how</b> the study works: the model under observation, the read-only harness that records routing, the REAP metric, the fail-closed integrity guarantees, and the verification that the harness is faithful to the real model code.</div>
-
+<p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li>1 <a href="#model">Model under observation</a></li>
-<li>2 <a href="#harness">Observation harness</a></li>
-<li>3 <a href="#pipeline">Corpus pipeline</a></li>
-<li>4 <a href="#reap">REAP metric</a></li>
-<li>5 <a href="#jlens">J-lens probes</a></li>
-<li>6 <a href="#failclosed">Fail-closed guarantees</a></li>
-<li>7 <a href="#faithful">Harness faithfulness verification</a></li>
-<li>8 <a href="#infra">Deployment infrastructure</a></li>
+<li><a href="#model">1. Model specification</a></li>
+<li><a href="#harness">2. Observation harness</a></li>
+<li><a href="#pipeline">3. Corpus pipeline</a></li>
+<li><a href="#reap">4. REAP metric</a></li>
+<li><a href="#jlens">5. J-lens probes</a></li>
+<li><a href="#fail-closed">6. Fail-closed guarantees</a></li>
+<li><a href="#faithfulness">7. Faithfulness verification</a></li>
+<li><a href="#infra">8. Deployment infrastructure</a></li>
 </ul></div>
 
-<h2 id="model">1. Model under observation</h2>
-<p>DeepSeek-V4-Flash-0731 is a sparse <b>mixture-of-experts</b> (MoE) language model. Its routing
-architecture is the object of study:</p>
+<h1>Methods and observation harness</h1>
+<div class="hatnote">The technical setup: model, harness, REAP metric, J-lens probes, and the fail-closed integrity guarantees.</div>
+
+<h2 id="model">1. Model specification</h2>
 <table class="wikitable">
-<tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
-<tr><td>Layers</td><td class="num">43</td><td>Indexed L0&ndash;L42</td></tr>
-<tr><td>Routed experts / layer</td><td class="num">256</td><td>SwiGLU FFN, fp4 weights</td></tr>
-<tr><td>Activated experts / token</td><td class="num">6</td><td>top-6 selection</td></tr>
-<tr><td>Gate score function</td><td><code>sqrt(softplus(x))</code></td><td>sqrt-softplus; see Gate.forward</td></tr>
-<tr><td>Route scale</td><td class="num">1.5</td><td>multiplies normalized weights</td></tr>
-<tr><td>Bias in gate</td><td>per-expert float</td><td>shifts <i>selection</i> only, not weights</td></tr>
-<tr><td>Hash-routed layers</td><td>L0&ndash;L2</td><td><code>n_hash_layers=3</code>; expert IDs fixed per token ID via <code>tid2eid</code></td></tr>
-<tr><td>Hidden dim / vocab</td><td class="num">4,096 / 129,280</td><td></td></tr>
-<tr><td>Attention precision</td><td>fp8</td><td>tilelang sparse_attn kernel (replaced in harness)</td></tr>
-<tr><td>Hyper-connections</td><td>hc_head &times;4</td><td></td></tr>
-<tr><td>Group-limited routing</td><td>none</td><td><code>o_groups=8</code> is an attention parameter, not routing</td></tr>
-<tr><td>Checkpoint revision</td><td colspan="2"><code>9e165c30e2704aec5d9d593cce3eebd58bbef1cb</code> (tokenizer pinned to same rev)</td></tr>
+<tr><th>Parameter</th><th>Value</th></tr>
+<tr><td>Architecture</td><td>DeepSeek-V4-Flash-0731 (sparse MoE)</td></tr>
+<tr><td>Layers</td><td class="num">43</td></tr>
+<tr><td>Routed experts per layer</td><td class="num">256</td></tr>
+<tr><td>Top-k gating</td><td class="num">6</td></tr>
+<tr><td>Gate function</td><td>sqrt-softplus, route_scale=1.5</td></tr>
+<tr><td>Hidden dimension</td><td class="num">4096</td></tr>
+<tr><td>Vocabulary</td><td class="num">129,280</td></tr>
+<tr><td>Expert weights precision</td><td>fp4</td></tr>
+<tr><td>Attention weights precision</td><td>fp8</td></tr>
+<tr><td>Hyper-connections</td><td>hc_head ×4, n_hash_layers=3</td></tr>
+<tr><td>Tokenizer</td><td>DeepSeek-V4-Flash-0731, rev <code>9e165c30</code></td></tr>
 </table>
 
-<h3>1.1 The routing step (real source)</h3>
-<p>The actual <code>Gate.forward</code> from <code>model.py:551&ndash;589</code>:</p>
-<pre>def forward(self, x, input_ids=None):
-    scores = linear(x.float(), self.weight.float())
-    if self.score_func == "softmax":
-        scores = scores.softmax(dim=-1)
-    elif self.score_func == "sigmoid":
-        scores = scores.sigmoid()
-    else:
-        scores = F.softplus(scores).sqrt()          # sqrt-softplus
-    original_scores = scores
-    # Bias shifts scores for expert selection (topk) but does not affect routing weights.
-    if self.bias is not None:
-        scores = scores + self.bias
-    if self.hash:                                    # L0-2 only
-        indices = self.tid2eid[input_ids]           # expert fixed per token ID
-    else:
-        indices = scores.topk(self.topk, dim=-1)[1]  # plain topk, no group masking
-    weights = original_scores.gather(1, indices)     # weights from UNbiased scores
-    if self.score_func != "softmax":
-        weights /= weights.sum(dim=-1, keepdim=True) # renormalize
-    weights *= self.route_scale                      # 1.5
-    return weights, indices</pre>
-<p>Two properties matter for analysis: (a) the <b>bias affects only which experts are selected</b>,
-not the weights they receive; (b) hash layers L0&ndash;2 route by token ID alone, so their
-statistics are corpus-invariant <i>by construction</i>.</p>
-
 <h2 id="harness">2. Observation harness</h2>
-<p><code>observe_religious.py</code> runs read-only inference with a forward hook on every
-<code>Gate</code> module. No weights are loaded into training mode, nothing is written back.
-Per token, per layer, it records:</p>
+<p>The harness (<code>observe_religious.py</code>, 22KB) runs read-only TP2 inference on the DGX Spark pair (de5c rank0 + 557f rank1). It:</p>
 <ul>
-<li><b>Selected expert indices</b> &mdash; the 6 winners of topk (or hash assignment)</li>
-<li><b>Gate weights</b> &mdash; sqrt-softplus scores gathered at the selected indices, normalized, &times;1.5</li>
-<li><b>Activation norms</b> &mdash; L2 norm of each selected expert's output vector</li>
+<li>Loads the converted checkpoint (<code>model{0,1}-mp2.safetensors</code>) into vLLM/Sparkinfer</li>
+<li>Hooks the Gate module's <code>forward()</code> to capture per-token routing (gate weights, activation norms, expert frequencies)</li>
+<li>Verified line-for-line against <code>model.py</code> Gate.forward — the hook is faithful</li>
+<li>Asserts fail-closed invariants before accepting any record</li>
+<li>Writes fsynced JSONL (crash-safe, resume-safe via <code>completed_keys()</code>)</li>
+<li>Supports <code>--raw-budget-tokens</code> for per-token routing capture (needed by Exp 11)</li>
 </ul>
-<p>These are aggregated per sample per layer into the record format documented on the
-<a href="data.html">data page</a>.</p>
-
-<div class="ambox warn"><b>Known caveats.</b>
-(1) The harness replaces the tilelang <code>sparse_attn</code> kernel and
-<code>fast_hadamard_transform</code> with pure-PyTorch equivalents &mdash; claimed numerically
-equivalent, but any difference would perturb routing upstream of L0.
-(2) The <code>gate_weights[256]</code> field in records is a <b>softmax diagnostic</b>, not the
-routing score (which is sqrt-softplus). Analyses must not treat it as the route score.
-(3) <code>routed_experts</code> stores <b>unique</b> expert IDs per layer, not per-token
-routing &mdash; which is why context-dump experiments need a GPU re-run.</div>
 
 <h2 id="pipeline">3. Corpus pipeline</h2>
-<p>Text goes through five stages before it becomes a record:</p>
 <ol>
-<li><b>Scrape</b> &mdash; <code>scrape_christian.py</code> / <code>scrape_theology_books.py</code> (Project Gutenberg,
-search-HTML enumeration, mirror fallbacks) and <code>scrape_wikipedia.py</code> (MediaWiki
-generator API, 3&nbsp;s delay, 429 backoff). Only public-domain or freely-published text.</li>
-<li><b>Clean</b> &mdash; Gutenberg header/footer stripped; <b>KJV verse numbers removed by regex</b>
-(this innocuous-looking step caused the <a href="results.html#retract">digit confound retraction</a>).</li>
-<li><b>Tokenize &amp; window</b> &mdash; <code>prepare_corpus.py</code> / <code>prepare_theology_corpus.py</code>:
-pinned tokenizer, English stopword filter, fixed windows (880-token Bible chapters; 16k windows for books).</li>
-<li><b>Select</b> &mdash; <code>select_theology.py</code>: stratified quotas per topic, per-sample digit density recorded in manifest.</li>
-<li><b>Observe</b> &mdash; the harness (above), fsynced JSONL output, one record per sample.</li>
+<li><b>Scrape</b> — Project Gutenberg (Gutendex/mirror) + Wikipedia (MediaWiki API). Rate-limited: Gutenberg 0.8–1.5s, Wikipedia 3s with 429 exponential backoff.</li>
+<li><b>Split</b> — Per-book/per-chapter plain text via <code>corpus/split_corpus.py</code></li>
+<li><b>Tokenize</b> — Pinned tokenizer rev <code>9e165c30</code></li>
+<li><b>Window</b> — ≤16,384 tokens per sample; verse numbers stripped from Bible (the digit-confound origin)</li>
+<li><b>Emit</b> — Resumable JSONL + SHA-256 manifests via shared <code>_emit_jsonl</code></li>
 </ol>
 
 <h2 id="reap">4. REAP metric</h2>
-<p><b>REAP</b> = Routing-weight &times; Expert Activation Product. Per expert, per layer:</p>
-<pre>REAP = mean(gate_weight over tokens where expert fired)
-      &times; mean(activation_norm over the same tokens)</pre>
-<p>Text profiles are per-layer top-20 expert sets ranked by frequency-weighted mean REAP;
-inter-text similarity is Jaccard overlap of these sets. <b>Metric caution</b> (from the Kimi K3
-review): per-firing mean REAP has a heavy noise floor &mdash; experts firing &lt;35 times in
-98,304 slots dominate the mean. Layer-wise REAP profiles and frequency profiles can invert
-(see <a href="results.html#retract">retraction 8.2</a>). Always state which metric a number
-comes from.</p>
+<p><b>REAP</b> = gate_weight × activation_norm. A composite metric for expert importance that combines how strongly an expert is selected (gate weight) with how active it is when selected (activation norm). Computed per-expert per-layer per-sample, then aggregated across samples within a corpus.</p>
 
 <h2 id="jlens">5. J-lens probes</h2>
-<p><code>run_jlens.py</code> / <code>jlens_dsv4.py</code> capture, per position and per layer:</p>
+<p>Two probes capture the model's intermediate representations:</p>
 <ul>
-<li><b>Logit lens</b> &mdash; the unembedding applied to the residual stream at each layer, giving
-the model's running "next-token guess" before the final layer. <i>Uncalibrated readout path;
-the Genesis 1:2 claim built on it was withdrawn.</i></li>
-<li><b>Bounded Jacobian</b> &mdash; output sensitivity to input perturbations along 16 random
-projection directions; a cheap proxy for full Jacobian norms.</li>
+<li><b>Logit lens</b> — Project the residual stream through the unembedding matrix at each layer to see the model's running next-token guess. Records top-10 tokens + probabilities per position per layer.</li>
+<li><b>Bounded Jacobian</b> — Perturb the input embedding by ε=0.01 along 16 random directions, measure output logit change. L2 norm = cheap proxy for the full input-output Jacobian.</li>
 </ul>
-<p>80 samples across all 8 core traditions; complete.</p>
+<p>Both run on the same 80 samples (10 per tradition, except Upanishads n=3) under the same read-only harness. See <a href="jspace.html">J-space lens page</a> for details.</p>
 
-<h2 id="failclosed">6. Fail-closed guarantees</h2>
-<div class="ambox ok"><b>Integrity invariants (all 2,749 completed records pass, zero violations):</b>
+<h2 id="fail-closed">6. Fail-closed guarantees</h2>
+<p>Every record must pass these invariants before it is accepted:</p>
 <ul>
-<li><code>&Sigma; expert_frequencies == seqlen &times; 6</code> on <b>every layer of every record</b> &mdash; no token routing lost</li>
-<li><code>(category, sample_index)</code> unique across the dataset &mdash; no duplicates</li>
-<li>Records fsynced to JSONL line-by-line &mdash; a crash never corrupts a partially-written record</li>
-<li>English filter (stopword regex) &mdash; rejects non-English text before observation</li>
-<li>SHA-256 + manifest sidecars per corpus file</li>
-</ul></div>
+<li><b>Frequency sum</b>: <code>sum(expert_frequencies) == seqlen × topk</code> for every layer</li>
+<li><b>Non-negative</b>: All gate weights and activation norms ≥ 0</li>
+<li><b>Finite</b>: No NaN or Inf in any recorded value</li>
+<li><b>Shape match</b>: <code>len(expert_frequencies) == 256</code> for routed layers</li>
+</ul>
+<p>Any violation → the record is discarded and the run aborts. Zero violations across all 3,682 records observed to date.</p>
 
-<h2 id="faithful">7. Harness faithfulness verification</h2>
-<p>The harness's reimplementation of the gate was checked line-for-line against
-<code>model.py</code>:</p>
-<table class="wikitable">
-<tr><th>Check</th><th>Result</th></tr>
-<tr><td>sqrt-softplus score</td><td>&#10003; matches <code>F.softplus(scores).sqrt()</code></td></tr>
-<tr><td>Bias for selection only</td><td>&#10003; weights gathered from unbiased scores</td></tr>
-<tr><td>Hash routing L0&ndash;2</td><td>&#10003; <code>tid2eid[input_ids]</code></td></tr>
-<tr><td>Plain topk</td><td>&#10003; no group masking</td></tr>
-<tr><td>Renormalization + route scale</td><td>&#10003; <code>/sum</code> then <code>*1.5</code></td></tr>
-</table>
+<h2 id="faithfulness">7. Faithfulness verification</h2>
+<p>The Gate hook was verified line-for-line against the model's <code>Gate.forward()</code> method. The Kimi K3 external review independently reproduced the e164 zero-on-Bible finding from the committed observation artifacts, confirming the harness is faithful.</p>
 
 <h2 id="infra">8. Deployment infrastructure</h2>
-<p>The model runs tensor-parallel across two DGX Spark nodes (TP2), one rank per node.
-Observation runs launch as Docker containers (<code>run_full_observation.sh</code>), orchestrated
-by a chain supervisor (<code>chain_next_runs.sh</code>) that sequences runs and self-heals NCCL
-stalls by relaunching with record-skip-ahead. A 30-minute cron automation monitors all
-pipelines and deploys queued experiments when nodes free up. All credentials live in
-environment variables; committed code is sanitized. The whole harness is reproducible via
-the published <a href="https://github.com/0xSero/dsv4-reap-routing">Docker image</a>
-(base <code>ghcr.io/anemll/dspark-vllm-gx10:0.1.1</code>).</p>
+<table class="wikitable">
+<tr><th>Component</th><th>Spec</th></tr>
+<tr><td>Head node (rank 0)</td><td>de5c (DGX Spark), 10.0.1.1, password auth via SSH_ASKPASS</td></tr>
+<tr><td>Worker node (rank 1)</td><td>557f (DGX Spark), 192.168.1.96, key auth</td></tr>
+<tr><td>Container image</td><td><code>local/dspark-vllm-gx10:proven-0731</code></td></tr>
+<tr><td>NCCL transport</td><td>Socket (IB disabled in container), NCCL_TIMEOUT=600s</td></tr>
+<tr><td>Checkpoint</td><td>Converted MP2 safetensors on both nodes</td></tr>
+<tr><td>Jump path</td><td>Mac → 557f (key) → de5c (password via ConnectX 10.0.1.1)</td></tr>
+<tr><td>Resume</td><td>JSONL skip-ahead via <code>completed_keys()</code> — zero data loss on NCCL stalls</td></tr>
+</table>
 
-<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

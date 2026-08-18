@@ -3,210 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Exp 13 ablation - DSv4-Flash REAP Wiki</title>
-<style>
-body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
-a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
-#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
-#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
-#mw-body{margin-left:11em;margin-top:3.5em}
-.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
-@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
-#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
-#mw-panel .portal{margin-bottom:1.2em}
-#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
-#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
-#mw-panel li a{display:block;padding-left:.5em}
-#mw-panel li.here a{font-weight:600}
-.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
-.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
-.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
-.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
-.mw-body p{margin:.5em 0}
-.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
-code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
-pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
-.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
-.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
-.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
-.wikitable tr:nth-child(even){background:#f8f9fa}
-.num{text-align:right;font-family:monospace}
-.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
-.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
-.ambox.warn{border-left-color:#f28500;background:#fef6e7}
-.ambox.bad{border-left-color:#d33;background:#fee7e6}
-.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
-.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
-.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
-figure{margin:1em 0;text-align:center}
-figure img{max-width:100%;border:1px solid #c8ccd0}
-figcaption{font-size:12px;color:#54595d;margin-top:.3em}
-.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
-.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
-.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
-.toc ul{list-style:none;margin:0;padding-left:1.2em}
-.small{font-size:12px;color:#54595d}
-.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
-</style>
+<title>Exp 13: H6 ablation — DSv4-Flash REAP Wiki</title>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-head">
+  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
+</div>
 <div id="mw-panel">
-<div class="portal"><h3>Wiki</h3><ul>
-<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
-<li><a href="methods.html">Methods &amp; harness</a></li>
-<li><a href="data.html">Data &amp; corpora</a></li>
-<li><a href="results.html">Results &amp; findings</a></li>
+  <div class="portal"><h3>Wiki pages</h3><ul>
+<li><a href="../index.html">Main page</a></li>
+<li><a href="index.html">Master index</a></li>
+<li><a href="methods.html">Methods & harness</a></li>
+<li><a href="data.html">Data & corpora</a></li>
+<li><a href="results.html">Results & findings</a></li>
 <li><a href="jspace.html">J-space lens</a></li>
 <li><a href="experiments.html">Experiments</a></li>
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
-<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="roadmap.html">Roadmap & ideas</a></li>
 <li><a href="narrative.html">Narrative</a></li>
-<li><a href="exp4.html">Exp 4 results</a></li>
-<li class="here"><a href="exp13.html">Exp 13 ablation</a></li>
-<li><a href="exp1.html">Exp 1 results</a></li>
-<li><a href="exp12.html">Exp 12 results</a></li>
+<li><a href="exp1.html">Exp 1: 12-translation</a></li>
+<li><a href="exp4.html">Exp 4: Quotation switch</a></li>
+<li><a href="exp12.html">Exp 12: Digit pairs</a></li>
+<li class="here"><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
-</ul></div>
-<div class="portal"><h3>Resources</h3><ul>
+  </ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#rationale">1. Rationale</a></li>
+<li><a href="#anchors">2. H6 anchor registry</a></li>
+<li><a href="#modes">3. Intervention modes</a></li>
+<li><a href="#corpus">4. Corpus design</a></li>
+<li><a href="#outcome">5. Primary outcome</a></li>
+<li><a href="#controls">6. Controls</a></li>
+<li><a href="#hook">7. Hook implementation</a></li></ul></div>
+  <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
-<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
-</ul></div>
-<div class="portal"><h3>Reviews</h3><ul>
-<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
-<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
-</ul></div>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">HuggingFace (raw obs)</a></li>
+<li><a href="jlens_viewer.html" target="_blank">Interactive J-space viewer</a></li>
+  </ul></div>
+  <div class="portal"><h3>External review</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">Claude Opus 5 review</a></li>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">Kimi K3 review</a></li>
+  </ul></div>
 </div>
 <div id="mw-body"><div class="mw-body">
-<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
-
-<h1>Exp 13: Scoped H6 Ablation</h1>
-<div class="hatnote">Causal intervention test: does knocking out the H6 verse/prose axis experts damage prose processing more than verse processing? The ablation hook is designed and deployed; the corpus is pending.</div>
-
+<p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li>1 <a href="#rationale">Rationale</a></li>
-<li>2 <a href="#anchors">H6 anchor registry (frozen)</a></li>
-<li>3 <a href="#modes">Intervention modes</a></li>
-<li>4 <a href="#dose">Dose series</a></li>
-<li>5 <a href="#corpus">Corpus design</a></li>
-<li>6 <a href="#outcome">Primary outcome and estimand</a></li>
-<li>7 <a href="#controls">Controls and validation</a></li>
-<li>8 <a href="#runplan">Run plan</a></li>
-<li>9 <a href="#code">Hook implementation</a></li>
+<li><a href="#rationale">1. Rationale</a></li>
+<li><a href="#anchors">2. H6 anchor registry</a></li>
+<li><a href="#modes">3. Intervention modes</a></li>
+<li><a href="#corpus">4. Corpus design</a></li>
+<li><a href="#outcome">5. Primary outcome</a></li>
+<li><a href="#controls">6. Controls</a></li>
+<li><a href="#hook">7. Hook implementation</a></li>
 </ul></div>
 
-<h2 id="rationale">1. Rationale</h2>
-<p>The H6 axis is the study's strongest observational finding: 13+ experts (layers 4&ndash;41)
-fire at up to 90,595/M on discursive prose and at ~0 on bare verse text, a 4,384&times; ratio
-with Cohen's d = 2.61. But observation alone cannot establish causality. Exp 13 asks:
-<b>if we remove these experts, does the model get worse on prose than on verse?</b></p>
-<p>This is the only experiment in the study that modifies model behavior (via a forward-pass hook).
-All other experiments are read-only. The hook is fail-closed: it logs every intervention and
-restores the original forward pass after each record.</p>
+<h1>Experiment 13: Scoped H6 Ablation</h1>
+<div class="hatnote">Causal intervention: knock out the 6 H6 anchor experts and measure Δ-NLL on prose vs verse. <span class="tag tag-pending">staged — hook deployed, corpus ready, not yet run</span></div>
 
-<h2 id="anchors">2. H6 anchor registry (frozen)</h2>
-<p>The following 6 experts were selected as the H6 anchor set based on the original observational
-data. This registry is <b>frozen</b> &mdash; no peeking at new data to add or remove anchors.</p>
+<h2 id="rationale">1. Rationale</h2>
+<p>Exp 1, 4b, and 12 establish that H6 correlates with verse/prose format. But correlation is not causation. Exp 13 asks: <b>does H6 causally contribute</b> to the model's processing of prose vs verse, or is it an epiphenomenon?</p>
+
+<h2 id="anchors">2. H6 anchor registry</h2>
 <table class="wikitable">
-<tr><th>Anchor</th><th>Layer</th><th>Expert ID</th><th>Verse rate (M)</th><th>Prose rate (M)</th><th>Ratio</th></tr>
-<tr><td>H6-1</td><td class="num">21</td><td class="num">42</td><td class="num">~0</td><td class="num">~10,000</td><td class="num">&infin;</td></tr>
-<tr><td>H6-2</td><td class="num">22</td><td class="num">105</td><td class="num">~0</td><td class="num">~15,000</td><td class="num">&infin;</td></tr>
-<tr><td>H6-3</td><td class="num">23</td><td class="num">113</td><td class="num">~0</td><td class="num">~20,000</td><td class="num">&infin;</td></tr>
-<tr><td>H6-4</td><td class="num">30</td><td class="num">198</td><td class="num">~0</td><td class="num">~30,000</td><td class="num">&infin;</td></tr>
-<tr><td>H6-5</td><td class="num">32</td><td class="num">254</td><td class="num">~0</td><td class="num">~40,000</td><td class="num">&infin;</td></tr>
-<tr><td>H6-6</td><td class="num">41</td><td class="num">147</td><td class="num">~0</td><td class="num">~90,595</td><td class="num">&infin;</td></tr>
+<tr><th>Anchor</th><th>Layer</th><th>Expert</th></tr>
+<tr><td>H6-A1</td><td class="num">21</td><td class="num">42</td></tr>
+<tr><td>H6-A2</td><td class="num">22</td><td class="num">105</td></tr>
+<tr><td>H6-A3</td><td class="num">23</td><td class="num">113</td></tr>
+<tr><td>H6-A4</td><td class="num">30</td><td class="num">198</td></tr>
+<tr><td>H6-A5</td><td class="num">32</td><td class="num">254</td></tr>
+<tr><td>H6-A6</td><td class="num">41</td><td class="num">147</td></tr>
 </table>
-<p class="small">Rates are approximate from the original 8-tradition observation. The full 13+ cluster
-is exploratory until frozen independently. Only these 6 anchors are used in the ablation.</p>
 
 <h2 id="modes">3. Intervention modes</h2>
-<p>Two distinct interventions, labelled and analyzed separately:</p>
-<table class="wikitable">
-<tr><th>Mode</th><th>What it does</th><th>What it measures</th></tr>
-<tr><td><b>Contribution knockout</b> (primary)</td><td>Retain top-6 selection and gate weights, but zero the chosen expert's output tensor</td><td>Harm of removing the expert's contribution. If the model still routes to the expert but its output is silenced, how much worse is the prediction?</td></tr>
-<tr><td><b>Route-mask compensation</b> (secondary)</td><td>Mask the expert before top-k selection, choose replacement experts, renormalize gate weights</td><td>Whether the model can compensate by rerouting to other experts. If damage is small, the system has redundancy.</td></tr>
-</table>
-<p>The distinction matters: a routing marker (high selection, negligible contribution) would show
-large effects in route-mask but near-zero in knockout. A functional contributor would show large
-effects in both.</p>
-
-<h2 id="dose">4. Dose series</h2>
-<p>Each anchor knocked out singly, then cumulative sets:</p>
-<table class="wikitable">
-<tr><th>Dose</th><th>Anchors removed</th><th>Purpose</th></tr>
-<tr><td>dose_1</td><td>Each of the 6 individually (6 runs)</td><td>Is one anchor crucial, or are they interchangeable?</td></tr>
-<tr><td>dose_3</td><td>3 anchors (H6-1, H6-3, H6-5)</td><td>Partial dose &mdash; is there a graded response?</td></tr>
-<tr><td>dose_6</td><td>All 6 anchors</td><td>Full ablation &mdash; maximum damage estimate</td></tr>
-</table>
-<p>If damage scales with dose, the effect is diffuse across the cluster. If dose_1 already matches
-dose_6, one expert is doing the work. If dose_3 &asymp; dose_6, three experts are sufficient.</p>
-
-<h2 id="corpus">5. Corpus design</h2>
-<p>4 cells, held-out material never used to select H6:</p>
-<table class="wikitable">
-<tr><th>Cell</th><th>Format</th><th>Domain</th><th>Records</th><th>Tokens/block</th></tr>
-<tr><td>1</td><td>Verse</td><td>Religious (KJV, digit-stripped)</td><td class="num">100+</td><td>512&ndash;1024</td></tr>
-<tr><td>2</td><td>Verse</td><td>Secular (poetry, matched format)</td><td class="num">100+</td><td>512&ndash;1024</td></tr>
-<tr><td>3</td><td>Prose</td><td>Religious (commentary, held-out)</td><td class="num">100+</td><td>512&ndash;1024</td></tr>
-<tr><td>4</td><td>Prose</td><td>Secular (essay, news, arXiv)</td><td class="num">100+</td><td>512&ndash;1024</td></tr>
-</table>
-<p>Blocks are short (512&ndash;1024 tokens) to enable chunked NLL computation within the 121GB
-unified memory budget. The 2&times;2 design separates format (verse/prose) from domain
-(religious/secular), testing the H6 hypothesis that format is the driver.</p>
-
-<h2 id="outcome">6. Primary outcome and estimand</h2>
-<p><b>Delta-NLL</b> per block: <code>Delta-NLL = NLL(ablation) - NLL(baseline)</code> in
-nats/token. Positive delta means the ablation hurt prediction.</p>
-<p><b>Primary causal estimand:</b> <code>b_interaction</code> &mdash; the interaction term
-between ablation condition and input format. A positive <code>b_interaction</code> means
-ablation causes more damage on prose than on verse, supporting the H6 hypothesis.</p>
-<p><b>Secondary estimand:</b> main effect of ablation (overall damage) and main effect of format
-(overall prose vs verse difficulty gap).</p>
-
-<h2 id="controls">7. Controls and validation</h2>
-<table class="wikitable">
-<tr><th>Control</th><th>What it tests</th><th>Expected result</th></tr>
-<tr><td><b>Sham hook</b></td><td>Hook runs but does nothing (no expert removed)</td><td>Delta-NLL &asymp; 0 (validates the hook infrastructure)</td></tr>
-<tr><td><b>20 random six-expert clusters</b></td><td>Matched on routing frequency to H6, but not the H6 experts</td><td>Delta-NLL should be small and similar across formats (no interaction)</td></tr>
-<tr><td><b>Digit-cluster positive control</b></td><td>Knockout the 6 highest-digit-density experts</td><td>Should damage digit-heavy text more than digit-free text</td></tr>
-<tr><td><b>Fixed seed + rank-by-rank logging</b></td><td>Reproducibility and TP2 consistency</td><td>Both ranks produce identical Delta-NLL</td></tr>
-</table>
-
-<h2 id="runplan">8. Run plan</h2>
-<p>11 modes &times; 4 corpora = 44 runs. Each run processes all blocks in one cell under one
-intervention mode. The run order is:</p>
 <ol>
-<li><b>Baseline</b> &mdash; no intervention, establish reference NLL per block</li>
-<li><b>Sham</b> &mdash; hook active, no knockout, validate infrastructure</li>
-<li><b>6 single knockouts</b> &mdash; each H6 anchor individually</li>
-<li><b>dose_3</b> &mdash; 3 anchors knocked out together</li>
-<li><b>dose_6</b> &mdash; all 6 anchors knocked out</li>
-<li><b>route_mask_dose_6</b> &mdash; route-mask compensation mode, all 6</li>
+<li><b>Contribution knockout:</b> Keep gate selection (expert is still chosen) but zero its output. Measures the expert's direct contribution to the residual stream.</li>
+<li><b>Route-mask compensation:</b> Prevent the expert from being selected; the gate reselects the next-best expert. Measures whether the model can compensate.</li>
 </ol>
-<p>Each run writes a JSONL with per-block Delta-NLL. Analysis produces the interaction coefficient
-plot, dose-response curve, and control comparison.</p>
 
-<h2 id="code">9. Hook implementation</h2>
-<p>The ablation hook (<code>exp13_ablation_hook.py</code>) monkey-patches the MoE forward pass
-at runtime, replacing <code>moe_forward</code> with one of the two intervention modes. Key
-design decisions:</p>
+<h2 id="corpus">4. Corpus design</h2>
+<table class="wikitable">
+<tr><th>Cell</th><th>Records</th><th>Source</th></tr>
+<tr><td>Verse, religious</td><td class="num">120</td><td>KJV Bible (held-out)</td></tr>
+<tr><td>Prose, religious</td><td class="num">120</td><td>Christian commentary (held-out)</td></tr>
+<tr><td>Verse, secular</td><td class="num">120</td><td>Shakespeare sonnets, Whitman, Dickinson</td></tr>
+<tr><td>Prose, secular</td><td class="num">120</td><td>Darwin, Thoreau</td></tr>
+<tr><td><b>Total</b></td><td class="num">480</td><td>418,695 tokens</td></tr>
+</table>
+
+<h2 id="outcome">5. Primary outcome</h2>
+<p>Δ-NLL (change in negative log-likelihood) when H6 anchors are knocked out, compared verse vs prose. If H6 is causal, knocking it out should damage prose more than verse.</p>
+
+<h2 id="controls">6. Controls</h2>
 <ul>
-<li><b>H6_ANCHORS</b> is a hardcoded dictionary, not read from a file &mdash; prevents
-accidental registry drift</li>
-<li><b>compute_nll_chunked</b> processes 512-token chunks to avoid OOM on the 121GB unified
-memory (the model + KV cache + gradients for full 16k windows exceeds available memory)</li>
-<li><b>Fail-closed:</b> the hook restores the original <code>moe_forward</code> after each
-record. If the hook crashes, the original forward pass is restored before the exception propagates.</li>
-<li><b>TP2-safe:</b> the hook runs on both ranks; NCCL all-reduce still occurs for the modified
-output tensor</li>
+<li>20 matched control experts (randomly selected, matched for frequency and REAP rank)</li>
+<li>Dose series: knockout 1, 2, 3, 4, 5, 6 anchors</li>
+<li>Secular verse/prose cells test whether the effect is religion-specific or format-general</li>
 </ul>
-<p>The hook is deployed to both TP2 nodes (<code>/home/valentine/obs-religious/exp13_ablation_hook.py</code>).
-The ablation corpus is not yet built &mdash; this is the next step after Exp 4b completes.</p>
 
-<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+<h2 id="hook">7. Hook implementation</h2>
+<p>The ablation hook (<code>exp13_ablation_hook.py</code>, 14.6KB) is deployed to both TP2 nodes. It injects into the forward pass to zero out or mask H6 anchor experts. Read-only constraint respected: the hook modifies the forward pass during observation, not the model weights.</p>
+
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

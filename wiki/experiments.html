@@ -3,234 +3,136 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Experiments - DSv4-Flash REAP Wiki</title>
-<style>
-body{margin:0;background:#f8f9fa;color:#202122;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Liberation Sans',sans-serif;font-size:14px;line-height:1.6}
-a{color:#3366cc;text-decoration:none}a:hover{text-decoration:underline}
-#mw-head{position:fixed;top:0;left:0;right:0;height:3.5em;background:#fff;border-bottom:1px solid #a2a9b1;z-index:100;display:flex;align-items:center;padding:0 1.5em}
-#mw-head .brand{font-weight:600;font-size:13px;color:#54595d}
-#mw-body{margin-left:11em;margin-top:3.5em}
-.mw-body{background:#fff;border:1px solid #a7d7f9;max-width:60em;margin:1em auto;padding:1em 1.5em 2em}
-@media(max-width:768px){#mw-body{margin-left:0}#mw-panel{display:none}.mw-body{margin:0;border:none}}
-#mw-panel{position:fixed;top:3.5em;left:0;width:11em;bottom:0;padding:1em 0 0 .5em;font-size:12px;background:#f8f9fa;overflow-y:auto}
-#mw-panel .portal{margin-bottom:1.2em}
-#mw-panel h3{font-size:12px;font-weight:600;color:#54595d;margin:0 0 .4em}
-#mw-panel ul{list-style:none;margin:0;padding:0;line-height:1.8}
-#mw-panel li a{display:block;padding-left:.5em}
-#mw-panel li.here a{font-weight:600}
-.mw-body h1{font-size:28px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:0 0 .25em;padding-bottom:.1em}
-.mw-body h2{font-size:22px;font-family:'Linux Libertine',Georgia,serif;font-weight:400;border-bottom:1px solid #a2a9b1;margin:1em 0 .5em;padding-bottom:.17em}
-.mw-body h3{font-size:17px;font-weight:600;margin:.8em 0 .3em}
-.mw-body h4{font-size:14.5px;font-weight:600;margin:.6em 0 .2em}
-.mw-body p{margin:.5em 0}
-.mw-body ul,.mw-body ol{margin:.3em 0 .5em 1.6em}.mw-body li{margin:.2em 0}
-code{font-family:'Courier New',monospace;font-size:13px;background:#f0f0f0;padding:0 2px}
-pre{background:#f8f9fa;border:1px solid #eaecf0;padding:.8em 1em;font-family:'Courier New',monospace;font-size:12.5px;line-height:1.4;overflow-x:auto;border-radius:2px}
-.wikitable{border-collapse:collapse;width:100%;margin:.5em 0;font-size:13px;background:#fff;border:1px solid #a2a9b1}
-.wikitable th{background:#eaecf0;border:1px solid #a2a9b1;padding:4px 8px;text-align:left;font-weight:600}
-.wikitable td{border:1px solid #a2a9b1;padding:4px 8px;vertical-align:top}
-.wikitable tr:nth-child(even){background:#f8f9fa}
-.num{text-align:right;font-family:monospace}
-.hatnote{font-style:italic;padding:.4em 0;margin:.5em 0;color:#54595d;font-size:13px}
-.ambox{margin:.5em 0;border:1px solid #a2a9b1;border-left:10px solid #c8ccd1;background:#f8f9fa;padding:.5em 1em;font-size:13px}
-.ambox.warn{border-left-color:#f28500;background:#fef6e7}
-.ambox.bad{border-left-color:#d33;background:#fee7e6}
-.ambox.ok{border-left-color:#3c8;background:#eaf7ee}
-.tag{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;margin-left:4px}
-.tag-pending{background:#eaf0ff;color:#3366cc}.tag-ok{background:#eaf7ee;color:#14866d}.tag-bad{background:#fee7e6;color:#d33}.tag-run{background:#fef6e7;color:#b25f00}
-figure{margin:1em 0;text-align:center}
-figure img{max-width:100%;border:1px solid #c8ccd0}
-figcaption{font-size:12px;color:#54595d;margin-top:.3em}
-.catlinks{margin-top:1em;padding:.4em .8em;background:#f8f9fa;border:1px solid #a2a9b1;font-size:12px}
-.toc{background:#f8f9fa;border:1px solid #a2a9b1;padding:.5em 1em;display:inline-block;margin:.5em 0 1em;font-size:13px}
-.toc .toctitle{font-weight:600;text-align:center;margin-bottom:.3em}
-.toc ul{list-style:none;margin:0;padding-left:1.2em}
-.small{font-size:12px;color:#54595d}
-.subtitle{font-size:13px;color:#54595d;margin-bottom:.5em}
-</style>
+<title>Experiments — DSv4-Flash REAP Wiki</title>
+<link rel="stylesheet" href="../style.css">
 </head>
 <body>
-<div id="mw-head"><span class="brand">DSv4-Flash REAP Research Wiki</span></div>
+<div id="mw-head">
+  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
+</div>
 <div id="mw-panel">
-<div class="portal"><h3>Wiki</h3><ul>
-<li><a href="../RESEARCH_WIKI.html">Main page</a></li>
-<li><a href="methods.html">Methods &amp; harness</a></li>
-<li><a href="data.html">Data &amp; corpora</a></li>
-<li><a href="results.html">Results &amp; findings</a></li>
+  <div class="portal"><h3>Wiki pages</h3><ul>
+<li><a href="../index.html">Main page</a></li>
+<li><a href="index.html">Master index</a></li>
+<li><a href="methods.html">Methods & harness</a></li>
+<li><a href="data.html">Data & corpora</a></li>
+<li><a href="results.html">Results & findings</a></li>
 <li><a href="jspace.html">J-space lens</a></li>
 <li class="here"><a href="experiments.html">Experiments</a></li>
 <li><a href="code.html">Code reference</a></li>
 <li><a href="operations.html">Operations (live)</a></li>
-<li><a href="roadmap.html">Roadmap &amp; ideas</a></li>
+<li><a href="roadmap.html">Roadmap & ideas</a></li>
 <li><a href="narrative.html">Narrative</a></li>
-<li><a href="exp4.html">Exp 4 results</a></li>
-<li><a href="exp13.html">Exp 13 ablation</a></li>
-<li><a href="exp1.html">Exp 1 results</a></li>
-<li><a href="exp12.html">Exp 12 results</a></li>
+<li><a href="exp1.html">Exp 1: 12-translation</a></li>
+<li><a href="exp4.html">Exp 4: Quotation switch</a></li>
+<li><a href="exp12.html">Exp 12: Digit pairs</a></li>
+<li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
-</ul></div>
-<div class="portal"><h3>Resources</h3><ul>
+  </ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#priority">1. Current priority queue</a></li>
+<li><a href="#e1">2. Exp 1 — Multi-translation Bible test complete</a></li>
+<li><a href="#e4b">3. Exp 4b — Quotation-switch test complete</a></li>
+<li><a href="#e12">4. Exp 12 — Digit minimal-pair test complete</a></li>
+<li><a href="#e13">5. Exp 13 — Scoped H6 ablation staged</a></li>
+<li><a href="#e11">6. Exp 11 — Context dump staged</a></li>
+<li><a href="#e3">7. Exp 3 — Secular null not staged</a></li>
+<li><a href="#e8">8. Exp 8 — Sorted L42 frequency check done</a></li>
+<li><a href="#e9">9. Exp 9 — Position/length confound answered</a></li>
+<li><a href="#other">10. Other planned experiments</a></li></ul></div>
+  <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/wiki.html">Technical wiki</a></li>
-<li><a href="https://0xsero.github.io/dsv4-reap-routing/">Narrative page</a></li>
-<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HF dataset</a></li>
-</ul></div>
-<div class="portal"><h3>Reviews</h3><ul>
-<li><a href="../reviews/claude_opus5_review.md">Claude Opus 5</a></li>
-<li><a href="../reviews/kimi_k3_review.md">Kimi K3</a></li>
-</ul></div>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
+<li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">HuggingFace (raw obs)</a></li>
+<li><a href="jlens_viewer.html" target="_blank">Interactive J-space viewer</a></li>
+  </ul></div>
+  <div class="portal"><h3>External review</h3><ul>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">Claude Opus 5 review</a></li>
+<li><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">Kimi K3 review</a></li>
+  </ul></div>
 </div>
 <div id="mw-body"><div class="mw-body">
-<div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
-
-<h1>Experiments</h1>
-<div class="hatnote">All experiments, numbered as in <code>EXPERIMENTS.md</code> (revised post-review). Each entry: hypothesis tested, design, status, result or expected result.</div>
-
+<p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li>1 <a href="#priority">Current priority queue</a></li>
-<li>2 <a href="#e12">Exp 12 &mdash; Digit minimal-pairs</a></li>
-<li>3 <a href="#e11">Exp 11 &mdash; e164 context dump</a></li>
-<li>4 <a href="#e1">Exp 1 &mdash; Multi-translation register test</a></li>
-<li>5 <a href="#e3">Exp 3 &mdash; Secular null baseline</a></li>
-<li>6 <a href="#e8">Exp 8 &mdash; Sorted L42 frequency check</a> <span class="tag tag-ok">done</span></li>
-<li>7 <a href="#e9">Exp 9 &mdash; Position/length confound</a> <span class="tag tag-ok">answered</span></li>
-<li>8 <a href="#e4b">Exp 4b &mdash; Quotation-switch test</a> <span class="tag tag-ok">complete</span></li>
-<li>9 <a href="#e13">Exp 13 &mdash; H6 ablation</a> <span class="tag tag-pending">staged</span></li>
-<li>10 <a href="#other">Other planned experiments</a></li>
+<li><a href="#priority">1. Current priority queue</a></li>
+<li><a href="#e1">2. Exp 1 — Multi-translation Bible test complete</a></li>
+<li><a href="#e4b">3. Exp 4b — Quotation-switch test complete</a></li>
+<li><a href="#e12">4. Exp 12 — Digit minimal-pair test complete</a></li>
+<li><a href="#e13">5. Exp 13 — Scoped H6 ablation staged</a></li>
+<li><a href="#e11">6. Exp 11 — Context dump staged</a></li>
+<li><a href="#e3">7. Exp 3 — Secular null not staged</a></li>
+<li><a href="#e8">8. Exp 8 — Sorted L42 frequency check done</a></li>
+<li><a href="#e9">9. Exp 9 — Position/length confound answered</a></li>
+<li><a href="#other">10. Other planned experiments</a></li>
 </ul></div>
 
+<h1>Experiments</h1>
+<div class="hatnote">All experiments, numbered as in <code>EXPERIMENTS.md</code>. Each entry: hypothesis, design, status, result.</div>
+
 <h2 id="priority">1. Current priority queue</h2>
-<p>Wave-2 is complete; deployment order below. Exp 1, Exp 12, and Exp 4b are all complete:</p>
 <ol>
-<li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-ok">complete</span> Decisive within-document verse-quote vs commentary test. H6 = 163,284/M on commentary, fires on prose context not verse quotes.</li>
-<li><b>Exp 12</b> &mdash; 222 samples (111 pairs), 438k tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;).</li>
-<li><b>Exp 1</b> &mdash; 360 samples, 613k tokens. <span class="tag tag-ok">complete (expanded)</span> H6 = 59.5/M (excl. MSG), translation-invariant. MSG outlier at 1,033/M confirms format detection.</li>
-<li><b>Exp 13</b> &mdash; Ablation hook designed, corpus to build. Causal test of H6 contribution.</li>
-<li><b>Exp 3</b> &mdash; secular null, staged after digit question settles.</li>
+<li><b>Exp 1</b> — 360 samples, 613,344 tokens. <span class="tag tag-ok">complete</span> H6 = 59.5/M (excl. MSG), translation-invariant. MSG at 1,033/M confirms format detection.</li>
+<li><b>Exp 4b</b> — 351 samples, 5,156,659 tokens. <span class="tag tag-ok">complete</span> H6 = 163,284/M on commentary prose.</li>
+<li><b>Exp 12</b> — 222 samples, 437,900 tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02×), e164 digit detector (1,453×).</li>
+<li><b>Exp 13</b> — Ablation hook designed, corpus staged (480 records). <span class="tag tag-pending">staged</span></li>
+<li><b>Exp 11</b> — Context dump. <span class="tag tag-pending">staged</span></li>
+<li><b>Exp 3</b> — Secular null. <span class="tag tag-pending">not staged</span></li>
 </ol>
 
-<h2 id="e12">2. Exp 12 &mdash; Digit minimal-pair test <span class="tag tag-ok">complete</span></h2>
+<h2 id="e1">2. Exp 1 — Multi-translation Bible test <span class="tag tag-ok">complete</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>H1: is e164 a digit detector? Is H6 digit-independent?</td></tr>
-<tr><td>Design</td><td>111 matched pairs of text across 5 categories (dates_and_years, misc_numeric, numbered_list, scripture_citation, tabular_statistics). Each pair: same source text, one version <b>with_digits</b>, one <b>digit_stripped</b>. 222 records, 437,900 tokens.</td></tr>
-<tr><td>Corpus</td><td><code>corpus/samples/exp12_digit_minimal_pairs.jsonl</code> &mdash; 222 records (111 pairs &times; 2 conditions)</td></tr>
-<tr><td>Result</td><td><b>H6 is digit-independent (1.02&times; ratio).</b> H6 fires at 136,915/M with digits vs 134,252/M stripped. <b>e164 is a digit detector (1,453&times; ratio).</b> e164 fires at 40,307/M with digits vs 27.7/M stripped. The two axes are orthogonal. See <a href="exp12.html">Exp 12 results</a>.</td></tr>
+<tr><td>Hypothesis</td><td>Does H6 fire on non-KJV renderings of the same text? (translation-invariance)</td></tr>
+<tr><td>Design</td><td>30 Bible passages × 12 English translations (5 public-domain + 7 copyrighted). All 0-digit controlled. 360 records, 613,344 tokens.</td></tr>
+<tr><td>Result</td><td><b>Translation-invariant for verse-formatted translations.</b> H6 = 59.5/M (excl. MSG). KJV and ESV perfect zero. MSG (prose paraphrase) at 1,033/M confirms H6 detects format, not content. See <a href="exp1.html">Exp 1 results</a>.</td></tr>
 </table>
 
-<h3>2.1 Key results table</h3>
-<table class="wikitable">
-<tr><th>Expert</th><th>with_digits (M)</th><th>digit_stripped (M)</th><th>ratio</th><th>Interpretation</th></tr>
-<tr><td>H6 (verse/prose axis)</td><td class="num">136,915</td><td class="num">134,252</td><td class="num">1.02&times;</td><td>Digit-independent</td></tr>
-<tr><td>e164 (L42 digit expert)</td><td class="num">40,307</td><td class="num">27.7</td><td class="num">1,453&times;</td><td>Digit detector confirmed</td></tr>
-</table>
-
-<h2 id="e11">3. Exp 11 &mdash; e164/e27/e68 context dump <span class="tag tag-pending">staged</span></h2>
+<h2 id="e4b">3. Exp 4b — Quotation-switch test <span class="tag tag-ok">complete</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>H1: what tokens actually trigger the specialist cluster?</td></tr>
-<tr><td>Design</td><td>Re-run observation with <code>--raw-budget-tokens</code> to capture per-token routing; extract top-500 firing contexts with &plusmn;20-token windows</td></tr>
-<tr><td>Why a re-run</td><td><code>routed_experts</code> in existing records stores unique expert IDs, not per-token routing &mdash; contexts cannot be recovered from disk</td></tr>
-<tr><td>Prediction</td><td>Contexts are numerals, footnote markers, verse references, roman numerals</td></tr>
+<tr><td>Hypothesis</td><td>Does H6 fire on quoted verse, surrounding commentary, or both?</td></tr>
+<tr><td>Design</td><td>351 commentary windows with embedded KJV quotes, 18 sources, 5,156,659 tokens.</td></tr>
+<tr><td>Result</td><td><b>H6 = 163,284/M on commentary prose.</b> Fires on prose context, not verse quotes. r = −0.13 with quote fraction. See <a href="exp4.html">Exp 4 results</a>.</td></tr>
 </table>
 
-<h2 id="e1">4. Exp 1 &mdash; Multi-translation register test <span class="tag tag-ok">complete (expanded)</span></h2>
+<h2 id="e12">4. Exp 12 — Digit minimal-pair test <span class="tag tag-ok">complete</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>Register vs memorization vs content: does H6 fire on non-KJV renderings of the <i>same</i> text?</td></tr>
-<tr><td>Design</td><td>30 Bible passages in 12 English translations: 5 public-domain (KJV, ASV, YLT, WEB, BBE) + 7 copyrighted (NIV, ESV, NLT, NRSV, NASB, CSB, MSG). All verse numbers stripped, all verified <b>0.0000% digits</b>. 360 records, 613,344 tokens.</td></tr>
-<tr><td>Corpus</td><td><code>corpus/samples/exp1_all_translations.jsonl</code> &mdash; 360 records (30 passages &times; 12 translations)</td></tr>
-<tr><td>Phase 1 (5 public-domain)</td><td>150 records, 209,151 tokens, H6 = 47.8/M. KJV and ASV perfect zero.</td></tr>
-<tr><td>Phase 2 (12 translations)</td><td>360 records, 613,344 tokens, H6 = 153.3/M overall (59.5/M excl. MSG). <b>MSG outlier at 1,032.7/M confirms H6 detects format, not content</b> &mdash; MSG is a prose paraphrase that abandons verse lineation.</td></tr>
-<tr><td>Result</td><td><b>Translation-invariant for verse-formatted translations.</b> KJV and ESV both fire at 0.0. 11 verse-formatted translations fire at 0&ndash;171/M (negligible vs 163,284/M commentary). MSG (prose paraphrase) fires at 1,032.7/M &mdash; the format hypothesis confirmed. e164 positive control: 1.6/M (digit confound controlled).</td></tr>
+<tr><td>Hypothesis</td><td>Is e164 a digit detector? Is H6 digit-independent?</td></tr>
+<tr><td>Design</td><td>111 matched pairs, 5 categories, 222 records, 437,900 tokens. Each pair: same text, one with_digits, one digit_stripped.</td></tr>
+<tr><td>Result</td><td><b>H6 digit-independent (1.02× ratio).</b> <b>e164 digit detector (1,453× ratio).</b> The two axes are orthogonal. See <a href="exp12.html">Exp 12 results</a>.</td></tr>
 </table>
 
-<h3>4.1 Per-translation H6 rates (12 translations)</h3>
-<table class="wikitable">
-<tr><th>Translation</th><th>Records</th><th>Tokens</th><th>H6 Rate (M)</th><th>License</th><th>Description</th></tr>
-<tr><td>KJV</td><td class="num">30</td><td class="num">42,010</td><td class="num">0.0</td><td>Public domain</td><td>King James Version (1611)</td></tr>
-<tr><td>ESV</td><td class="num">30</td><td class="num">57,755</td><td class="num">0.0</td><td>Copyrighted</td><td>English Standard Version (2001)</td></tr>
-<tr><td>NASB</td><td class="num">30</td><td class="num">57,872</td><td class="num">17.3</td><td>Copyrighted</td><td>New American Standard Bible</td></tr>
-<tr><td>BBE</td><td class="num">30</td><td class="num">41,434</td><td class="num">24.1</td><td>Public domain</td><td>Bible in Basic English (850 words)</td></tr>
-<tr><td>ASV</td><td class="num">30</td><td class="num">41,103</td><td class="num">24.3</td><td>Public domain</td><td>American Standard Version (1901)</td></tr>
-<tr><td>YLT</td><td class="num">30</td><td class="num">43,186</td><td class="num">46.3</td><td>Public domain</td><td>Young's Literal Translation</td></tr>
-<tr><td>NRSV</td><td class="num">30</td><td class="num">57,090</td><td class="num">52.5</td><td>Copyrighted</td><td>New Revised Standard Version</td></tr>
-<tr><td>WEB</td><td class="num">30</td><td class="num">39,933</td><td class="num">75.1</td><td>Public domain</td><td>World English Bible (modern)</td></tr>
-<tr><td>CSB</td><td class="num">30</td><td class="num">57,898</td><td class="num">86.4</td><td>Copyrighted</td><td>Christian Standard Bible</td></tr>
-<tr><td>NIV</td><td class="num">30</td><td class="num">57,504</td><td class="num">121.7</td><td>Copyrighted</td><td>New International Version</td></tr>
-<tr><td>NLT</td><td class="num">30</td><td class="num">58,493</td><td class="num">171.0</td><td>Copyrighted</td><td>New Living Translation</td></tr>
-<tr><td><b>MSG</b></td><td class="num">30</td><td class="num">59,066</td><td class="num"><b>1,032.7</b></td><td>Copyrighted</td><td>The Message (prose paraphrase &mdash; <b>format outlier</b>)</td></tr>
-<tr><td><b>Excl. MSG</b></td><td class="num">330</td><td class="num">554,278</td><td class="num">59.5</td><td></td><td>11 verse-formatted translations</td></tr>
-</table>
-
-<h3>4.2 Charts</h3>
-<table class="wikitable">
-<tr><th>Chart</th><th>What it shows</th></tr>
-<tr><td><a href="../img/chart_exp1_all_by_translation.png">H6 rate by translation (12 trans.)</a></td><td>H6 composite rate per translation (bar chart, log scale). MSG towers above all others.</td></tr>
-<tr><td><a href="../img/chart_exp1_all_pd_vs_cr.png">PD vs Copyrighted</a></td><td>Grouped bar: public domain vs copyrighted rates (MSG inflates the CR bar)</td></tr>
-<tr><td><a href="../img/chart_exp1_all_per_passage.png">Per-passage heatmap</a></td><td>H6 rate per passage &times; translation, showing which passages trigger H6 and which stay zero</td></tr>
-<tr><td><a href="../img/chart_exp1_by_translation.png">Phase 1: H6 by translation</a></td><td>Phase 1 chart (5 public-domain translations)</td></tr>
-</table>
-
-<h2 id="e3">5. Exp 3 &mdash; Secular null baseline <span class="tag tag-pending">not staged</span></h2>
+<h2 id="e13">5. Exp 13 — Scoped H6 ablation <span class="tag tag-pending">staged</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>H5: is any routing pattern religion-specific at all?</td></tr>
-<tr><td>Design</td><td>Secular English (news, arXiv, fiction) <b>stratified by digit density, not topic</b> &mdash; matched deciles against the religious corpora</td></tr>
-<tr><td>Decision rule</td><td>If secular text with matched digit density reproduces e164's firing profile, the expert is a general-English digit specialist and <i>all</i> religious framing drops out</td></tr>
+<tr><td>Hypothesis</td><td>Causal: does knocking out H6 anchors damage prose more than verse?</td></tr>
+<tr><td>Design</td><td>4-cell corpus (verse/prose × religious/secular), 480 records. Ablation hook deployed to both TP2 nodes. Two modes: contribution knockout, route-mask compensation.</td></tr>
+<tr><td>Status</td><td>Hook designed and deployed. Corpus staged. Not yet run.</td></tr>
 </table>
 
-<h2 id="e8">6. Exp 8 &mdash; Sorted L42 frequency check <span class="tag tag-ok">done</span></h2>
-<p><b>Question:</b> could the e164 exact-zero be a shard-index permutation bug (TP2 splitting
-expert bins inconsistently)?</p>
-<p><b>Method:</b> compare sorted L42 frequency histograms across corpora; check cross-corpus
-expert-ID consistency in the top-20.</p>
-<p><b>Result:</b> NOT a permutation bug &mdash; 15/20 top experts shared across corpora, and e164's
-rank differs (152 vs 255) in a way consistent only with genuinely different routing.</p>
-<div class="ambox warn"><b>Review note (Claude Opus 5):</b> this tested the never-at-risk
-channel (<code>expert_frequencies</code>, from bincount over replicated indices). The at-risk
-channels &mdash; <code>reap_score</code>, <code>activation_norms</code> &mdash; were not permutation-checked.</div>
+<h2 id="e11">6. Exp 11 — Context dump <span class="tag tag-pending">staged</span></h2>
+<p>Re-run observation with <code>--raw-budget-tokens</code> to capture per-token routing. Extract top-500 firing contexts with ±20-token windows. Prediction: contexts are numerals, footnote markers, verse references. Needs GPU re-run.</p>
 
-<h2 id="e9">7. Exp 9 &mdash; Position/length confound <span class="tag tag-ok">answered</span></h2>
-<p><b>Question:</b> KJV chapters are ~880 tokens; Christian samples are 16k windows. Could e164 be
-position-dependent, explaining the zero?</p>
-<p><b>Result:</b> No &mdash; length-matched comparison bands show Bible 0 / Qur'an 4,383/M at
-comparable window sizes. The zero is not a length artifact.</p>
+<h2 id="e3">7. Exp 3 — Secular null <span class="tag tag-pending">not staged</span></h2>
+<p>Is routing religion-specific or general-English? Compare religious vs matched secular text at same digit density. Staged after digit question settles.</p>
 
-<h2 id="e4b">8. Exp 4b &mdash; Quotation-switch within-document test <span class="tag tag-ok">complete</span></h2>
-<table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>H6: do the verse/prose axis experts fire on <i>prose context</i> rather than <i>verse content</i>? Within the same document, do H6 rates drop at quote boundaries?</td></tr>
-<tr><td>Design</td><td>351 commentary windows containing embedded KJV verse quotes (41,426 quote tokens across 18 sources). Each quote span has start/end token positions for per-token routing analysis. Character-window approach (60k chars ~16k tokens) to avoid tokenizing entire files.</td></tr>
-<tr><td>Corpus</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code> &mdash; 351 records, 5.2M tokens</td></tr>
-<tr><td>Result</td><td><b>Complete (351/351 records, 0 violations).</b> Mean H6 composite rate 163,284/M; quote-fraction vs H6 correlation r = &minus;0.13 &mdash; more verse quote content &rarr; less H6 firing. H6 fires on prose commentary context, not embedded verse quotes. See <a href="exp4.html#exp4b">Exp 4b results</a>.</td></tr>
-<tr><td>Pilot result (Exp 4)</td><td>H6 fires on prose context at 44,822/M vs verse content at 4.1/M &mdash; a 10,911&times; ratio. But only 419 quote tokens (pilot); Exp 4b scales to 41,426 for decisive test.</td></tr>
-<tr><td>Primary endpoint</td><td>Binary event <code>I(layer, expert, token in top-6)</code>; beta-binomial model at block level with document and window random effects</td></tr>
-</table>
+<h2 id="e8">8. Exp 8 — Sorted L42 frequency check <span class="tag tag-ok">done</span></h2>
+<p>Is e164 zero a permutation bug? No — 15/20 shared experts, ranks differ. The zero is real.</p>
 
-<h2 id="e13">9. Exp 13 &mdash; Scoped H6 ablation <span class="tag tag-pending">hook designed</span></h2>
-<table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>Causal: does knocking out H6 anchor experts damage prose processing more than verse processing?</td></tr>
-<tr><td>Design</td><td>Two intervention modes: (1) <b>contribution knockout</b> &mdash; zero expert output, keep gate selection; (2) <b>route-mask compensation</b> &mdash; mask before top-k, reselect, renormalize. Dose series: each anchor singly, then cumulative sets of 1, 3, and all 6.</td></tr>
-<tr><td>H6 anchors (frozen)</td><td>L21e42, L22e105, L23e113, L30e198, L32e254, L41e147</td></tr>
-<tr><td>Corpus</td><td>4 cells: verse/prose &times; religious/secular, 100+ blocks each, 512&ndash;1024 tokens, held-out material</td></tr>
-<tr><td>Primary outcome</td><td>Per-block <code>Delta-NLL = NLL(ablation) - NLL(baseline)</code> in nats/token</td></tr>
-<tr><td>Controls</td><td>Sham hook (~0 delta), 20 random six-expert control clusters matched on routing frequency, digit-cluster positive control</td></tr>
-<tr><td>Hook code</td><td><code>exp13_ablation_hook.py</code> &mdash; deployed to both TP2 nodes</td></tr>
-</table>
+<h2 id="e9">9. Exp 9 — Position/length confound <span class="tag tag-ok">answered</span></h2>
+<p>Is e164 zero a windowing artifact? No — Bible 0 / Qur'an 4,383/M at matched window sizes.</p>
 
 <h2 id="other">10. Other planned experiments</h2>
-<table class="wikitable">
-<tr><th>Idea</th><th>Status</th><th>Notes</th></tr>
-<tr><td>Jesus vs Lucifer routing comparison</td><td>staged (in theology selection)</td><td>400 Jesus vs 46 Lucifer records, digit-controlled</td></tr>
-<tr><td>Moloch / Saturn routing analysis</td><td>staged (in theology selection)</td><td>25 + 32 records</td></tr>
-<tr><td>Covariate regression</td><td>planned</td><td>Partial effects of tradition controlling digit%, punctuation%, sentence length, TTR &mdash; no GPU needed, uses existing records</td></tr>
-<tr><td>Perplexity correlation</td><td>planned</td><td>Per-sample loss vs effective-expert-count to test H3 (surprisal proxy)</td></tr>
-<tr><td>Jacobian validation</td><td>backlog</td><td>Increase projection count; low priority</td></tr>
-</table>
+<ul>
+<li>Jesus vs Lucifer routing (theology corpus staged)</li>
+<li>Moloch / Saturn routing (theology corpus staged)</li>
+<li>Entropy expert regression</li>
+<li>Comparative model study (same corpus through another MoE)</li>
+<li>Full Jacobian (replace 16-projection bound with exact norms)</li>
+</ul>
 
-<div class="catlinks"><b>Categories:</b> <a href="../RESEARCH_WIKI.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a> | <a href="data.html">Religious text corpora</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>
