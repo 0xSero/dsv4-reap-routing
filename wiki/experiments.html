@@ -66,6 +66,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li><a href="exp4.html">Exp 4 results</a></li>
 <li><a href="exp13.html">Exp 13 ablation</a></li>
 <li><a href="exp1.html">Exp 1 results</a></li>
+<li><a href="exp12.html">Exp 12 results</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
 </ul></div>
 <div class="portal"><h3>Resources</h3><ul>
@@ -102,19 +103,26 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <p>Deployment order when GPU nodes free (after wave-2 completes):</p>
 <ol>
 <li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-run">running now</span> Decisive within-document verse-quote vs commentary test.</li>
-<li><b>Exp 12</b> &mdash; 222 samples (111 pairs), ~438k tokens. Decisive for the digit question. <span class="tag tag-pending">running</span></li>
+<li><b>Exp 12</b> &mdash; 222 samples (111 pairs), 438k tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;).</li>
 <li><b>Exp 1</b> &mdash; 150 samples, 209k tokens. <span class="tag tag-ok">complete</span> H6 = 47.8/M, translation-invariant.</li>
 <li><b>Exp 13</b> &mdash; Ablation hook designed, corpus to build. Causal test of H6 contribution.</li>
 <li><b>Exp 3</b> &mdash; secular null, staged after digit question settles.</li>
 </ol>
 
-<h2 id="e12">2. Exp 12 &mdash; Digit minimal-pair test <span class="tag tag-pending">staged</span></h2>
+<h2 id="e12">2. Exp 12 &mdash; Digit minimal-pair test <span class="tag tag-ok">complete</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis tested</td><td>H1: is e164 a digit detector, and does it respond to <i>any</i> numeral or specifically to <i>citation structure</i> ("N:M" verse references)?</td></tr>
-<tr><td>Design</td><td>12 KJV chapters &times; 3 versions: (a) <b>asis</b> &mdash; digit-free, as observed; (b) <b>verseno</b> &mdash; KJV apparatus restored ("1:1 In the beginning...", 2.234% digits); (c) <b>arbit</b> &mdash; arbitrary numerals at random word boundaries, matched count (2.825% digits)</td></tr>
-<tr><td>Corpus</td><td><code>corpus/samples/exp12_minimal_pairs.jsonl</code> &mdash; 111 samples, fail-closed verified</td></tr>
-<tr><td>Predictions</td><td>If (b)&asymp;(c) &gg; (a): bare-numeral detector. If (b) &gg; (c): citation-structure detector. If all &asymp;: digit hypothesis wrong, reopen register hypothesis.</td></tr>
+<tr><td>Hypothesis tested</td><td>H1: is e164 a digit detector? Is H6 digit-independent?</td></tr>
+<tr><td>Design</td><td>111 matched pairs of text across 5 categories (dates_and_years, misc_numeric, numbered_list, scripture_citation, tabular_statistics). Each pair: same source text, one version <b>with_digits</b>, one <b>digit_stripped</b>. 222 records, 437,900 tokens.</td></tr>
+<tr><td>Corpus</td><td><code>corpus/samples/exp12_digit_minimal_pairs.jsonl</code> &mdash; 222 records (111 pairs &times; 2 conditions)</td></tr>
+<tr><td>Result</td><td><b>H6 is digit-independent (1.02&times; ratio).</b> H6 fires at 136,915/M with digits vs 134,252/M stripped. <b>e164 is a digit detector (1,453&times; ratio).</b> e164 fires at 40,307/M with digits vs 27.7/M stripped. The two axes are orthogonal. See <a href="exp12.html">Exp 12 results</a>.</td></tr>
+</table>
+
+<h3>2.1 Key results table</h3>
+<table class="wikitable">
+<tr><th>Expert</th><th>with_digits (M)</th><th>digit_stripped (M)</th><th>ratio</th><th>Interpretation</th></tr>
+<tr><td>H6 (verse/prose axis)</td><td class="num">136,915</td><td class="num">134,252</td><td class="num">1.02&times;</td><td>Digit-independent</td></tr>
+<tr><td>e164 (L42 digit expert)</td><td class="num">40,307</td><td class="num">27.7</td><td class="num">1,453&times;</td><td>Digit detector confirmed</td></tr>
 </table>
 
 <h2 id="e11">3. Exp 11 &mdash; e164/e27/e68 context dump <span class="tag tag-pending">staged</span></h2>
