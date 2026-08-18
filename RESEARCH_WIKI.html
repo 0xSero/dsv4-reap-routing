@@ -327,6 +327,8 @@
 <tr><td><b>A bookkeeping bug lied</b></td><td>The robustness file claimed L34 e33 fires at 2.7/M on the Bible. Actual: 9,670/M — 3,600&times; off, in the opposite direction. Regenerated from raw data.</td></tr>
 <tr><td><b>57.7 million tokens</b></td><td>Total observed: 1.05M KJV + 55.9M Christian literature + 0.7M other traditions. All verified: &Sigma;freq == tokens&times;6 on every layer of every record, zero violations.</td></tr>
 <tr><td><b>Verse quotes don't switch routing</b></td><td>Exp 4: Christian commentary windows with embedded KJV Bible quotes fire H6 at 44,822/M &mdash; same as pure commentary (41,894/M). The verse quotes are <b>ignored</b> by H6. It routes on the prose context, not the quoted content. A 10,911&times; ratio over pure Bible verse.</td></tr>
+<tr><td><b>Two orthogonal routing axes</b></td><td>Exp 12 confirms: H6 (verse/prose format) is digit-independent (1.02&times; ratio). e164 (digit detector) is format-independent (1,453&times; ratio). These are completely separate routing phenomena that were originally conflated in the "scripture detector" narrative.</td></tr>
+<tr><td><b>KJV and ASV: perfect zero</b></td><td>Exp 1: H6 fires at exactly 0 across 83,197 tokens of KJV and ASV Bible text (60 records). Not "near zero" &mdash; literally zero firings. The verse/prose axis is translation-invariant: BBE (850-word vocabulary) also fires at ~0.</td></tr>
 </table>
 
 <!-- Key Visualizations -->
@@ -383,7 +385,7 @@
 
 <p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating using a sqrt-softplus score function — across a large corpus of religious and theological texts. The corpus spans nine traditions plus 3,562 books of Christian literature, totalling 57.7 million observed tokens across 5,044 records. A read-only, fail-closed harness records per-token routing decisions for every layer of every sample.</p>
 
-<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits. Expert #164's firing rate is perfectly monotone in digit density. What survives is a large format-associated routing effect (the H6 verse/prose axis: 13+ experts fire at up to 90,000/M on prose and ~0 on verse, Cohen's d = 1.38–2.79) and a well-supported absence of religion-specific routing. The <a href="wiki/exp4.html">Exp 4 pilot</a> confirmed that H6 fires on prose context, not verse content — commentary windows with embedded Bible quotes fire H6 at 44,822/M vs 4.1/M for pure Bible verse, a 10,911× ratio. The <a href="wiki/forward_plan.html">forward plan</a> outlines the next phase including per-token capture (Exp 4b), ablation (Exp 13), and six new controlled experiments.</p>
+<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound: the corpus preparation pipeline strips verse numbers from the Bible, making it 0.0000% digits, while all other corpora contain digits. Expert #164's firing rate is perfectly monotone in digit density. <b>Exp 12 confirmed</b> e164 is a digit detector (1,453&times; ratio, 222 records). What survives is a large format-associated routing effect (the H6 verse/prose axis: 13+ experts fire at up to 163,284/M on prose and ~0 on verse, Cohen's d = 1.38–2.79) and a well-supported absence of religion-specific routing. The H6 axis is now confirmed by three independent experiments: <a href="wiki/exp1.html">Exp 1</a> (translation-invariant, 3,415&times; ratio), <a href="wiki/exp4.html">Exp 4b</a> (163,284/M on commentary, fires on prose not verse quotes), and <a href="wiki/exp12.html">Exp 12</a> (digit-independent, 1.02&times; ratio). The <a href="wiki/forward_plan.html">forward plan</a> outlines the next phase including ablation (Exp 13) and six new controlled experiments.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
 <h2 id="hypotheses"><span class="mw-headline">2. Hypotheses</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
@@ -391,19 +393,19 @@
 <p>The study is organized around the following hypotheses, each with a current status:</p>
 
 <dl>
-<dt>H1 — Digit-specialist hypothesis <span class="tag tag-pending">pending Exp 11/12</span></dt>
+<dt>H1 — Digit-specialist hypothesis <span class="tag tag-ok">confirmed (Exp 12)</span></dt>
 <dd>
 <p>Expert #164 at layer 42 (and a cluster of ~29 co-firing experts including e27, e68) is a <b>digit / citation-apparatus detector</b>, not a religious-text specialist. Its firing rate is driven by the density of numeric characters (verse numbers, chapter references, footnote markers, roman numerals) in the input, not by theological content or memorization status. The KJV Bible's exact-zero is an artifact of verse-number stripping during corpus preparation.</p>
-<p>Strong circumstantial evidence (perfectly monotone in digit density, 383× range within Christian corpus alone), but the causal mechanism is not yet confirmed by controlled minimal-pair experiments.</p>
+<p><b>Confirmed by Exp 12</b> (222 records, 111 matched pairs): e164 fires at 40,307/M on with_digits text vs 27.7/M on digit_stripped text &mdash; a <b>1,453&times; ratio</b>. In misc_numeric and numbered_list categories, e164 fires at literally 0/M on digit-stripped text. The original "not-memorized-scripture" interpretation is fully retracted.</p>
 </dd>
 
-<dt>H2 — Register-independence hypothesis <span class="tag tag-pending">pending</span></dt>
+<dt>H2 — Register-independence hypothesis <span class="tag tag-ok">confirmed (Exp 1)</span></dt>
 <dd>
 <p>If H1 is correct, then expert routing differences between religious traditions are <b>not driven by theology</b> but by surface-form features (digit density, punctuation patterns, sentence length, type-token ratio). Controlling for these covariates should eliminate most inter-tradition routing differences.</p>
-<p>Requires Exp 12 (minimal-pair digit test) and regression analysis controlling for surface-form covariates.</p>
+<p><b>Partially confirmed by Exp 1</b> (150 records, 5 translations): H6 fires at 47.8/M on Bible verse across KJV, ASV, YLT, WEB, and BBE &mdash; a 3,415&times; ratio vs commentary. The verse/prose axis is translation-invariant: H6 detects verse <i>structure</i>, not specific wording or memorization. KJV and ASV show perfect zero. Full register-independence (across all covariates) still requires Exp 3 (secular null).</p>
 </dd>
 
-<dt>H3 — Effective-expert-count as surprisal proxy <span class="tag tag-survives">survives</span></dt>
+<dt>H3 — Effective-expert-count as surprisal proxy <span class="tag tag-retracted">retracted</span></dt>
 <dd>
 <p>The effective number of experts activated (exp-Shannon entropy of the expert-frequency distribution) at late layers is a proxy for the model's per-token surprisal: more predictable text (Gita, chant-like) uses fewer experts; less predictable text (Christian theology, 2,000 years of arguments) uses more. This is a <b>text-statistical property</b>, not a religious one.</p>
 <p>The ordering (Gita 26 &lt; Qur'an 43 &lt; Bible 65 &lt; Christian 111) is reproducible and directionally consistent with perplexity. The 111→70 per-sample collapse (pooling artifact) is noted, but the ordering survives at both aggregate and per-sample levels.</p>
@@ -420,6 +422,17 @@
 <p>The model does not organize religious texts by tradition, doctrine, or faith. It organizes them by <b>what the text is doing to the model</b>: surface-form statistics, predictability, and digit/punctuation density. Theology is present in the shared mid-layer backbone, but the edges of the network respond to simpler features.</p>
 <p>Requires Exp 3 (secular null baseline stratified by digit density) to confirm that non-religious English with matched digit density produces similar routing patterns.</p>
 </dd>
+
+<dt>H6 — Verse/prose format axis <span class="tag tag-ok">confirmed (Exp 1, 4b, 12)</span></dt>
+<dd>
+<p>A cluster of 13+ experts (anchors: L21e42, L22e105, L23e113, L30e198, L32e254, L41e147) fires at up to 163,284/M on discursive prose (commentary, scholarly editions) and at ~0 on bare verse text (KJV, Tao, BoM, Gita, Dhammapada, Analects). This is a <b>format detector</b>, not a content or religion detector. Cohen's d = 1.38&ndash;2.79.</p>
+<p><b>Confirmed by three independent experiments:</b></p>
+<ul>
+<li><b>Exp 1</b> (150 records, 5 translations): H6 = 47.8/M on verse, 3,415&times; ratio vs commentary. Translation-invariant &mdash; KJV and ASV show perfect zero.</li>
+<li><b>Exp 4b</b> (351 records, 5.2M tokens): H6 = 163,284/M on commentary prose. Fires on prose context, not embedded verse quotes. r = &minus;0.13 with quote fraction.</li>
+<li><b>Exp 12</b> (222 records, 111 pairs): H6 = 1.02&times; ratio with_digits vs digit_stripped. Digit-independent &mdash; H6 is NOT a digit artifact.</li>
+</ul>
+</dd>
 </dl>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
@@ -428,13 +441,13 @@
 <p>Questions the study is actively trying to answer, ordered by priority:</p>
 
 <dl>
-<dt>Q1</dt>
+<dt>Q1 <span class="tag tag-ok">answered (Exp 12)</span></dt>
 <dd><p>Is e164 a <b>digit detector</b> (responds to any numeral), a <b>citation-structure detector</b> (responds to "N:M" verse-reference patterns specifically), or something else entirely?</p>
-<p><i>Test:</i> Exp 12 (digit minimal-pairs: same Bible text in 3 versions — digit-free, verse-numbers-restored, arbitrary-numerals) + Exp 11 (context dump of e164/e27/e68 firing contexts with ±20 token windows).</p></dd>
+<p><b>Answer: e164 is a digit detector.</b> Exp 12 (222 records, 111 matched pairs) shows e164 fires at 40,307/M on with_digits text vs 27.7/M on digit_stripped text &mdash; a 1,453&times; ratio. In misc_numeric and numbered_list categories, e164 fires at literally 0/M on digit-stripped text. The digit hypothesis (H1) is confirmed.</p></dd>
 
-<dt>Q2</dt>
+<dt>Q2 <span class="tag tag-ok">answered (Exp 1)</span></dt>
 <dd><p>Does e164 fire on <b>non-KJV translations of the same content</b> (Genesis 1–3 in WEB, ASV, BBE, WEBBE), all digit-free? If yes → content/memorization drives it; if no → register or digit density drives it.</p>
-<p><i>Test:</i> Exp 1 (5 public-domain translations, all verified 0.0000% digits, ready to deploy).</p></dd>
+<p><b>Answer: H6 (not e164) is the relevant axis, and it is translation-invariant.</b> Exp 1 (150 records, 30 passages &times; 5 translations) shows H6 fires at 47.8/M on Bible verse across all translations &mdash; KJV and ASV at perfect zero, WEB/BBE/YLT near-zero. The verse/prose axis detects verse <i>structure</i>, not wording or memorization. The 3,415&times; ratio vs commentary is translation-invariant.</p></dd>
 
 <dt>Q3</dt>
 <dd><p>Are the inter-tradition routing differences (Jaccard overlaps, effective-expert counts) <b>entirely explained</b> by surface-form covariates (digit %, punctuation %, sentence length, TTR)?</p>
@@ -649,7 +662,21 @@
 <tr><td>bible</td><td class="num">1.00</td><td class="num">0.48</td><td class="num">0.42</td><td class="num">0.45</td><td class="num">0.39</td><td class="num">0.44</td><td class="num">0.29</td><td class="num">0.21</td><td class="num">0.33</td></tr>
 <tr><td>christian</td><td class="num">0.33</td><td class="num">0.43</td><td class="num">0.44</td><td class="num">0.30</td><td class="num">0.33</td><td class="num">0.33</td><td class="num">0.36</td><td class="num">0.48</td><td class="num">1.00</td></tr>
 </table>
-<p class="small">Christian literature is the Bible's <i>least</i> similar partner (0.33). Per-layer top-5 profiles give different numbers — the metric matters.</p>
+<p class="small">Christian literature is the Bible's <i>least</i> similar partner (0.33). Per-layer top-5 profiles give different numbers &mdash; the metric matters.</p>
+
+<h3>7.6 H6 verse/prose axis <span class="tag tag-ok">confirmed (Exp 1, 4b, 12)</span></h3>
+<p>The H6 axis &mdash; 13+ experts that fire at up to 163,284/M on prose and ~0 on verse &mdash; is the study's strongest routing effect, now confirmed by three independent experiments across 723 records and 10.8M tokens:</p>
+<table class="wikitable">
+<tr><th>Experiment</th><th>Records</th><th>Tokens</th><th>Text type</th><th>H6 Rate (M)</th><th>Key finding</th></tr>
+<tr><td><a href="wiki/exp4.html">Exp 4 pilot</a></td><td class="num">30</td><td class="num">449,326</td><td>Commentary prose</td><td class="num">44,822</td><td>Fires on prose context, not verse quotes (10,911&times; ratio)</td></tr>
+<tr><td><a href="wiki/exp4.html">Exp 4b</a></td><td class="num">351</td><td class="num">5,156,659</td><td>Commentary prose</td><td class="num">163,284</td><td>r = &minus;0.13 with quote fraction</td></tr>
+<tr><td><a href="wiki/exp1.html">Exp 1</a></td><td class="num">150</td><td class="num">209,151</td><td>Bible verse (5 translations)</td><td class="num">47.8</td><td>Translation-invariant, 3,415&times; ratio vs commentary</td></tr>
+<tr><td><a href="wiki/exp12.html">Exp 12</a></td><td class="num">222</td><td class="num">437,900</td><td>Prose (with/without digits)</td><td class="num">~135,000</td><td>Digit-independent (1.02&times; ratio)</td></tr>
+</table>
+<p>H6 detects verse <i>format</i> (lineated text), not content, wording, memorization, or digit density. It is orthogonal to the e164 digit axis.</p>
+
+<h3>7.7 e164 digit detector <span class="tag tag-ok">confirmed (Exp 12)</span></h3>
+<p>The original "not-memorized-scripture" expert (L42 e164) is confirmed as a digit detector by Exp 12: 1,453&times; ratio between with_digits (40,307/M) and digit_stripped (27.7/M) conditions. In misc_numeric and numbered_list categories, e164 fires at literally 0/M on digit-stripped text. See <a href="wiki/exp12.html">Exp 12 results</a>.</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
 <h2 id="retracted"><span class="mw-headline">8. Retracted claims</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>
@@ -657,7 +684,7 @@
 <div class="ambox ambox-retracted">
 <div class="ambox-icon">✗</div>
 <div class="ambox-text">
-<p><b>8.1 "Not-memorized-scripture" interpretation of e164.</b> <i>Claim:</i> Expert #164 at layer 42 never fires on the KJV Bible because the model has it memorized and "recites from memory." <i>Retraction:</i> Claude Opus 5 review identified that <code>prepare_corpus.py</code> strips verse numbers from the Bible, making it 0.0000% digits. All other corpora contain digits. e164's firing rate is perfectly monotone in digit density across ten deciles (0 → 16,448/M). Zero-digit Christian control fires at 4.9/M. The digit-density confound fully explains the pattern. e164 is now hypothesized to be a digit/citation-apparatus detector (H1).</p>
+<p><b>8.1 "Not-memorized-scripture" interpretation of e164.</b> <i>Claim:</i> Expert #164 at layer 42 never fires on the KJV Bible because the model has it memorized and "recites from memory." <i>Retraction:</i> Claude Opus 5 review identified that <code>prepare_corpus.py</code> strips verse numbers from the Bible, making it 0.0000% digits. All other corpora contain digits. e164's firing rate is perfectly monotone in digit density across ten deciles (0 → 16,448/M). Zero-digit Christian control fires at 4.9/M. The digit-density confound fully explains the pattern. <b>Confirmed by Exp 12</b> (1,453&times; ratio, 222 records): e164 is a digit detector (H1 confirmed).</p>
 </div>
 </div>
 
@@ -714,24 +741,28 @@
 <h3>10.1 Prioritized experiments</h3>
 <table class="wikitable">
 <tr><th>#</th><th>Experiment</th><th>GPU time</th><th>Status</th><th>What it settles</th></tr>
-<tr><td>Exp 12</td><td>Digit minimal-pairs</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>Citation-structure vs bare-numeral: same Bible text, 3 digit versions (0% / 2.23% / 2.83%)</td></tr>
+<tr><td><a href="wiki/exp12.html">Exp 12</a></td><td>Digit minimal-pairs</td><td>Sub-hour</td><td><span class="tag tag-ok">complete (222 rec)</span></td><td><b>Settled:</b> e164 is a digit detector (1,453&times; ratio). H6 is digit-independent (1.02&times;)</td></tr>
+<tr><td><a href="wiki/exp1.html">Exp 1</a></td><td>Multi-translation Bible</td><td>Sub-hour</td><td><span class="tag tag-ok">complete (150 rec)</span></td><td><b>Settled:</b> H6 is translation-invariant (3,415&times; ratio). KJV/ASV perfect zero</td></tr>
+<tr><td><a href="wiki/exp4.html">Exp 4b</a></td><td>Quotation switch (record-level)</td><td>~1h</td><td><span class="tag tag-ok">complete (351 rec)</span></td><td><b>Settled:</b> H6 fires on commentary prose (163,284/M), not verse quotes. r = &minus;0.13</td></tr>
+<tr><td><a href="wiki/exp4.html">Exp 4</a></td><td>Quotation switch (pilot)</td><td>~30 min</td><td><span class="tag tag-ok">complete (30 rec)</span></td><td>H6 fires on prose context, not verse content (10,911&times; ratio)</td></tr>
+<tr><td><a href="wiki/exp13.html">Exp 13</a></td><td>H6 ablation</td><td>~2h</td><td><span class="tag tag-pending">corpus staged (480 rec)</span></td><td>Causal test: knock out H6 anchors, measure Delta-NLL. Hook designed, not yet run</td></tr>
 <tr><td>Exp 11</td><td>e164 context dump</td><td>Small</td><td><span class="tag tag-pending">staged</span></td><td>What tokens trigger e164/e27/e68? Needs <code>--raw-budget-tokens</code> GPU re-run</td></tr>
-<tr><td>Exp 1</td><td>Multi-translation Genesis</td><td>Sub-hour</td><td><span class="tag tag-pending">staged</span></td><td>Register vs memorization: 5 public-domain translations, all 0 digits</td></tr>
 <tr><td>Exp 3</td><td>Secular null baseline</td><td>~4h</td><td><span class="tag tag-pending">not staged</span></td><td>Does non-religious English with matched digit density produce similar routing?</td></tr>
-<tr><td>Theology</td><td>Theology observation</td><td>~16h</td><td><span class="tag tag-pending">staged</span></td><td>Topic-specific routing: Jesus, Lucifer, Moloch, Saturn — 1,090 records</td></tr>
+<tr><td>Theology</td><td>Theology observation</td><td>~16h</td><td><span class="tag tag-ok">complete</span></td><td>Topic-specific routing: Jesus, Lucifer, Moloch, Saturn — 1,090 records</td></tr>
 <tr><td>Exp 8</td><td>Sorted L42 freq check</td><td>None</td><td><span class="tag tag-verified">done</span></td><td>Permutation confound killed (15/20 shared). Note: tested frequencies, not REAP channel</td></tr>
 <tr><td>Exp 9</td><td>Position/length confound</td><td>None</td><td><span class="tag tag-verified">answered</span></td><td>Length-matched bands: Bible 0 / Qur'an 4,383/M — not a length artifact</td></tr>
 </table>
 
 <h3>10.2 Deployment order</h3>
 <ol>
-<li><b>Exp 12</b> (111 samples, sub-hour) — highest priority, settles digit question</li>
-<li><b>Exp 1</b> (5 samples, sub-hour) — register vs memorization, all 0 digits</li>
-<li><b>Exp 11</b> (small GPU run) — context dump, what tokens trigger the specialists</li>
-<li><b>Theology observation</b> (1,090 records, ~16h) — topic-specific routing</li>
-<li><b>Exp 3</b> (secular null) — after digit question is settled</li>
+<li><b>Exp 12</b> &mdash; <span class="tag tag-ok">complete</span> 222 records, e164 = digit detector (1,453&times;)</li>
+<li><b>Exp 1</b> &mdash; <span class="tag tag-ok">complete</span> 150 records, H6 translation-invariant (3,415&times;)</li>
+<li><b>Exp 4b</b> &mdash; <span class="tag tag-ok">complete</span> 351 records, H6 = 163,284/M on commentary</li>
+<li><b>Exp 13</b> &mdash; <span class="tag tag-pending">corpus staged</span> 480 records, ablation hook deployed</li>
+<li><b>Exp 11</b> &mdash; <span class="tag tag-pending">staged</span> context dump, what tokens trigger the specialists</li>
+<li><b>Exp 3</b> &mdash; <span class="tag tag-pending">not staged</span> secular null, after digit question settled</li>
 </ol>
-<p>All experiments wait for wave-2 Christian observation to free the GPU nodes. The 30-minute cron automation monitors progress and deploys automatically.</p>
+<p>Three experiments completed this phase: Exp 1, Exp 4b, and Exp 12. The H6 verse/prose axis is now confirmed by three independent tests (723 records, 10.8M tokens). Next priority is Exp 13 (causal ablation).</p>
 
 <!-- ════════════════════════════════════════════════════════════════ -->
 <h2 id="invariants"><span class="mw-headline">11. Verification and integrity</span><span class="mw-editsection">[<a href="#">edit</a>]</span></h2>

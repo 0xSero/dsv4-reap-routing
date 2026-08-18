@@ -94,15 +94,15 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <li>5 <a href="#e3">Exp 3 &mdash; Secular null baseline</a></li>
 <li>6 <a href="#e8">Exp 8 &mdash; Sorted L42 frequency check</a> <span class="tag tag-ok">done</span></li>
 <li>7 <a href="#e9">Exp 9 &mdash; Position/length confound</a> <span class="tag tag-ok">answered</span></li>
-<li>8 <a href="#e4b">Exp 4b &mdash; Quotation-switch test</a> <span class="tag tag-run">running</span></li>
+<li>8 <a href="#e4b">Exp 4b &mdash; Quotation-switch test</a> <span class="tag tag-ok">complete</span></li>
 <li>9 <a href="#e13">Exp 13 &mdash; H6 ablation</a> <span class="tag tag-pending">staged</span></li>
 <li>10 <a href="#other">Other planned experiments</a></li>
 </ul></div>
 
 <h2 id="priority">1. Current priority queue</h2>
-<p>Deployment order when GPU nodes free (after wave-2 completes):</p>
+<p>Wave-2 is complete; deployment order below. Exp 1, Exp 12, and Exp 4b are all complete:</p>
 <ol>
-<li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-run">running now</span> Decisive within-document verse-quote vs commentary test.</li>
+<li><b>Exp 4b</b> &mdash; 351 samples, ~5M tokens. <span class="tag tag-ok">complete</span> Decisive within-document verse-quote vs commentary test. H6 = 163,284/M on commentary, fires on prose context not verse quotes.</li>
 <li><b>Exp 12</b> &mdash; 222 samples (111 pairs), 438k tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02&times;), e164 digit detector (1,453&times;).</li>
 <li><b>Exp 1</b> &mdash; 150 samples, 209k tokens. <span class="tag tag-ok">complete</span> H6 = 47.8/M, translation-invariant.</li>
 <li><b>Exp 13</b> &mdash; Ablation hook designed, corpus to build. Causal test of H6 contribution.</li>
@@ -187,12 +187,13 @@ position-dependent, explaining the zero?</p>
 <p><b>Result:</b> No &mdash; length-matched comparison bands show Bible 0 / Qur'an 4,383/M at
 comparable window sizes. The zero is not a length artifact.</p>
 
-<h2 id="e4b">8. Exp 4b &mdash; Quotation-switch within-document test <span class="tag tag-run">running</span></h2>
+<h2 id="e4b">8. Exp 4b &mdash; Quotation-switch within-document test <span class="tag tag-ok">complete</span></h2>
 <table class="wikitable">
 <tr><th>Field</th><th>Value</th></tr>
 <tr><td>Hypothesis tested</td><td>H6: do the verse/prose axis experts fire on <i>prose context</i> rather than <i>verse content</i>? Within the same document, do H6 rates drop at quote boundaries?</td></tr>
 <tr><td>Design</td><td>351 commentary windows containing embedded KJV verse quotes (41,426 quote tokens across 18 sources). Each quote span has start/end token positions for per-token routing analysis. Character-window approach (60k chars ~16k tokens) to avoid tokenizing entire files.</td></tr>
 <tr><td>Corpus</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code> &mdash; 351 records, 5.2M tokens</td></tr>
+<tr><td>Result</td><td><b>Complete (351/351 records, 0 violations).</b> Mean H6 composite rate 163,284/M; quote-fraction vs H6 correlation r = &minus;0.13 &mdash; more verse quote content &rarr; less H6 firing. H6 fires on prose commentary context, not embedded verse quotes. See <a href="exp4.html#exp4b">Exp 4b results</a>.</td></tr>
 <tr><td>Pilot result (Exp 4)</td><td>H6 fires on prose context at 44,822/M vs verse content at 4.1/M &mdash; a 10,911&times; ratio. But only 419 quote tokens (pilot); Exp 4b scales to 41,426 for decisive test.</td></tr>
 <tr><td>Primary endpoint</td><td>Binary event <code>I(layer, expert, token in top-6)</code>; beta-binomial model at block level with document and window random effects</td></tr>
 </table>

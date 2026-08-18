@@ -162,12 +162,32 @@ See <a href="narrative.html#integrity">narrative &sect;8</a> for details.</div>
 slice; (c) full 9-corpus profile; (d) length-matched comparator (BoM at 16k); (e) split-half
 stability.</p>
 
-<h2 id="h6axis">4a. The verse-vs-prose axis (H6)</h2>
+<h2 id="h6axis">4a. The verse-vs-prose axis (H6) <span class="tag tag-ok">confirmed (Exp 1, 4b, 12)</span></h2>
 <figure><img src="../img/chart_h6_axis.png" alt="H6 verse-vs-prose axis">
 <figcaption>H6 axis: 8 expert cells where verse-text corpora (green) fire ~0 and discursive-prose corpora (red) fire at 10,000&ndash;90,000/M. 1,000&times; larger than the digit effect, and digit-independent.</figcaption></figure>
-<p>See <a href="narrative.html#h6">narrative &sect;4</a> for the full table and discussion. This is
-the study's primary positive finding: a large, digit-independent, length-independent routing axis
-that separates bare verse-text from discursive prose, cutting across all religious traditions.</p>
+<figure><img src="../img/chart_h6_heatmap.png" alt="H6 verse-vs-prose heatmap">
+<figcaption>H6 heatmap: 13 expert cells &times; 9 corpora &mdash; the clean separation between verse (green) and prose (red).</figcaption></figure>
+<figure><img src="../img/chart_h6_boxplot.png" alt="H6 verse vs prose boxplot">
+<figcaption>H6 boxplot: per-expert distributions showing how cleanly verse and prose groups separate (Cohen's d = 1.38&ndash;2.79).</figcaption></figure>
+<p>The H6 axis is the study's primary positive finding: a large, digit-independent, length-independent
+routing axis that separates bare verse-text from discursive prose, cutting across all religious traditions.
+The 6 anchor experts (L21e42, L22e105, L23e113, L30e198, L32e254, L41e147) fire at up to 163,284/M
+on commentary prose and ~0 on Bible verse.</p>
+
+<h3>4a.1 Confirmed by three independent experiments</h3>
+<table class="wikitable">
+<tr><th>Experiment</th><th>Records</th><th>Tokens</th><th>H6 Rate (M)</th><th>Key finding</th></tr>
+<tr><td><a href="exp4.html">Exp 4 pilot</a></td><td class="num">30</td><td class="num">449,326</td><td class="num">44,822</td><td>Fires on prose context, not verse quotes (10,911&times; ratio)</td></tr>
+<tr><td><a href="exp4.html">Exp 4b</a></td><td class="num">351</td><td class="num">5,156,659</td><td class="num">163,284</td><td>r = &minus;0.13 with quote fraction &mdash; fires on commentary, not verse</td></tr>
+<tr><td><a href="exp1.html">Exp 1</a></td><td class="num">150</td><td class="num">209,151</td><td class="num">47.8</td><td>Translation-invariant (KJV/ASV perfect zero), 3,415&times; ratio vs commentary</td></tr>
+<tr><td><a href="exp12.html">Exp 12</a></td><td class="num">222</td><td class="num">437,900</td><td class="num">~135,000</td><td>Digit-independent (1.02&times; ratio) &mdash; NOT a digit artifact</td></tr>
+</table>
+<p>See <a href="narrative.html#h6">narrative &sect;4</a> for the full 8-tradition table and discussion.</p>
+
+<h3>4a.2 e164 digit detector (orthogonal axis)</h3>
+<p>The original "scripture detector" (L42 e164) is <b>confirmed as a digit detector</b> by Exp 12:
+1,453&times; ratio between with_digits (40,307/M) and digit_stripped (27.7/M) conditions. This is
+orthogonal to the H6 verse/prose axis. See <a href="exp12.html">Exp 12 results</a>.</p>
 
 <h2 id="jaccard">5. Inter-tradition similarity</h2>
 <figure><img src="../img/chart_jaccard_heatmap.png" alt="Jaccard heatmap">
@@ -204,7 +224,8 @@ position, cherry-picked, uncalibrated readout. No surviving logit-lens headline.
 <h2 id="retract">8. Retractions</h2>
 <div class="ambox bad"><b>8.1 "Not-memorized-scripture" e164.</b> Digit-density confound
 (pipeline strips Bible verse numbers; perfectly monotone deciles 0&rarr;16,448/M; zero-digit
-Christian control 4.9/M; ~29-expert cluster incl. e27, e68). Found by Claude Opus 5 review.</div>
+Christian control 4.9/M; ~29-expert cluster incl. e27, e68). Found by Claude Opus 5 review.
+<b>Confirmed by Exp 12</b> (1,453&times; ratio, 222 records): e164 is a digit detector (H1 confirmed).</div>
 <div class="ambox bad"><b>8.2 Layer sandwich.</b> REAP noise-floor artifact; inverts on
 frequencies; write-up mixed two Jaccard metrics. Found by Kimi K3 review.</div>
 <div class="ambox bad"><b>8.3 Genesis 1:2 logit lens.</b> Position 30 token is ' deep' not

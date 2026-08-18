@@ -102,7 +102,9 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>prepare_christian_corpus.py</code></td><td>Same for the Gutenberg Christian corpus, 16k first window per book</td><td><code>corpus/samples/christian.jsonl</code> (28,789)</td></tr>
 <tr><td><code>prepare_theology_corpus.py</code></td><td>Tokenize + window the theology corpus (imports <code>_emit_jsonl</code>)</td><td><code>corpus/samples/theology.jsonl</code> (29,098)</td></tr>
 <tr><td><code>select_theology.py</code></td><td>Stratified selection with topic quotas and per-sample digit density in manifest</td><td><code>corpus/samples/theology_sel.jsonl</code> (1,090)</td></tr>
-<tr><td><code>exp12_build_minimal_pairs.py</code></td><td>Digit minimal-pair corpus (asis / verseno / arbit), matched digit counts</td><td><code>corpus/samples/exp12_minimal_pairs.jsonl</code> (111)</td></tr>
+<tr><td><code>build_exp12_digit_minimal_pairs.py</code></td><td>Builds Exp 12 digit minimal-pair corpus: 111 matched pairs across 5 categories (dates_and_years, misc_numeric, numbered_list, scripture_citation, tabular_statistics). Each pair: same text with_digits vs digit_stripped</td><td><code>corpus/samples/exp12_digit_minimal_pairs.jsonl</code> (222 records)</td></tr>
+<tr><td><code>build_exp4b_v2.py</code></td><td>Builds Exp 4b quotation-switch corpus: 351 commentary windows with annotated quote spans from Project Gutenberg Christian literature</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code></td></tr>
+<tr><td><code>build_exp13_ablation_corpus.py</code></td><td>Builds Exp 13 4-cell ablation corpus: verse_religious (KJV), prose_religious (held-out commentary), verse_secular (Shakespeare/Whitman/Dickinson), prose_secular (Darwin/Thoreau). 120 blocks per cell, 512&ndash;1024 tokens</td><td><code>corpus/samples/exp13_ablation_corpus.jsonl</code> (480 records, 418k tokens)</td></tr>
 </table>
 
 <h2>3. Observation</h2>
@@ -114,9 +116,18 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>obs_christian_watch.sh</code> / <code>obs_theology_watch.sh</code></td><td>Per-run watchdogs</td><td></td></tr>
 <tr><td><code>finalize_christian.sh</code></td><td>Pull shards, merge, verify invariants, build aggregates</td><td>Run on ALL RUNS COMPLETE</td></tr>
 <tr><td><code>run_theology_observation.sh</code></td><td>Theology deployment wrapper</td><td></td></tr>
+<tr><td><code>exp13_ablation_hook.py</code></td><td>The Exp 13 ablation hook. Modifies the forward pass to zero out H6 anchor experts and measure &Delta;-NLL. Two modes: contribution knockout (keep gate selection, zero output) and route-mask compensation (reselect replacements)</td><td>Deployed to both TP2 nodes but NOT YET RUN</td></tr>
+<tr><td><code>chart_exp12.py</code></td><td>Generates Exp 12 charts: H6 vs e164 by condition (grouped bar), H6 by category &times; condition, e164 by category &times; condition</td><td>Input: <code>exp12_obs.jsonl</code>; Output: <code>chart_exp12_*.png</code></td></tr>
 </table>
 
-<h2>4. J-lens probes</h2>
+<h2>4. Operations and orchestration</h2>
+<table class="wikitable">
+<tr><th>Script</th><th>Purpose</th><th>Notes</th></tr>
+<tr><td><code>chain_exp1_exp12.sh</code></td><td>Chain runner: waits for Exp 1 to complete, then launches Exp 12, then pulls results</td><td>Resume-safe with 2-poll death confirmation</td></tr>
+<tr><td><code>chain_experiments.sh</code></td><td>Earlier chain runner for wave-1 &rarr; J-lens &rarr; wave-2 sequencing</td><td></td></tr>
+</table>
+
+<h2>5. J-lens probes</h2>
 <table class="wikitable">
 <tr><th>Script</th><th>Purpose</th></tr>
 <tr><td><code>run_jlens.py</code> / <code>jlens_dsv4.py</code></td><td>Capture per-layer per-position next-token distributions and bounded Jacobian norms</td></tr>
@@ -125,17 +136,20 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>jlens_viewer.py</code></td><td>Interactive inspection of lens records</td></tr>
 </table>
 
-<h2>5. Analysis</h2>
+<h2>6. Analysis</h2>
 <table class="wikitable">
 <tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
 <tr><td><code>analyze_experts.py</code></td><td>Aggregate frequencies/REAP, cross-text Jaccard, effective-expert counts</td><td><code>core_agg.json</code>, <code>christian_agg.json</code>, <code>analysis/*.csv</code></td></tr>
 <tr><td><code>generate_report.py</code></td><td>Verification report: invariant checks over all records</td><td>report</td></tr>
 <tr><td><code>exp8_sorted_freq.py</code></td><td>Permutation-confound check on sorted L42 distributions</td><td><code>analysis_all/exp8_sorted_freq_results.txt</code></td></tr>
 <tr><td><code>exp11_context_dump.py</code></td><td>Attempted context recovery from existing records &mdash; documented failure (unique-ID storage), motivating the GPU re-run</td><td>&mdash;</td></tr>
+<tr><td><code>analyze_exp4.py</code></td><td>Analyzes Exp 4 pilot results: H6 rates by group (KJV files vs commentary), per-anchor breakdowns, digit density correlation</td><td>Exp 4 pilot analysis</td></tr>
+<tr><td><code>analyze_exp4b.py</code></td><td>Analyzes Exp 4b record-level results: H6 composite rates, per-anchor stats, quote_fraction vs H6 correlation, quartile analysis, source variation</td><td>Input: <code>exp4b_obs.jsonl</code>; Output: <code>EXP4B_RESULTS.md</code>, charts</td></tr>
+<tr><td><code>analyze_exp12.py</code></td><td>Analyzes Exp 12 digit minimal-pair results: H6 and e164 rates by condition (with_digits vs digit_stripped), per-category breakdown, per-pair comparison, digit density correlation</td><td>Input: <code>exp12_obs.jsonl</code> + <code>exp12_digit_minimal_pairs.jsonl</code></td></tr>
 <tr><td><code>build_wiki_site.py</code></td><td>Generates this wiki from a shared template</td><td><code>wiki/*.html</code></td></tr>
 </table>
 
-<h2>6. Publication and sync</h2>
+<h2>7. Publication and sync</h2>
 <table class="wikitable">
 <tr><th>Script</th><th>Purpose</th></tr>
 <tr><td><code>sync_to_github.sh</code></td><td>Self-throttling 4&nbsp;h sync: analysis, gzipped J-lens, sanitized code (credential scrub via <code>$SSHPASS</code> env), manifests; commit + push</td></tr>
@@ -143,7 +157,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <tr><td><code>stream_to_hf.py</code></td><td>Streaming record upload during observation</td></tr>
 </table>
 
-<h2>7. One-shot / probe utilities</h2>
+<h2>8. One-shot / probe utilities</h2>
 <p class="small"><code>probe_de5c.sh</code>, <code>probe2.sh</code>, <code>probe3.sh</code>,
 <code>jump.sh</code>, <code>chk_convert.sh</code>, <code>run_convert.sh</code>,
 <code>run_r0.sh</code>, <code>run_r1.sh</code>, <code>run_tp2_2384.sh</code>,
@@ -153,7 +167,7 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 checks, and recovery utilities from earlier phases. Kept for provenance; not part of the
 active pipeline.</p>
 
-<h2>8. Docker</h2>
+<h2>9. Docker</h2>
 <pre>FROM ghcr.io/anemll/dspark-vllm-gx10:0.1.1
 ENV TOKENIZER_ID=deepseek-ai/DeepSeek-V4-Flash-0731
 ENV TOKENIZER_REV=9e165c30e2704aec5d9d593cce3eebd58bbef1cb
