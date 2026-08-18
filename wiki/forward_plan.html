@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Forward plan — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,12 +32,12 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li class="here"><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#rules">1. Rules</a></li>
-<li><a href="#exp13-plan">2. Exp 13: Scoped H6 ablation</a></li>
-<li><a href="#priority-plan">3. Priority and dependencies</a></li>
-<li><a href="#new">4. New experiments proposed</a></li>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#rules">1. Rules we follow</a></li>
+<li><a href="#exp13-plan">2. Exp 13: the H6 ablation</a></li>
+<li><a href="#priority-plan">3. Priority order and what each one answers</a></li>
+<li><a href="#new">4. New experiments we are proposing</a></li>
 <li><a href="#viz">5. Visualization plan</a></li>
-<li><a href="#narrative-arc">6. Narrative arc</a></li></ul></div>
+<li><a href="#narrative-arc">6. The story we are telling</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -50,54 +52,59 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#rules">1. Rules</a></li>
-<li><a href="#exp13-plan">2. Exp 13: Scoped H6 ablation</a></li>
-<li><a href="#priority-plan">3. Priority and dependencies</a></li>
-<li><a href="#new">4. New experiments proposed</a></li>
+<li><a href="#rules">1. Rules we follow</a></li>
+<li><a href="#exp13-plan">2. Exp 13: the H6 ablation</a></li>
+<li><a href="#priority-plan">3. Priority order and what each one answers</a></li>
+<li><a href="#new">4. New experiments we are proposing</a></li>
 <li><a href="#viz">5. Visualization plan</a></li>
-<li><a href="#narrative-arc">6. Narrative arc</a></li>
+<li><a href="#narrative-arc">6. The story we are telling</a></li>
 </ul></div>
 
-<h1>Forward Plan: Next Experimental Phase</h1>
-<div class="hatnote">Designed to resolve the H6 routing axis without recreating confounds. Designed by GPT-5.6-terra.</div>
+<h1>Forward plan: next experimental phase</h1>
+<div class="hatnote">The plan for the experiments we want to run next, designed to settle the remaining questions about H6 without reintroducing the problems that misled us before.</div>
 
-<h2 id="rules">1. Rules</h2>
+<p>Quick orientation for anyone new to the project. DeepSeek-V4-Flash-0731 is a <b>mixture of experts</b> language model: it has 256 small sub-networks (we call them <i>experts</i>) at each of its 43 layers, and for each <i>token</i> (roughly each word) a <i>router</i> picks 6 experts to do the work. We feed the model text and record which experts it picks. Our main measurement, <b>REAP</b>, is the router's gate weight for an expert times that expert's activation norm, a single number summarizing how much each expert contributed.</p>
+
+<p>The finding we are now trying to nail down is <b>H6</b>: a group of 6 experts at layer 42 that fire strongly on prose (flowing, paragraph-shaped text) and go nearly silent on verse (short lineated lines, like poetry or scripture). We also found <b>e164</b>, expert 164 at layer 42, which fires on digit characters. We once thought e164 detected scripture, but that was a mistake in our own data pipeline, which had stripped verse numbers from the Bible, leaving it with no digits. The forward plan below is about proving the H6 finding causally and ruling out the remaining alternative explanations.</p>
+
+<h2 id="rules">1. Rules we follow</h2>
+<p>Every experiment in this project follows four rules. They exist because we got things wrong before, and these rules are how we keep from repeating it.</p>
 <ul>
-<li>Read-only: no weight edits, no pruning, no quantization</li>
-<li>Every experiment must control digit density</li>
-<li>Fail-closed invariants on every record</li>
-<li>External review before publication</li>
+<li><b>Read-only.</b> We never change the model's weights, remove experts, or compress it. We only feed text in and watch what happens. This keeps the model intact and our observations comparable across experiments.</li>
+<li><b>Control digit density.</b> Because e164 fires on digits, every experiment must track how many digits are in the text and hold that number steady when comparing groups. This is the control that exposed our original error.</li>
+<li><b>Fail-closed invariants.</b> Every observation is checked against hard rules (for example, the total number of expert firings must equal the number of tokens times the number of experts picked per token, and there must be no NaN or Inf values). If a check fails, the record is rejected before it enters the dataset.</li>
+<li><b>External review before publication.</b> Claims go to outside reviewers before we publish them. The e164 correction came from an external review.</li>
 </ul>
 
-<h2 id="exp13-plan">2. Exp 13: Scoped H6 ablation</h2>
-<p>The causal test. Knock out H6 anchors, measure Δ-NLL. See <a href="exp13.html">Exp 13 page</a> for full design.</p>
+<h2 id="exp13-plan">2. Exp 13: the H6 ablation</h2>
+<p>This is the most important next experiment. An <i>ablation</i> means temporarily switching some experts off and seeing what changes. Here we switch the 6 H6 experts off and measure how much worse the model gets at predicting the next token, using <i>negative log likelihood</i> (NLL), a standard measure of prediction error where lower is better. If the error rises sharply on prose but stays flat on verse, that is direct evidence H6 is what drives the prose-versus-verse difference, not merely correlated with it. See the <a href="exp13.html">Exp 13 page</a> for the full design.</p>
 
-<h2 id="priority-plan">3. Priority and dependencies</h2>
+<h2 id="priority-plan">3. Priority order and what each one answers</h2>
 <ol>
-<li>Exp 13 (ablation) — highest priority, causal claim</li>
-<li>Exp 11 (context dump) — what triggers specialists</li>
-<li>Exp 3 (secular null) — religion-specific or general?</li>
-<li>Theology observation — Jesus/Lucifer/Moloch/Saturn</li>
+<li><b>Exp 13, the ablation.</b> Highest priority, because it is the only experiment that can turn our correlation into a causal claim. Until we run it, we know H6 fires differently on prose and verse, but we do not know that H6 causes the difference.</li>
+<li><b>Exp 11, the context dump.</b> We look at the surrounding text at the exact moments when tradition-specific experts (ones that fire on only one religion) switch on, to learn what actually triggers them.</li>
+<li><b>Exp 3, the secular null.</b> Text in the same formats and styles as our religious texts but with no religious content. This answers whether anything we have seen is really about religion or only about ordinary English prose and verse.</li>
+<li><b>Theology observation.</b> Text about named figures (Jesus, Lucifer, Moloch, Saturn) and about Judaism, to see whether specific theological content changes routing.</li>
 </ol>
 
-<h2 id="new">4. New experiments proposed</h2>
+<h2 id="new">4. New experiments we are proposing</h2>
 <ul>
-<li><b>Format-edit factorial:</b> same text, verse-formatted vs prose-formatted, religious vs secular — 2×2 design</li>
-<li><b>Secular factorial:</b> same format controls with no religious content at all</li>
-<li><b>Lens robustness:</b> does digit density affect J-space probes?</li>
+<li><b>Format-edit factorial.</b> Take the same text and present it two ways, as verse (lineated) and as prose (flowing), and do this for both religious and secular text. A <i>factorial</i> design tests two variables at once, here format and religious content, across all four combinations. If format drives H6 and religion does not, the prose cells fire and the verse cells do not, regardless of whether the content is religious.</li>
+<li><b>Secular factorial.</b> The same format comparison but with no religious content at all. This is the cleanest test of whether H6 is purely a format detector with no hidden dependence on religious subject matter.</li>
+<li><b>Lens robustness.</b> We re-run our J-space lens probes (the method that peeks at the model's intermediate predictions layer by layer) split by digit density, to check whether digits are distorting those results the way they distorted e164.</li>
 </ul>
 
 <h2 id="viz">5. Visualization plan</h2>
 <ul>
-<li>Interactive H6 explorer (which experts fire on which passages)</li>
-<li>Per-layer routing animations (how routing evolves through the 43-layer stack)</li>
-<li>MSG vs KJV side-by-side (same passage, different format, different routing)</li>
+<li><b>Interactive H6 explorer.</b> A tool where you pick a passage and see which H6 experts fire on it and where, so the pattern is visible without reading raw numbers.</li>
+<li><b>Per-layer routing animations.</b> Show how expert selection changes as a token passes through the 43-layer stack, so you can see at which layer the prose-versus-verse split emerges.</li>
+<li><b>MSG versus KJV side-by-side.</b> The same Bible passage in the Message paraphrase (which reads like prose) and the King James Version (which is verse-formatted), shown together, so you can see how the format change alone alters the routing.</li>
 </ul>
 
-<h2 id="narrative-arc">6. Narrative arc</h2>
-<p>The story: "We asked if an AI routes religious text differently. The answer is no — but we found something more interesting: a verse/prose format detector. Here's how we found it, how we ruled out confounds, and what it means."</p>
+<h2 id="narrative-arc">6. The story we are telling</h2>
+<p>The arc, in plain terms: we asked whether a language model routes religious text differently from other text. The answer is no. But along the way we found something we did not expect, a set of experts that detect whether text is laid out as verse or as prose, and a single expert that detects digits. The forward plan is about proving the verse-versus-prose finding causally, ruling out the remaining confounds, and being honest about the error we made and corrected along the way.</p>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

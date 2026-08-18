@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Experiments — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,16 +32,13 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#priority">1. Current priority queue</a></li>
-<li><a href="#e1">2. Exp 1 — Multi-translation Bible test complete</a></li>
-<li><a href="#e4b">3. Exp 4b — Quotation-switch test complete</a></li>
-<li><a href="#e12">4. Exp 12 — Digit minimal-pair test complete</a></li>
-<li><a href="#e13">5. Exp 13 — Scoped H6 ablation staged</a></li>
-<li><a href="#e11">6. Exp 11 — Context dump staged</a></li>
-<li><a href="#e3">7. Exp 3 — Secular null not staged</a></li>
-<li><a href="#e8">8. Exp 8 — Sorted L42 frequency check done</a></li>
-<li><a href="#e9">9. Exp 9 — Position/length confound answered</a></li>
-<li><a href="#other">10. Other planned experiments</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#overview">Overview</a></li>
+<li><a href="#e1">Exp 1: 12 translations of the same Bible</a></li>
+<li><a href="#e4b">Exp 4b: Commentary with embedded Bible quotes</a></li>
+<li><a href="#e12">Exp 12: Same text with and without digits</a></li>
+<li><a href="#e13">Exp 13: Knock out H6 and see what breaks (not yet run)</a></li>
+<li><a href="#checks">Sanity checks we ran along the way</a></li>
+<li><a href="#ideas">Ideas we haven't committed to yet</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -54,85 +53,61 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#priority">1. Current priority queue</a></li>
-<li><a href="#e1">2. Exp 1 — Multi-translation Bible test complete</a></li>
-<li><a href="#e4b">3. Exp 4b — Quotation-switch test complete</a></li>
-<li><a href="#e12">4. Exp 12 — Digit minimal-pair test complete</a></li>
-<li><a href="#e13">5. Exp 13 — Scoped H6 ablation staged</a></li>
-<li><a href="#e11">6. Exp 11 — Context dump staged</a></li>
-<li><a href="#e3">7. Exp 3 — Secular null not staged</a></li>
-<li><a href="#e8">8. Exp 8 — Sorted L42 frequency check done</a></li>
-<li><a href="#e9">9. Exp 9 — Position/length confound answered</a></li>
-<li><a href="#other">10. Other planned experiments</a></li>
+<li><a href="#overview">Overview</a></li>
+<li><a href="#e1">Exp 1: 12 translations of the same Bible</a></li>
+<li><a href="#e4b">Exp 4b: Commentary with embedded Bible quotes</a></li>
+<li><a href="#e12">Exp 12: Same text with and without digits</a></li>
+<li><a href="#e13">Exp 13: Knock out H6 and see what breaks (not yet run)</a></li>
+<li><a href="#checks">Sanity checks we ran along the way</a></li>
+<li><a href="#ideas">Ideas we haven't committed to yet</a></li>
 </ul></div>
 
-<h1>Experiments</h1>
-<div class="hatnote">All experiments, numbered as in <code>EXPERIMENTS.md</code>. Each entry: hypothesis, design, status, result.</div>
+<h1>The experiments</h1>
+<div class="hatnote">Each experiment was designed to test one specific question. Here's what we asked, how we tested it, and what we learned.</div>
 
-<h2 id="priority">1. Current priority queue</h2>
-<ol>
-<li><b>Exp 1</b> — 360 samples, 613,344 tokens. <span class="tag tag-ok">complete</span> H6 = 59.5/M (excl. MSG), translation-invariant. MSG at 1,033/M confirms format detection.</li>
-<li><b>Exp 4b</b> — 351 samples, 5,156,659 tokens. <span class="tag tag-ok">complete</span> H6 = 163,284/M on commentary prose.</li>
-<li><b>Exp 12</b> — 222 samples, 437,900 tokens. <span class="tag tag-ok">complete</span> H6 digit-independent (1.02×), e164 digit detector (1,453×).</li>
-<li><b>Exp 13</b> — Ablation hook designed, corpus staged (480 records). <span class="tag tag-pending">staged</span></li>
-<li><b>Exp 11</b> — Context dump. <span class="tag tag-pending">staged</span></li>
-<li><b>Exp 3</b> — Secular null. <span class="tag tag-pending">not staged</span></li>
-</ol>
-
-<h2 id="e1">2. Exp 1 — Multi-translation Bible test <span class="tag tag-ok">complete</span></h2>
+<h2 id="overview">Overview</h2>
 <table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis</td><td>Does H6 fire on non-KJV renderings of the same text? (translation-invariance)</td></tr>
-<tr><td>Design</td><td>30 Bible passages × 12 English translations (5 public-domain + 7 copyrighted). All 0-digit controlled. 360 records, 613,344 tokens.</td></tr>
-<tr><td>Result</td><td><b>Translation-invariant for verse-formatted translations.</b> H6 = 59.5/M (excl. MSG). KJV and ESV perfect zero. MSG (prose paraphrase) at 1,033/M confirms H6 detects format, not content. See <a href="exp1.html">Exp 1 results</a>.</td></tr>
+<tr><th>#</th><th>Question</th><th>Records</th><th>Status</th><th>Answer</th></tr>
+<tr><td><a href="exp1.html">Exp 1</a></td><td>Does the verse/prose detector care which translation you use?</td><td class="num">360</td><td><span class="tag tag-ok">done</span></td><td>No. All verse translations fire near zero. The Message (prose) fires high. Format, not content.</td></tr>
+<tr><td><a href="exp4.html">Exp 4b</a></td><td>Does the detector fire on verse quotes embedded in prose commentary?</td><td class="num">351</td><td><span class="tag tag-ok">done</span></td><td>It fires on the prose, not the verse quotes. The model can tell the difference within a single document.</td></tr>
+<tr><td><a href="exp12.html">Exp 12</a></td><td>Is H6 actually about digits? Is e164 actually about digits?</td><td class="num">222</td><td><span class="tag tag-ok">done</span></td><td>H6 doesn't care about digits. e164 does (1,453x difference). Two separate effects.</td></tr>
+<tr><td><a href="exp13.html">Exp 13</a></td><td>Does knocking out H6 actually hurt the model on prose?</td><td class="num">480</td><td><span class="tag tag-pending">staged</span></td><td>Not yet run. The code is ready, the corpus is built, we just need GPU time.</td></tr>
+<tr><td>Exp 11</td><td>What specific tokens trigger the specialist experts?</td><td>—</td><td><span class="tag tag-pending">staged</span></td><td>Not yet run. Needs per-token routing capture.</td></tr>
+<tr><td>Exp 3</td><td>Is routing religion-specific or just general English?</td><td>—</td><td><span class="tag tag-pending">not staged</span></td><td>Compare religious vs. secular text at same digit density.</td></tr>
 </table>
 
-<h2 id="e4b">3. Exp 4b — Quotation-switch test <span class="tag tag-ok">complete</span></h2>
-<table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis</td><td>Does H6 fire on quoted verse, surrounding commentary, or both?</td></tr>
-<tr><td>Design</td><td>351 commentary windows with embedded KJV quotes, 18 sources, 5,156,659 tokens.</td></tr>
-<tr><td>Result</td><td><b>H6 = 163,284/M on commentary prose.</b> Fires on prose context, not verse quotes. r = −0.13 with quote fraction. See <a href="exp4.html">Exp 4 results</a>.</td></tr>
-</table>
+<h2 id="e1">Exp 1: 12 translations of the same Bible</h2>
+<p><b>The question:</b> We found H6 fires near zero on the KJV Bible. But maybe that's just something weird about the KJV's 1611 English? To test this, we took 30 Bible passages and translated each into 12 different English versions, from the 1611 KJV to the 2002 Message. All with verse numbers stripped, all at 0% digits.</p>
+<p><b>The answer:</b> H6 fired at near-zero on all 11 verse-formatted translations (KJV through NLT). It didn't matter if the English was archaic, modern, literal, or paraphrastic. If it was laid out as verse, H6 stayed quiet. But The Message, which rewrites the Bible as conversational prose, fired at 1,033/M. Same religious content, different format, completely different routing. <a href="exp1.html">Full results</a>.</p>
 
-<h2 id="e12">4. Exp 12 — Digit minimal-pair test <span class="tag tag-ok">complete</span></h2>
-<table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis</td><td>Is e164 a digit detector? Is H6 digit-independent?</td></tr>
-<tr><td>Design</td><td>111 matched pairs, 5 categories, 222 records, 437,900 tokens. Each pair: same text, one with_digits, one digit_stripped.</td></tr>
-<tr><td>Result</td><td><b>H6 digit-independent (1.02× ratio).</b> <b>e164 digit detector (1,453× ratio).</b> The two axes are orthogonal. See <a href="exp12.html">Exp 12 results</a>.</td></tr>
-</table>
+<h2 id="e4b">Exp 4b: Commentary with embedded Bible quotes</h2>
+<p><b>The question:</b> Christian commentary books contain both prose (the author's own writing) and verse (Bible quotes). Does H6 fire on the whole thing, just the quotes, or just the commentary?</p>
+<p><b>The answer:</b> H6 fires on the commentary prose, not on the verse quotes. The correlation between "how much of the text is verse quotes" and H6 firing was -0.13, meaning more verse quotes means slightly less H6 firing. The model can distinguish prose from verse even when they're mixed in the same document. <a href="exp4.html">Full results</a>.</p>
 
-<h2 id="e13">5. Exp 13 — Scoped H6 ablation <span class="tag tag-pending">staged</span></h2>
-<table class="wikitable">
-<tr><th>Field</th><th>Value</th></tr>
-<tr><td>Hypothesis</td><td>Causal: does knocking out H6 anchors damage prose more than verse?</td></tr>
-<tr><td>Design</td><td>4-cell corpus (verse/prose × religious/secular), 480 records. Ablation hook deployed to both TP2 nodes. Two modes: contribution knockout, route-mask compensation.</td></tr>
-<tr><td>Status</td><td>Hook designed and deployed. Corpus staged. Not yet run.</td></tr>
-</table>
+<h2 id="e12">Exp 12: Same text with and without digits</h2>
+<p><b>The question:</b> Our pipeline stripped digits from the Bible. Was H6 secretly just detecting the absence of digits? And was e164 really a digit detector?</p>
+<p><b>The answer:</b> We took 111 pairs of text where each pair was identical except one version had digits and the other didn't. H6 fired at essentially the same rate on both (1.02x ratio, basically 1:1). e164 fired 1,453x harder on text with digits. Two completely separate things the model detects: verse/prose format (H6) and digit presence (e164). <a href="exp12.html">Full results</a>.</p>
 
-<h2 id="e11">6. Exp 11 — Context dump <span class="tag tag-pending">staged</span></h2>
-<p>Re-run observation with <code>--raw-budget-tokens</code> to capture per-token routing. Extract top-500 firing contexts with ±20-token windows. Prediction: contexts are numerals, footnote markers, verse references. Needs GPU re-run.</p>
+<h2 id="e13">Exp 13: Knock out H6 and see what breaks (not yet run)</h2>
+<p><b>The question:</b> H6 correlates with verse/prose format. But does it actually cause anything? If we disable the H6 experts, does the model get worse at processing prose?</p>
+<p><b>The plan:</b> Take 4 groups of text: religious verse, religious prose, secular verse, secular prose (120 passages each). Run the model normally and record its prediction quality. Then disable the H6 experts and run it again. If the model gets significantly worse on prose but not verse, H6 is causally important for prose processing. The code is written and deployed. The corpus is built. We need GPU time to run it. <a href="exp13.html">Full design</a>.</p>
 
-<h2 id="e3">7. Exp 3 — Secular null <span class="tag tag-pending">not staged</span></h2>
-<p>Is routing religion-specific or general-English? Compare religious vs matched secular text at same digit density. Staged after digit question settles.</p>
-
-<h2 id="e8">8. Exp 8 — Sorted L42 frequency check <span class="tag tag-ok">done</span></h2>
-<p>Is e164 zero a permutation bug? No — 15/20 shared experts, ranks differ. The zero is real.</p>
-
-<h2 id="e9">9. Exp 9 — Position/length confound <span class="tag tag-ok">answered</span></h2>
-<p>Is e164 zero a windowing artifact? No — Bible 0 / Qur'an 4,383/M at matched window sizes.</p>
-
-<h2 id="other">10. Other planned experiments</h2>
+<h2 id="checks">Sanity checks we ran along the way</h2>
+<p>Two quick checks we did to make sure our observations weren't bugs:</p>
 <ul>
-<li>Jesus vs Lucifer routing (theology corpus staged)</li>
-<li>Moloch / Saturn routing (theology corpus staged)</li>
-<li>Entropy expert regression</li>
-<li>Comparative model study (same corpus through another MoE)</li>
-<li>Full Jacobian (replace 16-projection bound with exact norms)</li>
+<li><b>Was e164's zero on the Bible a permutation bug?</b> (Exp 8) No. 15 of the top 20 experts are shared between Bible and Christian corpora, just at different ranks. The zero at e164 is real, not a sorting error.</li>
+<li><b>Was e164's zero a windowing artifact?</b> (Exp 9) No. At matched window sizes, the Bible still fires 0 and the Qur'an fires 4,383/M.</li>
 </ul>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<h2 id="ideas">Ideas we haven't committed to yet</h2>
+<ul>
+<li>Does the model route "Jesus" and "Lucifer" differently? (theology corpus is staged)</li>
+<li>Does the model route "Moloch" and "Saturn" differently? (theology corpus is staged)</li>
+<li>Run the same corpus through a different MoE model and compare routing</li>
+<li>Replace our approximate Jacobian (16 random directions) with the exact computation</li>
+</ul>
+
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

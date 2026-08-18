@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Exp 12: Digit minimal-pairs — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,11 +32,11 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#design">1. Design</a></li>
-<li><a href="#results">2. Results</a></li>
-<li><a href="#charts">3. Visualizations</a></li>
-<li><a href="#findings">4. Key findings</a></li>
-<li><a href="#implications">5. Implications</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#design">Why we ran this</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#charts">Charts</a></li>
+<li><a href="#findings">What we learned</a></li>
+<li><a href="#implications">What this means</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -49,18 +51,19 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#design">1. Design</a></li>
-<li><a href="#results">2. Results</a></li>
-<li><a href="#charts">3. Visualizations</a></li>
-<li><a href="#findings">4. Key findings</a></li>
-<li><a href="#implications">5. Implications</a></li>
+<li><a href="#design">Why we ran this</a></li>
+<li><a href="#results">Results</a></li>
+<li><a href="#charts">Charts</a></li>
+<li><a href="#findings">What we learned</a></li>
+<li><a href="#implications">What this means</a></li>
 </ul></div>
 
-<h1>Experiment 12: Digit Minimal-Pair Test</h1>
-<div class="hatnote">The decisive digit confound test. <b>Result: H6 is digit-independent (1.02×). e164 is a digit detector (1,453×). The two axes are orthogonal.</b></div>
+<h1>Experiment 12: the digit minimal-pair test</h1>
+<div class="hatnote">This is the experiment that settled our original mistake. We took the same text in two versions, one with its digits kept and one with digits removed, and compared them. <b>H6 does not care about digits (1.02x ratio). e164, the expert we once thought was a scripture detector, is actually a digit detector (1,453x ratio). The two effects are completely separate.</b></div>
 
-<h2 id="design">1. Design</h2>
-<p>111 matched pairs of text across 5 categories. Each pair shares the same source text; one version (<b>with_digits</b>) retains original numerals, the other (<b>digit_stripped</b>) has digits removed. Digit density is the only systematic difference.</p>
+<h2 id="design">Why we ran this</h2>
+<p>Early in the study we thought we had found an expert (e164, expert number 164 at layer 42) that detected "memorized scripture." It fired at zero on Bible text and high on everything else. We were wrong. The real explanation was digits. Our pipeline had stripped verse numbers from the Bible, so the Bible was the only text in our corpus with 0% digits. e164 was not detecting scripture. It was detecting digits.</p>
+<p>Experiment 12 is the clean test of that. We built 111 matched pairs of text across 5 categories. Each pair shares the same source text. The "with_digits" version keeps the original numerals. The "digit_stripped" version has the digits removed. Digit density is the only systematic difference between the two versions of each pair.</p>
 <table class="wikitable">
 <tr><th>Category</th><th>Pairs</th><th>Description</th></tr>
 <tr><td>dates_and_years</td><td class="num">23</td><td>Historical texts with dates and chronologies</td></tr>
@@ -68,31 +71,32 @@
 <tr><td>numbered_list</td><td class="num">22</td><td>Numbered enumerations</td></tr>
 <tr><td>scripture_citation</td><td class="num">22</td><td>Bible verse references (e.g. "John 3:16")</td></tr>
 <tr><td>tabular_statistics</td><td class="num">22</td><td>Statistical data in tabular format</td></tr>
-<tr><td><b>Total</b></td><td class="num">111</td><td>222 records (111 × 2 conditions)</td></tr>
+<tr><td><b>Total</b></td><td class="num">111</td><td>222 records (111 x 2 conditions)</td></tr>
 </table>
 <p><b>Invariant check:</b> 0 violations across 222 records.</p>
 
-<h2 id="results">2. Results</h2>
-<h3>2.1 H6 (verse/prose axis) — digit-independent</h3>
+<h2 id="results">Results</h2>
+
+<h3>H6 (the verse/prose axis) does not care about digits</h3>
 <table class="wikitable">
 <tr><th>Condition</th><th>Tokens</th><th>H6 fires</th><th>H6 Rate (M)</th></tr>
 <tr><td>with_digits</td><td class="num">221,576</td><td class="num">30,337</td><td class="num">136,915</td></tr>
 <tr><td>digit_stripped</td><td class="num">216,324</td><td class="num">29,042</td><td class="num">134,252</td></tr>
 <tr><td><b>Ratio</b></td><td></td><td></td><td class="num">1.02×</td></tr>
 </table>
-<p>H6 fires at nearly identical rates regardless of digit presence. <b>H6 is not a digit detector.</b></p>
+<p>H6 fires at nearly identical rates whether the digits are present or not. The ratio is 1.02x, meaning essentially no difference. <b>H6 is not a digit detector.</b></p>
 
-<h3>2.2 e164 (L42 expert) — digit detector confirmed</h3>
+<h3>e164 (the layer-42 expert) is confirmed as a digit detector</h3>
 <table class="wikitable">
 <tr><th>Condition</th><th>Tokens</th><th>e164 fires</th><th>e164 Rate (M)</th></tr>
 <tr><td>with_digits</td><td class="num">221,576</td><td class="num">8,931</td><td class="num">40,307</td></tr>
 <tr><td>digit_stripped</td><td class="num">216,324</td><td class="num">6</td><td class="num">27.7</td></tr>
 <tr><td><b>Ratio</b></td><td></td><td></td><td class="num">1,453×</td></tr>
 </table>
-<p>e164 fires 1,453× more on text with digits. On digit-stripped text, it fires at only 27.7/M. <b>e164 is a digit detector.</b></p>
+<p>e164 fires 1,453 times harder on text with digits. On digit-stripped text it fires at only 27.7/M, barely above noise. <b>e164 is a digit detector.</b></p>
 
-<h3>2.3 Per-category breakdown</h3>
-<h4>H6 by category × condition</h4>
+<h3>Per-category breakdown</h3>
+<h4>H6 by category and condition</h4>
 <table class="wikitable">
 <tr><th>Category</th><th>with_digits (M)</th><th>stripped (M)</th><th>ratio</th></tr>
 <tr><td>dates_and_years</td><td class="num">176,979</td><td class="num">167,837</td><td class="num">1.05×</td></tr>
@@ -101,7 +105,7 @@
 <tr><td>scripture_citation</td><td class="num">63,138</td><td class="num">66,475</td><td class="num">0.95×</td></tr>
 <tr><td>tabular_statistics</td><td class="num">83,873</td><td class="num">93,193</td><td class="num">0.90×</td></tr>
 </table>
-<h4>e164 by category × condition</h4>
+<h4>e164 by category and condition</h4>
 <table class="wikitable">
 <tr><th>Category</th><th>with_digits (M)</th><th>stripped (M)</th><th>ratio</th></tr>
 <tr><td>dates_and_years</td><td class="num">27,129</td><td class="num">42.6</td><td class="num">637×</td></tr>
@@ -111,30 +115,30 @@
 <tr><td>tabular_statistics</td><td class="num">47,934</td><td class="num">27.9</td><td class="num">1,721×</td></tr>
 </table>
 
-<h2 id="charts">3. Visualizations</h2>
+<h2 id="charts">Charts</h2>
 <table class="wikitable">
 <tr><th>Chart</th><th>What it shows</th></tr>
 <tr><td><a href="../img/chart_exp12_h6_vs_e164.png">H6 vs e164</a></td><td>Grouped bar: H6 (digit-independent) vs e164 (digit detector), log scale</td></tr>
 <tr><td><a href="../img/chart_exp12_by_category.png">H6 by category</a></td><td>H6 rates per category, no systematic digit effect</td></tr>
-<tr><td><a href="../img/chart_exp12_e164_by_category.png">e164 by category</a></td><td>e164 rates — massive with_digits vs near-zero stripped</td></tr>
+<tr><td><a href="../img/chart_exp12_e164_by_category.png">e164 by category</a></td><td>e164 rates with massive with_digits vs near-zero stripped</td></tr>
 </table>
 
-<h2 id="findings">4. Key findings</h2>
+<h2 id="findings">What we learned</h2>
 <ol>
-<li><b>H6 is digit-independent (1.02× ratio).</b> H6 genuinely detects text format, not digit density.</li>
-<li><b>e164 is a digit detector (1,453× ratio).</b> The original "scripture detector" was entirely a digit-density confound.</li>
-<li><b>The two routing axes are orthogonal.</b> H6 = verse/prose format. e164 = digit presence. Separate phenomena, originally conflated.</li>
-<li><b>Per-pair comparison:</b> 81 pairs show with_digits > stripped, 24 reverse, 6 equal — for H6, the asymmetry is too small to indicate a digit effect.</li>
-<li><b>Digit density correlation r = −0.22 for H6.</b> Weak negative, no meaningful relationship.</li>
+<li><b>H6 is digit-independent (1.02x ratio).</b> It genuinely detects text format, not digit density.</li>
+<li><b>e164 is a digit detector (1,453x ratio).</b> What we originally called a "scripture detector" was entirely a digit-density confound.</li>
+<li><b>The two routing axes are separate.</b> H6 tracks verse vs. prose format. e164 tracks whether digits are present. They are different phenomena that we originally conflated.</li>
+<li><b>Per-pair comparison:</b> 81 pairs show with_digits higher than stripped, 24 show the reverse, 6 are equal. For H6, that asymmetry is too small to indicate a real digit effect.</li>
+<li><b>Digit density correlation r = -0.22 for H6.</b> A weak negative value, no meaningful relationship.</li>
 </ol>
 
-<h2 id="implications">5. Implications</h2>
+<h2 id="implications">What this means</h2>
 <ol>
-<li><b>The digit confound is fully resolved.</b> e164 = digits. H6 = verse/prose format. Separate axes, separate explanations.</li>
-<li><b>Three independent tests now confirm H6:</b> Exp 1 (translation-invariant), Exp 4b (fires on prose not verse quotes), Exp 12 (digit-independent). The H6 verse/prose axis is the strongest, most robust routing effect in the study.</li>
+<li><b>The digit confound is fully resolved.</b> e164 = digits. H6 = verse/prose format. Two separate axes, two separate explanations.</li>
+<li><b>Three independent tests now confirm H6:</b> Exp 1 (translation-invariant), Exp 4b (fires on prose, not verse quotes), and Exp 12 (digit-independent). The H6 verse/prose axis is the strongest and most robust routing effect in the study.</li>
 </ol>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

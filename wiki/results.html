@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Results and findings — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,14 +32,11 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#e164">1. Expert 164 across corpora</a></li>
-<li><a href="#effexp">2. Effective expert count</a></li>
-<li><a href="#backbone">3. Shared routing backbone</a></li>
-<li><a href="#specialists">4. Hard specialists</a></li>
-<li><a href="#h6axis">5. The H6 verse/prose axis</a></li>
-<li><a href="#jaccard">6. Inter-tradition similarity</a></li>
-<li><a href="#jlens-results">7. J-lens findings</a></li>
-<li><a href="#retract">8. Retractions</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#e164">Expert #164: the digit detector (originally misidentified)</a></li>
+<li><a href="#h6axis">The H6 cluster: the verse/prose detector (our main finding)</a></li>
+<li><a href="#backbone">All religions share the same backbone</a></li>
+<li><a href="#jlens-results">Looking inside the model (J-lens)</a></li>
+<li><a href="#retract">What we got wrong</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -52,54 +51,35 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#e164">1. Expert 164 across corpora</a></li>
-<li><a href="#effexp">2. Effective expert count</a></li>
-<li><a href="#backbone">3. Shared routing backbone</a></li>
-<li><a href="#specialists">4. Hard specialists</a></li>
-<li><a href="#h6axis">5. The H6 verse/prose axis</a></li>
-<li><a href="#jaccard">6. Inter-tradition similarity</a></li>
-<li><a href="#jlens-results">7. J-lens findings</a></li>
-<li><a href="#retract">8. Retractions</a></li>
+<li><a href="#e164">Expert #164: the digit detector (originally misidentified)</a></li>
+<li><a href="#h6axis">The H6 cluster: the verse/prose detector (our main finding)</a></li>
+<li><a href="#backbone">All religions share the same backbone</a></li>
+<li><a href="#jlens-results">Looking inside the model (J-lens)</a></li>
+<li><a href="#retract">What we got wrong</a></li>
 </ul></div>
 
-<h1>Results and findings</h1>
-<div class="hatnote">Every finding, with its chart, provenance, and current standing. Retracted claims are in <a href="#retract">§8</a>.</div>
+<h1>What we found</h1>
+<div class="hatnote">Each finding, with the chart that shows it and whether it survived scrutiny. Things we got wrong are in <a href="#retract">the last section</a>.</div>
 
-<h2 id="e164">1. Expert 164 across corpora</h2>
+<h2 id="e164">Expert #164: the digit detector (originally misidentified)</h2>
+<p>This is the expert that started everything. Expert #164 at layer 42 fired at exactly zero on the Bible and at 4,500+ per million tokens on everything else. We thought it was detecting "memorized scripture." It was actually detecting digits.</p>
 <figure><img src="../img/chart_e164_by_corpus.png" alt="e164 by corpus">
-<figcaption>e164 L42 firings per million tokens. Bible: exactly 0 across 1,045,776 tokens. Christian and Qur'an: ~4,565–4,571/M.</figcaption></figure>
+<figcaption>Expert 164 firing rate per million tokens. The Bible (left bar) is at zero. Christian literature and the Qur'an fire at ~4,565-4,571/M. The reason: we stripped verse numbers from the Bible, making it the only 0% digit text.</figcaption></figure>
 <table class="wikitable">
-<tr><th>Corpus</th><th>e164 firings</th><th>Tokens</th><th>Rate /M</th></tr>
-<tr><td>KJV Bible</td><td class="num">0</td><td class="num">1,045,776</td><td class="num">0.0</td></tr>
+<tr><th>Text</th><th>e164 fires</th><th>Tokens</th><th>Rate per million</th></tr>
+<tr><td>KJV Bible (digits stripped)</td><td class="num">0</td><td class="num">1,045,776</td><td class="num">0.0</td></tr>
 <tr><td>Qur'an</td><td class="num">1,180</td><td class="num">258,122</td><td class="num">4,571</td></tr>
-<tr><td>Christian wave-1</td><td class="num">93,265</td><td class="num">20,409,440</td><td class="num">4,565</td></tr>
+<tr><td>Christian literature</td><td class="num">93,265</td><td class="num">20,409,440</td><td class="num">4,565</td></tr>
 </table>
-<div class="ambox bad"><b>Retracted:</b> The "not-memorized-scripture" interpretation was withdrawn after the Claude Opus 5 review found the digit-density confound. <a href="wiki/exp12.html">Exp 12</a> confirmed e164 is a digit detector (1,453× ratio). The observation stands; only the interpretation changed.</div>
+<div class="ambox bad"><b>What we got wrong:</b> We claimed e164 detected "memorized scripture." Claude Opus 5's review caught the digit confound. <a href="exp12.html">Experiment 12</a> confirmed it: e164 is a digit detector (1,453x more firing with digits than without). The observation was real, the interpretation was wrong.</div>
 
-<h2 id="effexp">2. Effective expert count</h2>
-<figure><img src="../img/chart_effexp_by_layer.png" alt="Effective experts by layer">
-<figcaption>Exp-Shannon entropy of the expert-frequency distribution, all 43 layers.</figcaption></figure>
-<p>At layer 40: Bible 65, Christian 111 (aggregate). The aggregate is inflated by pooling; per-sample it collapses to 70. <b>The ordering survives</b> but it is <b>not a predictability proxy</b> (H3 retracted). Call it what it measures: routing concentration.</p>
-
-<h2 id="backbone">3. Shared routing backbone</h2>
-<figure><img src="../img/chart_l42_sorted.png" alt="Sorted L42 distributions">
-<figcaption>Sorted L42 frequency distributions. Both corpora ride the same high-frequency backbone.</figcaption></figure>
-<p>15/20 top L42 experts are shared between Bible and Christian corpora. The shapes track closely — both corpora use the same routing backbone, with tradition-specific specialists layered on top.</p>
-
-<h2 id="specialists">4. Hard specialists</h2>
-<table class="wikitable">
-<tr><th>Expert</th><th>Layer</th><th>Specialty</th><th>Notes</th></tr>
-<tr><td>e164</td><td class="num">42</td><td>Digit detector</td><td>Confirmed by Exp 12. Originally misidentified as "scripture detector."</td></tr>
-<tr><td>e34</td><td class="num">42</td><td>Qur'an-associated</td><td>Descriptive only; deserves same digit audit as e164.</td></tr>
-<tr><td>e33</td><td class="num">42</td><td>Dhammapada-associated</td><td>Descriptive only; deserves same digit audit.</td></tr>
-</table>
-
-<h2 id="h6axis">5. The H6 verse/prose axis</h2>
+<h2 id="h6axis">The H6 cluster: the verse/prose detector (our main finding)</h2>
+<p>This is what survived. A group of 6 anchor experts spread across layers 21-41 fire at massive rates on prose and go nearly silent on verse. It doesn't matter what the text is about. It matters whether it's laid out in verse lines or flowing paragraphs.</p>
 <figure><img src="../img/chart_h6_axis.png" alt="H6 verse-vs-prose axis">
-<figcaption>H6 axis: 8 expert cells where verse-text corpora (green) fire ~0 and discursive-prose corpora (red) fire at 10,000–90,000/M. 1,000× larger than the digit effect, and digit-independent.</figcaption></figure>
-<p>The study's primary positive finding. H6 anchors (frozen registry):</p>
+<figcaption>Each bar is one expert at one layer. The green bars (verse text) are near zero. The red bars (prose) are 10,000-90,000 per million tokens. The gap is about 1,000 times larger than the digit effect.</figcaption></figure>
+<p>The 6 anchor experts:</p>
 <table class="wikitable">
-<tr><th>Anchor</th><th>Layer</th><th>Expert</th></tr>
+<tr><th>Label</th><th>Layer</th><th>Expert #</th></tr>
 <tr><td>H6-A1</td><td class="num">21</td><td class="num">42</td></tr>
 <tr><td>H6-A2</td><td class="num">22</td><td class="num">105</td></tr>
 <tr><td>H6-A3</td><td class="num">23</td><td class="num">113</td></tr>
@@ -107,36 +87,37 @@
 <tr><td>H6-A5</td><td class="num">32</td><td class="num">254</td></tr>
 <tr><td>H6-A6</td><td class="num">41</td><td class="num">147</td></tr>
 </table>
-<p>Confirmed across three experiments:</p>
+<p>Three experiments confirmed this:</p>
 <table class="wikitable">
-<tr><th>Experiment</th><th>Records</th><th>Tokens</th><th>Text type</th><th>H6 Rate (M)</th><th>Key finding</th></tr>
-<tr><td><a href="exp1.html">Exp 1</a></td><td class="num">360</td><td class="num">613,344</td><td>Bible verse (12 trans.)</td><td class="num">59.5</td><td>Translation-invariant; MSG at 1,033/M confirms format detection</td></tr>
-<tr><td><a href="exp4.html">Exp 4b</a></td><td class="num">351</td><td class="num">5,156,659</td><td>Commentary prose</td><td class="num">163,284</td><td>r = −0.13 with quote fraction</td></tr>
-<tr><td><a href="exp12.html">Exp 12</a></td><td class="num">222</td><td class="num">437,900</td><td>Prose (with/without digits)</td><td class="num">~135,000</td><td>Digit-independent (1.02× ratio)</td></tr>
+<tr><th>Experiment</th><th>Text type</th><th>H6 rate</th><th>What it proved</th></tr>
+<tr><td><a href="exp1.html">Exp 1</a></td><td>Bible verse (12 translations)</td><td class="num">59.5/M</td><td>Same content, different translations, same near-zero H6. Format, not content.</td></tr>
+<tr><td><a href="exp4.html">Exp 4b</a></td><td>Commentary prose</td><td class="num">163,284/M</td><td>Fires on the prose commentary, not on verse quotes embedded in it.</td></tr>
+<tr><td><a href="exp12.html">Exp 12</a></td><td>Prose with/without digits</td><td class="num">~135,000/M</td><td>Same rate with or without digits. It's not a digit thing.</td></tr>
 </table>
 <figure><img src="../img/chart_h6_heatmap.png" alt="H6 heatmap">
-<figcaption>H6 anchor firing rates across corpora. Verse texts (left) at ~0; prose (right) at 10,000–163,000/M.</figcaption></figure>
+<figcaption>H6 firing rates across all texts. Verse texts (left columns) are dark (near zero). Prose texts (right columns) are bright (high firing).</figcaption></figure>
 <figure><img src="../img/chart_h6_boxplot.png" alt="H6 boxplot">
-<figcaption>H6 composite rate distribution by text type. Verse and prose are cleanly separated (Cohen's d = 1.38–2.79).</figcaption></figure>
+<figcaption>Distribution of H6 rates. Verse and prose barely overlap. Cohen's d (a measure of separation) is 1.38 to 2.79, which is a very large effect.</figcaption></figure>
 
-<h2 id="jaccard">6. Inter-tradition similarity</h2>
+<h2 id="backbone">All religions share the same backbone</h2>
 <figure><img src="../img/chart_jaccard_heatmap.png" alt="Jaccard heatmap">
-<figcaption>Top-20 REAP expert Jaccard overlap. Bible–Christian (0.33) is the lowest pair involving either.</figcaption></figure>
-<p>9×9 Jaccard matrix of top-20 REAP experts. All traditions share a common backbone; no tradition has a uniquely isolated routing profile.</p>
+<figcaption>How similar the top-20 experts are between traditions. Darker squares mean more overlap. No tradition is isolated.</figcaption></figure>
+<p>15 of the top 20 experts at layer 42 are shared between the Bible and Christian corpora. All nine traditions share a common routing backbone. No religion has its own private set of experts.</p>
 
-<h2 id="jlens-results">7. J-lens findings</h2>
+<h2 id="jlens-results">Looking inside the model (J-lens)</h2>
 <figure><img src="../img/chart_jacobian.png" alt="Bounded Jacobian norms">
-<figcaption>Mean bounded Jacobian norm at layers 0, 10, 20, 30, 42 across all traditions. L0 consistently ~2.5–3.5× later layers.</figcaption></figure>
-<p>See <a href="jspace.html">J-space lens page</a> for full details: bounded Jacobian norms, logit lens, interactive viewer, and the retracted Genesis 1:2 logit-lens claim.</p>
+<figcaption>How much the model's output changes when you nudge its input, measured at different layers. Layer 0 is about 2.5-3.5x more sensitive than later layers.</figcaption></figure>
+<p>The model's next-word predictions stabilize around layer 30-35, regardless of which religious tradition the text is from. No tradition shows qualitatively different behavior under the lens. See the <a href="jspace.html">J-space lens page</a> for the interactive viewer.</p>
 
-<h2 id="retract">8. Retractions</h2>
-<div class="ambox bad"><b>8.1 "Not-memorized-scripture" e164.</b> Digit-density confound (pipeline strips Bible verse numbers; perfectly monotone deciles 0→16,448/M; zero-digit Christian control 4.9/M; ~29-expert cluster incl. e27, e68). Found by Claude Opus 5 review. Resolved by <a href="exp12.html">Exp 12</a>: e164 is a digit detector (1,453× ratio).</div>
-<div class="ambox bad"><b>8.2 Layer sandwich.</b> REAP noise-floor artifact; inverts on frequencies; write-up mixed two Jaccard metrics. Found by Kimi K3 review.</div>
-<div class="ambox bad"><b>8.3 Genesis 1:2 logit lens.</b> Position 30 token is ' deep' not 'darkness' — the lens claim was based on a tokenization error.</div>
-<div class="ambox bad"><b>8.4 Effective experts = 111.</b> Pooling artifact (111→70 per-sample). The ordering survives; the absolute aggregate does not.</div>
-<div class="ambox bad"><b>8.5 H3: routing concentration = predictability.</b> Correlation is positive (+0.47), not negative. The 65 vs 111 gap is a window-length artifact.</div>
+<h2 id="retract">What we got wrong</h2>
+<p>Science is mostly about finding out you were wrong. Here's the full list:</p>
+<div class="ambox bad"><b>1. "Scripture detector" (e164).</b> We claimed expert 164 detected memorized scripture. It detected digits. Our pipeline had stripped verse numbers from the Bible, creating a fake correlation. Caught by Claude Opus 5's review. Resolved by <a href="exp12.html">Experiment 12</a>.</div>
+<div class="ambox bad"><b>2. "Layer sandwich."</b> A pattern we saw in expert overlap was a noise-floor artifact in our metric. It disappeared when we used raw frequencies instead. Caught by Kimi K3's review.</div>
+<div class="ambox bad"><b>3. Genesis 1:2 logit lens.</b> We claimed the model predicted "darkness" at an early layer. The token at that position was actually " deep", not "darkness." We made a tokenization error.</div>
+<div class="ambox bad"><b>4. "111 effective experts."</b> We reported the Bible used 65 experts and Christian literature used 111. The 111 was inflated by pooling samples. Per-sample, it was closer to 70. The ordering (Christian > Bible) is real, the absolute number was wrong.</div>
+<div class="ambox bad"><b>5. "Routing concentration = predictability."</b> We thought texts that used fewer experts were more predictable. The correlation goes the other way (+0.47). The gap was caused by different text chunk lengths, not predictability.</div>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

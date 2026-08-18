@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Narrative — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,16 +32,16 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#question">1. The question</a></li>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#question">1. The question we started with</a></li>
 <li><a href="#answer">2. The answer</a></li>
-<li><a href="#digit">3. The digit detector (e164)</a></li>
-<li><a href="#h6">4. The verse/prose axis (H6)</a></li>
-<li><a href="#backbone-narrative">5. No religion backbone</a></li>
-<li><a href="#lens-narrative">6. Late prediction emergence</a></li>
-<li><a href="#h3-retraction">7. What we got wrong (H3)</a></li>
-<li><a href="#integrity">8. Integrity chain</a></li>
-<li><a href="#hypotheses-narrative">9. Hypothesis status</a></li>
-<li><a href="#experiments-ranked">10. Experiments ranked by decisiveness</a></li></ul></div>
+<li><a href="#digit">3. The digit detector we mistook for a scripture detector</a></li>
+<li><a href="#h6">4. The verse-versus-prose detector (H6)</a></li>
+<li><a href="#backbone-narrative">5. No religion-specific backbone</a></li>
+<li><a href="#lens-narrative">6. When the model's predictions take shape</a></li>
+<li><a href="#h3-retraction">7. What we got wrong about predictability (H3)</a></li>
+<li><a href="#integrity">8. How we kept the data honest</a></li>
+<li><a href="#hypotheses-narrative">9. Where each hypothesis stands</a></li>
+<li><a href="#experiments-ranked">10. The experiments, ranked by how decisive they were</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -54,68 +56,68 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#question">1. The question</a></li>
+<li><a href="#question">1. The question we started with</a></li>
 <li><a href="#answer">2. The answer</a></li>
-<li><a href="#digit">3. The digit detector (e164)</a></li>
-<li><a href="#h6">4. The verse/prose axis (H6)</a></li>
-<li><a href="#backbone-narrative">5. No religion backbone</a></li>
-<li><a href="#lens-narrative">6. Late prediction emergence</a></li>
-<li><a href="#h3-retraction">7. What we got wrong (H3)</a></li>
-<li><a href="#integrity">8. Integrity chain</a></li>
-<li><a href="#hypotheses-narrative">9. Hypothesis status</a></li>
-<li><a href="#experiments-ranked">10. Experiments ranked by decisiveness</a></li>
+<li><a href="#digit">3. The digit detector we mistook for a scripture detector</a></li>
+<li><a href="#h6">4. The verse-versus-prose detector (H6)</a></li>
+<li><a href="#backbone-narrative">5. No religion-specific backbone</a></li>
+<li><a href="#lens-narrative">6. When the model's predictions take shape</a></li>
+<li><a href="#h3-retraction">7. What we got wrong about predictability (H3)</a></li>
+<li><a href="#integrity">8. How we kept the data honest</a></li>
+<li><a href="#hypotheses-narrative">9. Where each hypothesis stands</a></li>
+<li><a href="#experiments-ranked">10. The experiments, ranked by how decisive they were</a></li>
 </ul></div>
 
 <h1>Does DeepSeek-V4 route by religion?</h1>
-<div class="hatnote">An honest account, correctness-first. Written 15 Aug 2026, updated through Exp 1 expansion.</div>
+<div class="hatnote">An honest account of what we found, what we got wrong, and what we corrected. Written 15 Aug 2026, updated through Exp 1 expansion.</div>
 
-<h2 id="question">1. The question</h2>
-<p>We asked: does a sparse mixture-of-experts language model — DeepSeek-V4-Flash-0731, with 256 experts per layer and top-6 routing — distribute its computation differently when it reads religious text vs secular text? Does it have "Bible experts" or "Qur'an experts"?</p>
+<h2 id="question">1. The question we started with</h2>
+<p>We wanted to know whether a mixture of experts language model routes religious text differently from secular text. DeepSeek-V4-Flash-0731 has 256 small expert networks at each of its 43 layers, and for every token it reads, a gate picks just 6 of them to do the work. So the question was simple: does that gate send Bible verses to different experts than it sends, say, a Wikipedia article? Are there "Bible experts" or "Qur'an experts" hiding in there?</p>
 
 <h2 id="answer">2. The answer</h2>
-<p><b>No.</b> The model does not route by religion. What we found instead is a large <b>verse/prose format detector</b> (H6) that fires on discursive prose and goes silent on verse-structured text — regardless of which religion, which translation, or which century the text is from.</p>
+<p><b>No.</b> The model does not route by religion. What we found instead is a large group of experts we call H6 that acts as a <b>verse-versus-prose detector</b>. These experts fire strongly when the model reads flowing prose and go nearly silent when it reads text broken into verse lines. This holds regardless of which religion the text comes from, which translation it is, or which century it was written in.</p>
 
-<h2 id="digit">3. The digit detector (e164)</h2>
-<p>Our original headline — expert e164 at L42 was a "not-memorized-scripture detector" — was wrong. Claude Opus 5's external review found the confound: our pipeline strips verse numbers from the Bible, making it 0% digits, while all other corpora contain digits. e164 fires on digits, not on "non-scripture." <a href="exp12.html">Exp 12</a> confirmed this definitively: 1,453× ratio between text with and without digits.</p>
+<h2 id="digit">3. The digit detector we mistook for a scripture detector</h2>
+<p>Our first headline finding was that expert number 164 at layer 42 was a "not-memorized-scripture detector." It fired at zero on the Bible and high on everything else. We were excited. We were also wrong. An external review by Claude Opus 5 caught the confound: our pipeline had stripped verse numbers from the Bible, making it the only text in our collection with zero digits. Every other text contained digits. So expert 164 was not detecting scripture at all. It was detecting digits. <a href="exp12.html">Experiment 12</a> settled this: the expert fired 1,453 times harder on text containing digits than on the same text with digits removed.</p>
 
-<h2 id="h6">4. The verse/prose axis (H6)</h2>
-<p>What survives is H6: 13+ experts that fire at up to 163,284/M on prose and ~0 on verse. This is a <b>format detector</b> — it responds to whether text is lineated like verse or flowing like prose. It is:</p>
+<h2 id="h6">4. The verse-versus-prose detector (H6)</h2>
+<p>What does survive scrutiny is H6: a cluster of about 13 experts that fire at up to 163,284 times per million tokens on prose and at essentially zero on verse. This is a <b>format detector</b>. It responds to whether text is laid out in short verse lines or written in flowing paragraphs. It does not care what the text is about. Here is the evidence:</p>
 <ul>
-<li><b>Translation-invariant</b> (Exp 1): KJV (1611) and ESV (2001) both fire at 0.0. The Message (a prose paraphrase) fires at 1,033/M — because it abandons verse format.</li>
-<li><b>Digit-independent</b> (Exp 12): 1.02× ratio with vs without digits.</li>
-<li><b>Context-sensitive</b> (Exp 4b): fires on commentary prose, not on verse quotes embedded within it.</li>
+<li><b>It ignores the translation</b> (Exp 1). The King James Bible from 1611 and the English Standard Version from 2001 both fire at 0.0. But The Message, a paraphrase that rewrites the Bible as conversational prose, fires at 1,033 per million tokens. Same religious content, different format, completely different routing.</li>
+<li><b>It ignores digits</b> (Exp 12). The ratio between text with and without digits is 1.02x, meaning H6 barely notices whether digits are present.</li>
+<li><b>It is context-sensitive</b> (Exp 4b). When a prose commentary contains an embedded Bible quote, H6 fires on the commentary but not on the verse quote inside it.</li>
 </ul>
 
-<h2 id="backbone-narrative">5. No religion backbone</h2>
-<p>15/20 top L42 experts are shared between Bible and Christian corpora. All nine traditions share a common routing backbone. No tradition has a uniquely isolated routing profile.</p>
+<h2 id="backbone-narrative">5. No religion-specific backbone</h2>
+<p>Of the 20 most active experts at layer 42, 15 are shared between the Bible corpus and the Christian literature corpus. All nine religious traditions in our study share a common routing backbone. No tradition has a uniquely isolated set of experts that only it uses.</p>
 
-<h2 id="lens-narrative">6. Late prediction emergence</h2>
-<p>Logit-lens analysis shows the model's next-token predictions stabilize around layer 30–35 across all traditions. Earlier layers carry more input-level leverage (bounded Jacobian L0 norms are ~2.5–3.5× later layers). No tradition shows qualitatively different lens behavior.</p>
+<h2 id="lens-narrative">6. When the model's predictions take shape</h2>
+<p>We used a technique called the logit lens to peek at the model's running guess at each layer. Across all traditions, the model's next-word predictions stabilize around layers 30 to 35. Earlier layers carry more input-level leverage: when we measured how much a tiny nudge to the input changes the output at each layer (the bounded Jacobian), layer 0 was about 2.5 to 3.5 times more sensitive than later layers. No tradition behaves qualitatively differently from the others.</p>
 
-<h2 id="h3-retraction">7. What we got wrong (H3)</h2>
-<p>We hypothesized that effective-expert count inversely tracks text predictability (H3). This was wrong — the correlation is positive (+0.47), not negative. The 65 vs 111 gap was a window-length artifact. H3 is retracted.</p>
+<h2 id="h3-retraction">7. What we got wrong about predictability (H3)</h2>
+<p>We hypothesized that texts which use fewer experts would be more predictable (H3). This was wrong. The correlation goes the other way: it is positive, at +0.47. The gap we had seen between two texts, one using 65 effective experts and the other 111, was an artifact of how we chunked the text into windows. We retract H3.</p>
 
-<h2 id="integrity">8. Integrity chain</h2>
-<p>Every record passes fail-closed invariants (frequency sum = seqlen × topk, no NaN/Inf, correct shapes). Zero violations across all 3,682 records. The harness was verified line-for-line against the model's Gate.forward.</p>
+<h2 id="integrity">8. How we kept the data honest</h2>
+<p>Every record had to pass fail-closed integrity checks before we accepted it. The expert selection frequencies had to add up to exactly the sequence length times the number of experts picked per token, with no NaN or infinity values and correct array shapes. We had zero violations across all 3,682 records. We also verified our interception code line by line against the model's actual gate logic, so we are confident we recorded what the model really does.</p>
 
-<h2 id="hypotheses-narrative">9. Hypothesis status</h2>
+<h2 id="hypotheses-narrative">9. Where each hypothesis stands</h2>
 <table class="wikitable">
 <tr><th>Hypothesis</th><th>Status</th><th>Evidence</th></tr>
-<tr><td>H1: e164 = digit detector</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 12: 1,453× ratio</td></tr>
-<tr><td>H2: Surface-form routing</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 1: translation-invariant</td></tr>
-<tr><td>H3: Routing = predictability</td><td><span class="tag tag-bad">retracted</span></td><td>Correlation is +0.47, not negative</td></tr>
-<tr><td>H6: Verse/prose format axis</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 1, 4b, 12: 933 records, 6,207,903 tokens</td></tr>
+<tr><td>H1: Expert 164 is a digit detector</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 12: 1,453x ratio between text with and without digits</td></tr>
+<tr><td>H2: Routing follows surface form, not content</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 1: the same passages in 12 translations route the same way</td></tr>
+<tr><td>H3: Routing concentration tracks predictability</td><td><span class="tag tag-bad">retracted</span></td><td>Correlation is +0.47, the opposite of what we predicted</td></tr>
+<tr><td>H6: There is a verse-versus-prose format axis</td><td><span class="tag tag-ok">confirmed</span></td><td>Exp 1, 4b, and 12: 933 records, 6,207,903 tokens</td></tr>
 </table>
 
-<h2 id="experiments-ranked">10. Experiments ranked by decisiveness</h2>
+<h2 id="experiments-ranked">10. The experiments, ranked by how decisive they were</h2>
 <ol>
-<li><b>Exp 12</b> (digit minimal-pairs) — most decisive: resolves e164 and H6 digit-independence</li>
-<li><b>Exp 1</b> (12 translations) — translation-invariance + MSG format outlier</li>
-<li><b>Exp 4b</b> (quotation switch) — within-document verse vs prose</li>
-<li><b>Exp 4</b> (pilot) — suggestive but confounded by digit density</li>
+<li><b>Exp 12</b> (digit minimal-pairs). Most decisive. It resolved both the expert 164 question and whether H6 cares about digits.</li>
+<li><b>Exp 1</b> (12 translations). Showed routing is translation-invariant and that The Message is the format outlier.</li>
+<li><b>Exp 4b</b> (quotation switch). Showed verse-versus-prose switching within a single document.</li>
+<li><b>Exp 4</b> (pilot). Suggestive, but its results were confounded by digit density and could not stand on their own.</li>
 </ol>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

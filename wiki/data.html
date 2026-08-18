@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Data and corpora — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,12 +32,11 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#core">1. Core observation corpora</a></li>
-<li><a href="#experiment-corpora">2. Experiment corpora</a></li>
-<li><a href="#raw">3. Raw sources</a></li>
-<li><a href="#record">4. Record format</a></li>
-<li><a href="#aggregates">5. Aggregates</a></li>
-<li><a href="#hf">6. HuggingFace datasets</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#core">Religious texts (the main corpus)</a></li>
+<li><a href="#experiment-corpora">Experiment-specific text</a></li>
+<li><a href="#raw">Raw sources</a></li>
+<li><a href="#record">What a record looks like</a></li>
+<li><a href="#hf">Where to download the data</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -50,82 +51,73 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#core">1. Core observation corpora</a></li>
-<li><a href="#experiment-corpora">2. Experiment corpora</a></li>
-<li><a href="#raw">3. Raw sources</a></li>
-<li><a href="#record">4. Record format</a></li>
-<li><a href="#aggregates">5. Aggregates</a></li>
-<li><a href="#hf">6. HuggingFace datasets</a></li>
+<li><a href="#core">Religious texts (the main corpus)</a></li>
+<li><a href="#experiment-corpora">Experiment-specific text</a></li>
+<li><a href="#raw">Raw sources</a></li>
+<li><a href="#record">What a record looks like</a></li>
+<li><a href="#hf">Where to download the data</a></li>
 </ul></div>
 
-<h1>Data and corpora</h1>
-<div class="hatnote">Every corpus, its record count, token count, digit density, and source. All manifests on <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>.</div>
+<h1>What text we fed the model</h1>
+<div class="hatnote">Every text we used, where it came from, and how much of it there is. All data is on <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>.</div>
 
-<h2 id="core">1. Core observation corpora</h2>
+<h2 id="core">Religious texts (the main corpus)</h2>
+<p>We gathered texts from 9 religious traditions plus a large collection of Christian literature. Here's the full inventory:</p>
 <table class="wikitable">
-<tr><th>Corpus</th><th>Records</th><th>Tokens</th><th>Window</th><th>Digit density</th><th>Source</th></tr>
-<tr><td>KJV Bible</td><td class="num">1,189</td><td class="num">1,045,776</td><td>per-chapter (~880)</td><td class="num">0.0000%</td><td>Gutenberg KJV, verse numbers stripped</td></tr>
-<tr><td>Christian literature wave-1</td><td class="num">1,267</td><td class="num">20,409,440</td><td>16k first window/book</td><td>~1.1% median</td><td>Gutenberg, 32 topic searches, 3,705 books</td></tr>
-<tr><td>Christian literature wave-2</td><td class="num">2,295</td><td>~37M</td><td>16k</td><td>varies</td><td>Gutenberg extended topics</td></tr>
-<tr><td>Qur'an (Pickthall)</td><td class="num">115</td><td class="num">258,122</td><td>8k</td><td>varies</td><td>Gutenberg</td></tr>
-<tr><td>Book of Mormon</td><td class="num">30</td><td class="num">342,614</td><td>16k</td><td class="num">0.000% median</td><td>Gutenberg pg17</td></tr>
-<tr><td>Bhagavad Gita</td><td class="num">18</td><td class="num">29,690</td><td>8k</td><td>low</td><td>Gutenberg</td></tr>
-<tr><td>Tao Te Ching</td><td class="num">81</td><td class="num">13,852</td><td>per-chapter</td><td>low</td><td>Gutenberg</td></tr>
-<tr><td>Dhammapada</td><td class="num">26</td><td class="num">16,203</td><td>8k</td><td>low</td><td>Gutenberg pg2017</td></tr>
-<tr><td>Analects</td><td class="num">20</td><td class="num">42,041</td><td>8k</td><td>low</td><td>Gutenberg</td></tr>
-<tr><td>Upanishads</td><td class="num">3</td><td class="num">21,669</td><td>16k</td><td>low</td><td>Gutenberg (n=3, directional only)</td></tr>
-<tr><td><b>Total core</b></td><td class="num"><b>2,749</b></td><td class="num"><b>22,179,407</b></td><td colspan="3"></td></tr>
+<tr><th>Text</th><th>Passages</th><th>Tokens</th><th>Digit density</th><th>Where it came from</th></tr>
+<tr><td>KJV Bible</td><td class="num">1,189</td><td class="num">1,045,776</td><td class="num">0.0000%</td><td>Project Gutenberg, verse numbers stripped</td></tr>
+<tr><td>Christian literature (wave 1)</td><td class="num">1,267</td><td class="num">20,409,440</td><td>~1.1%</td><td>Project Gutenberg, 3,705 books across 32 topics</td></tr>
+<tr><td>Christian literature (wave 2)</td><td class="num">2,295</td><td>~37M</td><td>varies</td><td>Project Gutenberg, extended topic set</td></tr>
+<tr><td>Qur'an (Pickthall translation)</td><td class="num">115</td><td class="num">258,122</td><td>varies</td><td>Project Gutenberg</td></tr>
+<tr><td>Book of Mormon</td><td class="num">30</td><td class="num">342,614</td><td class="num">0.000%</td><td>Project Gutenberg</td></tr>
+<tr><td>Bhagavad Gita</td><td class="num">18</td><td class="num">29,690</td><td>low</td><td>Project Gutenberg</td></tr>
+<tr><td>Tao Te Ching</td><td class="num">81</td><td class="num">13,852</td><td>low</td><td>Project Gutenberg</td></tr>
+<tr><td>Dhammapada</td><td class="num">26</td><td class="num">16,203</td><td>low</td><td>Project Gutenberg</td></tr>
+<tr><td>Analects (Confucius)</td><td class="num">20</td><td class="num">42,041</td><td>low</td><td>Project Gutenberg</td></tr>
+<tr><td>Upanishads</td><td class="num">3</td><td class="num">21,669</td><td>low</td><td>Project Gutenberg (too few for strong claims)</td></tr>
+<tr><td><b>Total</b></td><td class="num"><b>2,749</b></td><td class="num"><b>22,179,407</b></td><td colspan="2"></td></tr>
+</table>
+<p>The "digit density" column matters a lot, as it turned out. The Bible is the only text at exactly 0%, because we stripped verse numbers from it. That created the confound that led to our retracted "scripture detector" claim.</p>
+
+<h2 id="experiment-corpora">Experiment-specific text</h2>
+<p>For targeted experiments, we built custom corpora:</p>
+<table class="wikitable">
+<tr><th>Experiment</th><th>Passages</th><th>Tokens</th><th>Status</th><th>What's in it</th></tr>
+<tr><td><a href="exp1.html">Exp 1</a>: 12 Bible translations</td><td class="num">360</td><td class="num">613,344</td><td><span class="tag tag-ok">done</span></td><td>Same 30 passages in 12 English translations (KJV, WEB, ASV, YLT, BBE + NIV, ESV, NLT, NRSV, NASB, CSB, MSG). All with digits stripped.</td></tr>
+<tr><td><a href="exp4.html">Exp 4b</a>: Commentary with quotes</td><td class="num">351</td><td class="num">5,156,659</td><td><span class="tag tag-ok">done</span></td><td>351 chunks of Christian commentary that contain embedded Bible quotes. We annotated where the quotes are so we could compare routing on quotes vs. routing on commentary.</td></tr>
+<tr><td><a href="exp12.html">Exp 12</a>: Digit pairs</td><td class="num">222</td><td class="num">437,900</td><td><span class="tag tag-ok">done</span></td><td>111 pairs of the same text, one with digits and one with digits removed. 5 categories: dates, lists, statistics, scripture citations, misc numeric.</td></tr>
+<tr><td><a href="exp13.html">Exp 13</a>: Ablation corpus</td><td class="num">480</td><td class="num">418,695</td><td><span class="tag tag-pending">staged</span></td><td>4 groups: verse-religious, prose-religious, verse-secular, prose-secular. 120 passages each. For the causal ablation test.</td></tr>
 </table>
 
-<h2 id="experiment-corpora">2. Experiment corpora</h2>
+<h2 id="raw">Raw sources</h2>
 <table class="wikitable">
-<tr><th>Corpus</th><th>Records</th><th>Tokens</th><th>Status</th><th>Purpose</th></tr>
-<tr><td>Exp 1 (12 translations)</td><td class="num">360</td><td class="num">613,344</td><td><span class="tag tag-ok">complete</span></td><td>30 passages × 12 translations (KJV, WEB, ASV, YLT, BBE + NIV, ESV, NLT, NRSV, NASB, CSB, MSG); 0-digit controlled</td></tr>
-<tr><td>Exp 4b quotation-switch</td><td class="num">351</td><td class="num">5,156,659</td><td><span class="tag tag-ok">complete</span></td><td>351 commentary windows with annotated KJV quote spans, 18 sources</td></tr>
-<tr><td>Exp 12 digit minimal-pairs</td><td class="num">222</td><td class="num">437,900</td><td><span class="tag tag-ok">complete</span></td><td>111 matched pairs (with_digits vs digit_stripped), 5 categories</td></tr>
-<tr><td>Exp 13 ablation corpus</td><td class="num">480</td><td class="num">418,695</td><td><span class="tag tag-pending">staged</span></td><td>4 cells (verse/prose × religious/secular), 120 blocks each</td></tr>
+<tr><th>Source</th><th>How much</th><th>Notes</th></tr>
+<tr><td>Wikipedia theology articles</td><td class="num">7,508 articles</td><td>Started from 6 seed topics, followed categories 3 levels deep</td></tr>
+<tr><td>Project Gutenberg theology books</td><td class="num">3,827 books</td><td>40+ topic searches; about 400M tokens total</td></tr>
+<tr><td>Project Gutenberg Christian books</td><td class="num">3,705 books</td><td>32 topics spanning patristics through modern</td></tr>
+<tr><td>Secular sources (for Exp 13)</td><td>5 works</td><td>Shakespeare sonnets, Whitman, Dickinson, Darwin, Thoreau</td></tr>
 </table>
 
-<h2 id="raw">3. Raw sources</h2>
-<table class="wikitable">
-<tr><th>Source</th><th>Volume</th><th>Notes</th></tr>
-<tr><td>Wikipedia theology articles</td><td class="num">7,508 files</td><td>6 seed topics, category traversal depth 3</td></tr>
-<tr><td>Gutenberg theology books</td><td class="num">3,827 books</td><td>40+ topic searches; ~1.6B chars (~400M tokens)</td></tr>
-<tr><td>Gutenberg Christian books</td><td class="num">3,705 books</td><td>32 topics: patristics → reformation → modern</td></tr>
-<tr><td>Gutenberg Christian wave-2</td><td class="num">2,295 books</td><td>Extended topic set</td></tr>
-<tr><td>Secular sources (Exp 13)</td><td>5 files</td><td>Shakespeare sonnets, Whitman, Dickinson, Darwin, Thoreau</td></tr>
-</table>
-
-<h2 id="record">4. Record format</h2>
-<h3>4.1 Corpus sample (input)</h3>
+<h2 id="record">What a record looks like</h2>
+<p>Each piece of text becomes two files: the input (what we fed the model) and the observation (what we recorded).</p>
+<h3>Input (the text we feed in)</h3>
 <pre>{"sample_id": "bible_gen_001", "category": "bible",
   "sample_index": 0, "seqlen": 880, "token_ids": [...],
   "text": "In the beginning God created..."}</pre>
-<h3>4.2 Observation record (output)</h3>
+<h3>Output (what the harness records)</h3>
 <pre>{"category": "bible", "sample_index": 0, "seqlen": 880,
   "observation": {"layers": {"0": {"expert_frequencies": [12, 0, 3, ...],
     "gate_weights": [...], "activation_norms": [...]}}}}</pre>
+<p>The <code>expert_frequencies</code> array has 256 numbers, one per expert, counting how many tokens selected that expert at that layer.</p>
 
-<h2 id="aggregates">5. Aggregates</h2>
+<h2 id="hf">Where to download the data</h2>
 <table class="wikitable">
-<tr><th>File</th><th>Contents</th></tr>
-<tr><td><code>core_agg.json</code></td><td>Per-category n/tok/freq/reap, 8 traditions</td></tr>
-<tr><td><code>christian_agg.json</code></td><td>Same for Christian wave-1 (1,267 books)</td></tr>
-<tr><td><code>analysis/cross_text_jaccard.csv</code></td><td>9×9 top-20 REAP Jaccard matrix</td></tr>
-<tr><td><code>analysis/expert_frequency.csv</code></td><td>Per-expert frequency table across corpora</td></tr>
-<tr><td><code>analysis/text_expert_profiles.parquet</code></td><td>Full per-text per-expert profiles (Parquet)</td></tr>
-<tr><td><code>analysis/robustness_checks.txt</code></td><td>Matched-n bootstrap CIs (5,000 resamples)</td></tr>
-<tr><td><code>jac_matrix.json</code></td><td>Jacobian norm matrix (per text per layer)</td></tr>
+<tr><th>Dataset</th><th>What's in it</th><th>Link</th></tr>
+<tr><td>Consolidated (45 files)</td><td>Everything: observations, J-lens data, manifests, analysis, code</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">0xSero/deepseek-v4-flash-reap</a></td></tr>
+<tr><td>Raw observations (11 files)</td><td>Streaming parquet shards from the observation runs</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">0xSero/deepseek-v4-flash-religious-reap-observations</a></td></tr>
 </table>
 
-<h2 id="hf">6. HuggingFace datasets</h2>
-<table class="wikitable">
-<tr><th>Dataset</th><th>Contents</th><th>Link</th></tr>
-<tr><td>Consolidated (45 files)</td><td>Observations, J-lens, manifests, analysis, code</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">0xSero/deepseek-v4-flash-reap</a></td></tr>
-<tr><td>Raw observations (11 files)</td><td>Streaming parquet shards from observation runs</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">0xSero/deepseek-v4-flash-religious-reap-observations</a></td></tr>
-</table>
-
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

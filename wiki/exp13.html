@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Exp 13: H6 ablation — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,13 +32,13 @@
 <li class="here"><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#rationale">1. Rationale</a></li>
-<li><a href="#anchors">2. H6 anchor registry</a></li>
-<li><a href="#modes">3. Intervention modes</a></li>
-<li><a href="#corpus">4. Corpus design</a></li>
-<li><a href="#outcome">5. Primary outcome</a></li>
-<li><a href="#controls">6. Controls</a></li>
-<li><a href="#hook">7. Hook implementation</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#rationale">Why a causal test</a></li>
+<li><a href="#anchors">The 6 H6 anchor experts</a></li>
+<li><a href="#modes">Two ways to knock an expert out</a></li>
+<li><a href="#corpus">The test corpus</a></li>
+<li><a href="#outcome">What we will measure</a></li>
+<li><a href="#controls">Controls</a></li>
+<li><a href="#hook">The hook that does it</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -51,22 +53,23 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#rationale">1. Rationale</a></li>
-<li><a href="#anchors">2. H6 anchor registry</a></li>
-<li><a href="#modes">3. Intervention modes</a></li>
-<li><a href="#corpus">4. Corpus design</a></li>
-<li><a href="#outcome">5. Primary outcome</a></li>
-<li><a href="#controls">6. Controls</a></li>
-<li><a href="#hook">7. Hook implementation</a></li>
+<li><a href="#rationale">Why a causal test</a></li>
+<li><a href="#anchors">The 6 H6 anchor experts</a></li>
+<li><a href="#modes">Two ways to knock an expert out</a></li>
+<li><a href="#corpus">The test corpus</a></li>
+<li><a href="#outcome">What we will measure</a></li>
+<li><a href="#controls">Controls</a></li>
+<li><a href="#hook">The hook that does it</a></li>
 </ul></div>
 
-<h1>Experiment 13: Scoped H6 Ablation</h1>
-<div class="hatnote">Causal intervention: knock out the 6 H6 anchor experts and measure Δ-NLL on prose vs verse. <span class="tag tag-pending">staged — hook deployed, corpus ready, not yet run</span></div>
+<h1>Experiment 13: the H6 ablation test</h1>
+<div class="hatnote">A causal test. We plan to knock out the 6 H6 experts and measure how much the model's predictions get worse on prose versus verse. <span class="tag tag-pending">staged. The hook is deployed and the corpus is ready, but the run has not been executed yet.</span></div>
 
-<h2 id="rationale">1. Rationale</h2>
-<p>Exp 1, 4b, and 12 establish that H6 correlates with verse/prose format. But correlation is not causation. Exp 13 asks: <b>does H6 causally contribute</b> to the model's processing of prose vs verse, or is it an epiphenomenon?</p>
+<h2 id="rationale">Why a causal test</h2>
+<p>Experiments 1, 4b, and 12 establish that H6 correlates with verse/prose format. But correlation is not causation. It is possible H6 fires on prose without actually doing anything useful, the way a smoke alarm might blink whenever the oven is on without being wired into the alarm system. Experiment 13 asks the direct question: <b>does H6 causally contribute</b> to how the model processes prose versus verse, or is it just along for the ride?</p>
 
-<h2 id="anchors">2. H6 anchor registry</h2>
+<h2 id="anchors">The 6 H6 anchor experts</h2>
+<p>These are the six experts we plan to knock out, one or several at a time:</p>
 <table class="wikitable">
 <tr><th>Anchor</th><th>Layer</th><th>Expert</th></tr>
 <tr><td>H6-A1</td><td class="num">21</td><td class="num">42</td></tr>
@@ -77,13 +80,14 @@
 <tr><td>H6-A6</td><td class="num">41</td><td class="num">147</td></tr>
 </table>
 
-<h2 id="modes">3. Intervention modes</h2>
+<h2 id="modes">Two ways to knock an expert out</h2>
 <ol>
-<li><b>Contribution knockout:</b> Keep gate selection (expert is still chosen) but zero its output. Measures the expert's direct contribution to the residual stream.</li>
-<li><b>Route-mask compensation:</b> Prevent the expert from being selected; the gate reselects the next-best expert. Measures whether the model can compensate.</li>
+<li><b>Contribution knockout:</b> The gate still picks the expert (so the model "tries" to use it), but we zero out its output. This measures how much that expert directly contributes to the model's computation.</li>
+<li><b>Route-mask compensation:</b> We stop the gate from picking the expert at all, so the gate has to pick the next-best expert instead. This measures whether the model can compensate when its preferred expert is unavailable.</li>
 </ol>
 
-<h2 id="corpus">4. Corpus design</h2>
+<h2 id="corpus">The test corpus</h2>
+<p>We built a 2x2 design that crosses format (verse vs. prose) with content (religious vs. secular). That lets us test whether the effect is specific to religious text or general to all text.</p>
 <table class="wikitable">
 <tr><th>Cell</th><th>Records</th><th>Source</th></tr>
 <tr><td>Verse, religious</td><td class="num">120</td><td>KJV Bible (held-out)</td></tr>
@@ -93,20 +97,20 @@
 <tr><td><b>Total</b></td><td class="num">480</td><td>418,695 tokens</td></tr>
 </table>
 
-<h2 id="outcome">5. Primary outcome</h2>
-<p>Δ-NLL (change in negative log-likelihood) when H6 anchors are knocked out, compared verse vs prose. If H6 is causal, knocking it out should damage prose more than verse.</p>
+<h2 id="outcome">What we will measure</h2>
+<p>The primary outcome is the change in negative log-likelihood (NLL) when the H6 anchors are knocked out. NLL is a standard measure of how surprised the model is by the next token: lower is better, and a rising NLL means the model is getting worse at predicting the text. If H6 is causal, knocking it out should raise NLL more on prose than on verse. In plain terms: removing H6 should hurt the model more when it is reading prose.</p>
 
-<h2 id="controls">6. Controls</h2>
+<h2 id="controls">Controls</h2>
 <ul>
-<li>20 matched control experts (randomly selected, matched for frequency and REAP rank)</li>
-<li>Dose series: knockout 1, 2, 3, 4, 5, 6 anchors</li>
-<li>Secular verse/prose cells test whether the effect is religion-specific or format-general</li>
+<li>20 matched control experts, randomly selected but matched for frequency and REAP rank (how strongly and how often they are chosen). Knocking these out gives us a baseline for comparison.</li>
+<li>A dose series: knock out 1, then 2, 3, 4, 5, then all 6 anchors, to see whether the damage scales with how many we remove.</li>
+<li>The secular verse/prose cells test whether the effect is specific to religion or general to format.</li>
 </ul>
 
-<h2 id="hook">7. Hook implementation</h2>
-<p>The ablation hook (<code>exp13_ablation_hook.py</code>, 14.6KB) is deployed to both TP2 nodes. It injects into the forward pass to zero out or mask H6 anchor experts. Read-only constraint respected: the hook modifies the forward pass during observation, not the model weights.</p>
+<h2 id="hook">The hook that does it</h2>
+<p>The ablation is implemented in a hook (<code>exp13_ablation_hook.py</code>, 14.6KB) deployed to both TP2 nodes. It injects into the model's forward pass to zero out or mask the H6 anchor experts. We respect the read-only constraint of the study: the hook modifies the forward pass during observation only, never the model's stored weights.</p>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

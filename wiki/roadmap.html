@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Roadmap and ideas — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,10 +32,10 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#near">1. Near term (next GPU block)</a></li>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#near">1. Near term</a></li>
 <li><a href="#medium">2. Medium term</a></li>
-<li><a href="#backlog">3. Backlog (ideas, uncommitted)</a></li>
-<li><a href="#open">4. Known open problems</a></li></ul></div>
+<li><a href="#backlog">3. Backlog (ideas, not committed)</a></li>
+<li><a href="#open">4. Open problems we have not solved</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -48,48 +50,57 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#near">1. Near term (next GPU block)</a></li>
+<li><a href="#near">1. Near term</a></li>
 <li><a href="#medium">2. Medium term</a></li>
-<li><a href="#backlog">3. Backlog (ideas, uncommitted)</a></li>
-<li><a href="#open">4. Known open problems</a></li>
+<li><a href="#backlog">3. Backlog (ideas, not committed)</a></li>
+<li><a href="#open">4. Open problems we have not solved</a></li>
 </ul></div>
 
 <h1>Roadmap and ideas</h1>
-<div class="hatnote">What's next, in order, and the backlog of ideas not yet committed to.</div>
+<div class="hatnote">Where the project goes next, in rough order, plus the questions we have not answered yet.</div>
 
-<h2 id="near">1. Near term (next GPU block)</h2>
+<p>This is a study of DeepSeek-V4-Flash-0731, a language model built as a <b>mixture of experts</b>. Instead of running one giant network for every word, the model keeps 256 smaller sub-networks (we call them <i>experts</i>) at each of its 43 layers, and a <i>router</i> that picks 6 of them for each <i>token</i> (roughly, each word or word-part) it reads. We record which experts get picked and how strongly they fire. Our main measurement is called <b>REAP</b>: it multiplies how much the router wanted an expert (its <i>gate weight</i>) by how active that expert turned out to be (its <i>activation norm</i>), giving one number per expert per token that says how much that expert contributed.</p>
+
+<p>So far we have found two clear things. The first is <b>H6</b>, a group of 6 experts at layer 42 (the last layer) that fire strongly on flowing prose but go nearly silent on verse, meaning text broken into short lineated lines like poetry or scripture. The second is <b>e164</b>, expert number 164 at layer 42, which fires on digits (the numerals 0 through 9) and on little else. We originally mistook e164 for a scripture detector, but that was an error caused by our own data pipeline stripping verse numbers out of the Bible, leaving the Bible with no digits while every other text had them.</p>
+
+<p>The roadmap below is what we plan to do next, and the questions still open.</p>
+
+<h2 id="near">1. Near term</h2>
+<p>These are the experiments we have already prepared and expect to run in the next block of GPU time.</p>
 <ol>
-<li>Exp 13 ablation — causal test of H6 contribution <span class="tag tag-pending">staged</span></li>
-<li>Exp 11 context dump — see what triggers the specialist cluster <span class="tag tag-pending">staged</span></li>
-<li>Theology observation (Jesus / Lucifer / Moloch / Saturn / Judaism)</li>
+<li><b>Exp 13, the ablation.</b> An <i>ablation</i> is a test where we temporarily switch some experts off and see what changes. Here we switch the H6 experts off and measure how much worse the model gets at predicting the next token, using its <i>negative log likelihood</i> (NLL), a standard measure of prediction error where lower is better. If the error jumps on prose but not on verse, that is direct evidence H6 is causing the difference, not just tracking it. <span class="tag tag-pending">staged</span></li>
+<li><b>Exp 11, the context dump.</b> We look at the actual text the model is reading at the moments when the tradition-specific experts (the ones that fire on only one religion) switch on. The goal is to see what in the text triggers them. <span class="tag tag-pending">staged</span></li>
+<li><b>Theology observation.</b> Run text about specific figures, Jesus, Lucifer, Moloch, and Saturn, plus texts on Judaism, through the model and record the routing, to see whether named theological content changes which experts fire.</li>
 </ol>
 
 <h2 id="medium">2. Medium term</h2>
+<p>These need more design work before we run them.</p>
 <ul>
-<li>Secular null (Exp 3) stratified by digit density — the religion-vs-general-English test</li>
-<li>Covariate regression on existing records: tradition effects controlling digit%, punctuation%, sentence length, TTR</li>
-<li>Perplexity correlation: per-sample loss vs effective-expert-count</li>
-<li>Digit-density-controlled Jesus vs Lucifer vs Moloch vs Saturn comparison</li>
+<li><b>Secular null (Exp 3).</b> Text in the same formats and styles as our religious texts, but with no religious content at all. This answers the baseline question: is any signal we see actually about religion, or only about ordinary English prose and verse? We split the comparison by digit density so the digit confound that fooled us on e164 cannot come back.</li>
+<li><b>Covariate regression.</b> A statistical method that lets us ask whether the religious tradition matters once we hold text length, punctuation, sentence length, and digit density constant. Run on the records we already have.</li>
+<li><b>Perplexity correlation.</b> <i>Perplexity</i> is how surprised the model is by a piece of text, a transformation of NLL. We check whether texts the model finds more predictable use fewer effective experts, or more.</li>
+<li><b>Digit-controlled theology comparison.</b> Compare the Jesus, Lucifer, Moloch, and Saturn texts while holding digit density fixed, so digits cannot explain any difference we see.</li>
 </ul>
 
-<h2 id="backlog">3. Backlog (ideas, uncommitted)</h2>
+<h2 id="backlog">3. Backlog (ideas, not committed)</h2>
+<p>These are ideas we think are worth doing but have not yet scheduled.</p>
 <ul>
-<li><b>Other specialists' confound audits:</b> e34 (Qur'an) and e33 (Dhammapada) deserve the same digit/translation scrutiny that e164 got.</li>
-<li><b>Full Jacobian:</b> replace 16-projection bound with exact norms on small samples.</li>
-<li><b>Activation patching:</b> not in scope unless explicitly re-scoped (would break read-only constraint).</li>
-<li><b>Comparative model study:</b> run the identical corpus through another MoE model's router.</li>
-<li><b>Publication:</b> per Kimi K3, the e164 observation alone is workshop-paper material. Exp 1, 4b, and 12 results are in hand. Condition broader claims on Exp 11/3 landing cleanly.</li>
+<li><b>Audit the other specialists.</b> Two experts we flagged as tradition-specific, e34 (firing on Qur'an text) and e33 (firing on Dhammapada text), deserve the same digit and translation scrutiny that exposed e164. They may also be responding to something mundane we have not noticed.</li>
+<li><b>Full Jacobian.</b> Our current sensitivity measure, the bounded Jacobian, approximates the true value using 16 random directions. We could compute the exact value on a small sample instead, for a sharper picture.</li>
+<li><b>Activation patching.</b> Copying expert activations from one input into another to test causality directly. This is not in scope right now because it would mean editing the model's internal state, and we have kept the model strictly read-only.</li>
+<li><b>Comparative model study.</b> Run the same corpus through a different mixture-of-experts model and compare the routing. This would tell us whether H6 is specific to this model or a general property of the architecture.</li>
+<li><b>Publication.</b> Outside reviewers judged the e164 finding alone to be workshop-paper material. The results from Exp 1, 4b, and 12 are ready. Broader claims should wait until Exp 11 and Exp 3 land cleanly.</li>
 </ul>
 
-<h2 id="open">4. Known open problems</h2>
+<h2 id="open">4. Open problems we have not solved</h2>
 <ul>
-<li>e164's causal trigger (numeral vs citation structure vs something correlated)</li>
-<li>Whether any religious-content signal survives digit-density controls</li>
-<li>Whether per-firing mean REAP can be salvaged as a metric (noise floor) or should be replaced</li>
-<li>Small-n traditions: Gita (n=18) and Upanishads (n=3) are too small for strong claims</li>
+<li>What exactly triggers e164? Is it the numeral characters themselves, the citation structure that often surrounds them, or something else correlated?</li>
+<li>Does any genuine religious-content signal survive once we control for digit density? So far the answer leans no, but we have not closed the door.</li>
+<li>Can per-firing mean REAP (averaging the REAP score only over the tokens where an expert fires) be saved as a useful metric, or is it too noisy at the floor? We may need to replace it.</li>
+<li>Small traditions. The Gita sample has only 18 records and the Upanishads sample has only 3, which is too little data for confident claims about them.</li>
 </ul>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

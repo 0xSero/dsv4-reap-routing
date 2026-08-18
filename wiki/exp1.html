@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Exp 1: 12-translation Bible test — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,12 +32,13 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#design">1. Design</a></li>
-<li><a href="#results">2. Results</a></li>
-<li><a href="#msg">3. The Message (MSG) outlier</a></li>
-<li><a href="#charts">4. Visualizations</a></li>
-<li><a href="#findings">5. Key findings</a></li>
-<li><a href="#implications">6. Implications</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#the-question">The question we were trying to answer</a></li>
+<li><a href="#translations">The 12 translations</a></li>
+<li><a href="#results">What H6 did on each translation</a></li>
+<li><a href="#msg">The Message outlier</a></li>
+<li><a href="#charts">Charts</a></li>
+<li><a href="#findings">What we learned</a></li>
+<li><a href="#implications">What this means</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -50,19 +53,24 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#design">1. Design</a></li>
-<li><a href="#results">2. Results</a></li>
-<li><a href="#msg">3. The Message (MSG) outlier</a></li>
-<li><a href="#charts">4. Visualizations</a></li>
-<li><a href="#findings">5. Key findings</a></li>
-<li><a href="#implications">6. Implications</a></li>
+<li><a href="#the-question">The question we were trying to answer</a></li>
+<li><a href="#translations">The 12 translations</a></li>
+<li><a href="#results">What H6 did on each translation</a></li>
+<li><a href="#msg">The Message outlier</a></li>
+<li><a href="#charts">Charts</a></li>
+<li><a href="#findings">What we learned</a></li>
+<li><a href="#implications">What this means</a></li>
 </ul></div>
 
-<h1>Experiment 1: Multi-Translation Bible Test</h1>
-<div class="hatnote">Does H6 depend on which translation is used? 30 passages × 12 translations, all 0-digit controlled. <b>Result: H6 is translation-invariant for verse-formatted translations. MSG (prose paraphrase) at 1,033/M confirms H6 detects format.</b></div>
+<h1>Experiment 1: the 12-translation Bible test</h1>
+<div class="hatnote">We took the same 30 Bible passages and ran them through 12 different English translations to see whether H6 cares about which translation you use. It does not. H6 stays near zero on every verse-formatted translation, then spikes on The Message, a paraphrase written as prose. <b>That tells us H6 is tracking text format, not religious content.</b></div>
 
-<h2 id="design">1. Design</h2>
-<p>30 Bible passages spanning Genesis through Romans, each rendered in 12 English translations. All verse numbers stripped. Digit density verified at 0.0000% across all 360 records.</p>
+<h2 id="the-question">The question we were trying to answer</h2>
+<p>H6 is our name for a group of six experts that fire heavily on prose and go quiet on verse. Before this experiment we had only seen that pattern on one corpus of Bible text. We wanted to know whether the pattern holds across translations, or whether it was just an accident of whichever translation we happened to feed the model.</p>
+<p>So we picked 30 passages spanning Genesis through Romans and rendered each one in 12 English translations, from the King James Version (1611) to the Christian Standard Bible (2017). That gives 360 records and 613,344 tokens of text in total. We stripped every verse number first, so there are zero digits in any of the text. That matters because we already knew digits confuse the picture (see <a href="exp12.html">Experiment 12</a>), and we wanted to remove that variable.</p>
+
+<h2 id="translations">The 12 translations</h2>
+<p>They span four centuries and several translation philosophies, from ultra-literal word-for-word to loose paraphrase:</p>
 <table class="wikitable">
 <tr><th>Translation</th><th>Era</th><th>Register</th><th>License</th></tr>
 <tr><td>KJV</td><td>1611</td><td>Archaic</td><td>Public domain</td></tr>
@@ -79,7 +87,8 @@
 <tr><td><b>MSG</b></td><td>2002</td><td><b>Paraphrase</b></td><td>Copyrighted</td></tr>
 </table>
 
-<h2 id="results">2. Results</h2>
+<h2 id="results">What H6 did on each translation</h2>
+<p>The table below shows how often H6 fired, measured in "firing rate per million tokens." That number means: for every million tokens of text we feed the model, how many times did the gate pick one of the six H6 experts? A low number means H6 stayed quiet. A high number means H6 was active.</p>
 <table class="wikitable">
 <tr><th>Translation</th><th>Records</th><th>Tokens</th><th>H6 fires</th><th>H6 Rate (M)</th><th>License</th></tr>
 <tr><td>KJV</td><td class="num">30</td><td class="num">42,010</td><td class="num">0</td><td class="num">0.0</td><td>Public domain</td></tr>
@@ -96,36 +105,36 @@
 <tr><td><b>MSG</b></td><td class="num">30</td><td class="num">59,066</td><td class="num">61</td><td class="num"><b>1,032.7</b></td><td>Copyrighted</td></tr>
 <tr><td><b>Excl. MSG</b></td><td class="num">330</td><td class="num">554,278</td><td class="num">33</td><td class="num">59.5</td><td></td></tr>
 </table>
-<p><b>Invariant check:</b> 0 violations across 360 records.</p>
-<p><b>e164 positive control:</b> 1.6/M across all 613,344 tokens (1 fire total, in NIV). Digit confound controlled.</p>
+<p>Two integrity checks passed. First, the "invariant check," a running audit that confirms our expert-frequency numbers add up correctly, reported 0 violations across all 360 records. Second, our digit-detecting expert e164 fired only 1.6 times per million tokens across the whole corpus, with a single fire total. That confirms the digit confound was controlled: H6 is not reacting to digits here.</p>
 
-<h2 id="msg">3. The Message (MSG) outlier</h2>
-<p>MSG fires at 1,033/M — 6–60× higher than any other translation. This is <b>not a failure of translation invariance</b>; it is the strongest confirmation of the format hypothesis. The Message is a conversational paraphrase that abandons verse lineation for flowing prose. From the router's perspective, MSG is prose, not verse. H6 fires on it the same way it fires on commentary prose.</p>
-<p>8 of 30 passages show H6=0 across <b>all 12 translations including MSG</b> — the most tightly verse-structured passages where even MSG retains enough verse-like formatting.</p>
+<h2 id="msg">The Message outlier</h2>
+<p>One translation jumps off the page. The Message (MSG) fires at 1,033/M, which is 6 to 60 times higher than any other translation. This is not a broken translation or a failure of our test. It is the strongest piece of evidence we have for the format hypothesis.</p>
+<p>The Message is a paraphrase. Its translator, Eugene Peterson, rewrote the Bible as conversational prose, abandoning the short line-by-line verse layout every other translation keeps. From the model's perspective, MSG reads as prose, not verse. So H6 fires on it the same way it fires on any prose.</p>
+<p>Eight of the 30 passages show H6 = 0 across all 12 translations, including MSG. Those are the most tightly verse-structured passages, the ones where even The Message keeps enough verse-like formatting that H6 stays quiet.</p>
 
-<h2 id="charts">4. Visualizations</h2>
+<h2 id="charts">Charts</h2>
 <table class="wikitable">
 <tr><th>Chart</th><th>What it shows</th></tr>
 <tr><td><a href="../img/chart_exp1_all_by_translation.png">H6 by translation (12)</a></td><td>Bar chart, log scale. KJV and ESV at zero; MSG towers above all.</td></tr>
 <tr><td><a href="../img/chart_exp1_all_pd_vs_cr.png">PD vs Copyrighted</a></td><td>Grouped bar. CR inflated by MSG; excl. MSG the difference is modest.</td></tr>
-<tr><td><a href="../img/chart_exp1_all_per_passage.png">Per-passage heatmap</a></td><td>H6 rate per passage × translation. Shows which passages trigger H6.</td></tr>
+<tr><td><a href="../img/chart_exp1_all_per_passage.png">Per-passage heatmap</a></td><td>H6 rate per passage x translation. Shows which passages trigger H6.</td></tr>
 </table>
 
-<h2 id="findings">5. Key findings</h2>
+<h2 id="findings">What we learned</h2>
 <ol>
-<li><b>H6 near-zero on all verse-formatted translations.</b> KJV and ESV: perfect zero across 99,765 tokens. Other 10: 17–171/M, negligible vs 163,284/M commentary.</li>
-<li><b>MSG confirms format hypothesis.</b> Fires at 1,033/M — not a bad translation, but prose-format.</li>
-<li><b>Translation invariance holds for verse.</b> KJV (1611) and ESV (2001) both fire at 0.0. Register, era, and translation philosophy are irrelevant.</li>
-<li><b>Digit confound controlled.</b> e164 at 1.6/M. All 360 records 0.0000% digits.</li>
+<li><b>H6 stays near zero on verse-formatted text.</b> KJV and ESV fired at a perfect 0.0 across 99,765 tokens combined. The other 10 verse translations fired at only 17 to 171 per million, which is negligible compared to the 163,284/M we see on prose commentary.</li>
+<li><b>The Message confirms the format hypothesis.</b> It fired at 1,033/M, not because it is a bad translation, but because it is formatted as prose.</li>
+<li><b>Translation invariance holds for verse.</b> The KJV (1611) and ESV (2001) both fired at 0.0. The era, the register, and the translation philosophy do not matter. Only the format matters.</li>
+<li><b>The digit confound was controlled.</b> e164 fired at 1.6/M. All 360 records had 0.0000% digits.</li>
 </ol>
 
-<h2 id="implications">6. Implications</h2>
+<h2 id="implications">What this means</h2>
 <ol>
-<li><b>H6 is a format detector.</b> The MSG result is decisive: abandon verse format → H6 fires. Preserve verse lineation → H6 stays near zero.</li>
-<li><b>Combined with Exp 4b and Exp 12:</b> H6 confirmed across 933 records and 6,207,903 tokens — the strongest routing effect in the study.</li>
+<li><b>H6 is a format detector.</b> The Message result is decisive. Abandon verse format and H6 fires. Preserve verse lineation and H6 stays near zero.</li>
+<li><b>Taken with Exp 4b and Exp 12:</b> H6 is confirmed across 933 records and 6,207,903 tokens. It is the strongest routing effect we found in the whole study.</li>
 </ol>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Operations (live) — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,11 +32,11 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#running">1. Running now</a></li>
-<li><a href="#queue">2. Deployment queue</a></li>
-<li><a href="#runbook">3. Runbook (each 30-min automation cycle)</a></li>
-<li><a href="#constraints">4. Operational constraints</a></li>
-<li><a href="#incidents">5. Incident log</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#running">1. What is running now</a></li>
+<li><a href="#queue">2. What is queued to run next</a></li>
+<li><a href="#runbook">3. What the automation does every 30 minutes</a></li>
+<li><a href="#constraints">4. Rules we follow</a></li>
+<li><a href="#incidents">5. What went wrong, and how we fixed it</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -49,69 +51,73 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#running">1. Running now</a></li>
-<li><a href="#queue">2. Deployment queue</a></li>
-<li><a href="#runbook">3. Runbook (each 30-min automation cycle)</a></li>
-<li><a href="#constraints">4. Operational constraints</a></li>
-<li><a href="#incidents">5. Incident log</a></li>
+<li><a href="#running">1. What is running now</a></li>
+<li><a href="#queue">2. What is queued to run next</a></li>
+<li><a href="#runbook">3. What the automation does every 30 minutes</a></li>
+<li><a href="#constraints">4. Rules we follow</a></li>
+<li><a href="#incidents">5. What went wrong, and how we fixed it</a></li>
 </ul></div>
 
 <h1>Operations (live)</h1>
-<div class="hatnote">What is running, what is queued, and the runbook. Status reflects 2026-08-18.</div>
+<div class="hatnote">What is running, what is queued, and how we keep the whole thing honest. Status reflects 2026-08-18.</div>
 
-<h2 id="running">1. Running now</h2>
+<h2 id="running">1. What is running now</h2>
+<p>The two big observation runs are finished. The only thing still actively running is a small automation job that wakes up every 30 minutes to check on things, deploy the next queued experiment, and sync to GitHub. Here is the status of each pipeline:</p>
 <table class="wikitable">
-<tr><th>Pipeline</th><th>Progress</th><th>Supervisor</th><th>Notes</th></tr>
-<tr><td>Christian wave-2 observation</td><td><span class="tag tag-ok">complete (2,295/2,295)</span></td><td><code>chain_next_runs.sh</code></td><td>3 NCCL stalls, all self-healed with skip-ahead</td></tr>
-<tr><td>Expanded Exp 1 (12 translations)</td><td><span class="tag tag-ok">complete (360/360)</span></td><td><code>run_full_observation.sh</code></td><td>NCCL timeout at 212/360, resumed with skip-ahead</td></tr>
-<tr><td>30-min mission automation</td><td>active</td><td>cron</td><td>Monitors chains/watchdogs, deploys queued experiments, throttled GitHub sync</td></tr>
+<tr><th>Pipeline</th><th>Progress</th><th>What manages it</th><th>Notes</th></tr>
+<tr><td>Christian wave-2 observation</td><td><span class="tag tag-ok">complete (2,295/2,295)</span></td><td><code>chain_next_runs.sh</code></td><td>The network link between the two GPUs stalled 3 times. Each time the supervisor detected it, skipped ahead past the records already done, and resumed. No data was lost.</td></tr>
+<tr><td>Expanded Exp 1 (12 translations)</td><td><span class="tag tag-ok">complete (360/360)</span></td><td><code>run_full_observation.sh</code></td><td>The GPU link timed out at record 212 of 360. We resumed with skip-ahead and finished the rest.</td></tr>
+<tr><td>30-min mission automation</td><td>active</td><td>cron (a built-in scheduler)</td><td>Every 30 minutes it checks whether any supervisor script has died, restarts it if so, runs the next queued experiment, and syncs to GitHub at most once every 4 hours.</td></tr>
 </table>
 
-<h2 id="queue">2. Deployment queue</h2>
+<h2 id="queue">2. What is queued to run next</h2>
+<p>These are the experiments and tasks lined up to run. The completed ones are marked done; the rest are waiting for a GPU slot.</p>
 <ol>
-<li><code>./finalize_christian.sh</code> — merge wave-2, verify invariants, rebuild aggregates <span class="tag tag-ok">done</span></li>
-<li><b>Exp 12</b> — <span class="tag tag-ok">complete</span> 222 records</li>
-<li><b>Exp 1</b> — <span class="tag tag-ok">complete</span> 360 records (12 translations)</li>
-<li><b>Exp 4b</b> — <span class="tag tag-ok">complete</span> 351 records</li>
-<li><b>Exp 13</b> — <span class="tag tag-pending">staged</span> ablation hook deployed, corpus ready</li>
-<li><b>Exp 11</b> — context-dump re-run with <code>--raw-budget-tokens</code></li>
-<li><b>Theology observation</b> — 1,090 records (~16h)</li>
+<li><code>./finalize_christian.sh</code>: merges the wave-2 Christian data, re-checks the integrity invariants, and rebuilds the summary tables. <span class="tag tag-ok">done</span></li>
+<li><b>Exp 12</b> (digit pairs): <span class="tag tag-ok">complete</span>, 222 records.</li>
+<li><b>Exp 1</b> (12 translations): <span class="tag tag-ok">complete</span>, 360 records.</li>
+<li><b>Exp 4b</b> (quotation switch): <span class="tag tag-ok">complete</span>, 351 records.</li>
+<li><b>Exp 13</b> (ablation): <span class="tag tag-pending">staged</span>. The hook that zeroes out the H6 experts is deployed to both machines, and the corpus is ready. This is the experiment that will tell us whether H6 actually matters for the model's performance, not just whether it fires.</li>
+<li><b>Exp 11</b>: a re-run of the context dump with a larger token budget, so we can see more of what the model was reading when each expert fired.</li>
+<li><b>Theology observation</b>: 1,090 records of theology text, estimated at about 16 hours of GPU time.</li>
 </ol>
 
-<h2 id="runbook">3. Runbook (each 30-min automation cycle)</h2>
-<pre>1. tail /tmp/chain_runs.log            # run status
+<h2 id="runbook">3. What the automation does every 30 minutes</h2>
+<p>This is the checklist the 30-minute cron job follows, in order. It is designed to need no human intervention for routine operation:</p>
+<pre>1. tail /tmp/chain_runs.log            # check run status
 2. pgrep -f 'chain_next|obs_christian_watch|jlens_watch|obs_theology_watch'
-                                       # restart any dead supervisor
-3. bash sync_to_github.sh              # self-throttles to 4h
-4. If "ALL RUNS COMPLETE": finalize + deploy queue (above)
-5. On completed observation: pull via scp, verify fail-closed invariants,
-   run analyze_experts.py, update wiki + site, sync</pre>
+                                       # check if any supervisor died; restart if so
+3. bash sync_to_github.sh              # push to GitHub (throttled to once per 4h)
+4. If "ALL RUNS COMPLETE": finalize the data and deploy the next queued experiment
+5. On completed observation: pull the data via scp, re-verify the integrity
+   invariants, run analyze_experts.py, update this wiki, and sync</pre>
 
-<h2 id="constraints">4. Operational constraints</h2>
+<h2 id="constraints">4. Rules we follow</h2>
+<p>These are the constraints we imposed on ourselves to keep the study clean and safe. They matter because the whole point of the project is to observe the model without changing it:</p>
 <ul>
-<li><b>Read-only:</b> no weight edits, no pruning, no quantization. Observation only.</li>
-<li><b>Host exclusions:</b> spark-2822 (100.83.190.2) is out of scope, never touched.</li>
-<li><b>Credentials:</b> de5c password via <code>SSHPASS</code> env only; never printed, logged, or committed.</li>
-<li><b>Scraping:</b> never parallel scrapers (429); Gutenberg 0.8–1.5s; Wikipedia 3s.</li>
-<li><b>Corpus:</b> English only; public-domain for core corpora; copyrighted Bible translations included for Exp 1 per explicit authorization.</li>
-<li><b>Integrity:</b> fail-closed invariants asserted before any record is accepted.</li>
+<li><b>We never modify the model.</b> No weight edits, no pruning, no quantization. We only watch. The one exception is Exp 13, which temporarily zeroes out experts to test causality, and even that does not change the saved weights.</li>
+<li><b>One machine is off limits.</b> spark-2822 (100.83.190.2) is out of scope and never touched.</li>
+<li><b>Passwords stay in environment variables.</b> The de5c machine password is passed through the <code>SSHPASS</code> environment variable only. It is never printed, logged, or committed to git.</li>
+<li><b>No parallel scraping.</b> We never run multiple scrapers at once against the same site. We wait 0.8 to 1.5 seconds between Gutenberg requests and 3 seconds between Wikipedia requests. This is why: early on we ran 6 Wikipedia scrapers in parallel and got rate-limited (HTTP 429).</li>
+<li><b>English text only.</b> The core corpora are public domain. The 7 copyrighted Bible translations in Exp 1 are included because we had explicit authorization to use them.</li>
+<li><b>Every record is checked before it is accepted.</b> The fail-closed integrity invariants run on every record. If any check fails, the record is thrown out and the run stops.</li>
 </ul>
 
-<h2 id="incidents">5. Incident log</h2>
+<h2 id="incidents">5. What went wrong, and how we fixed it</h2>
 <table class="wikitable">
-<tr><th>Date</th><th>Event</th><th>Resolution</th></tr>
-<tr><td>08-14</td><td>J-lens NCCL stalls (2×)</td><td>autoheal + resume; completed 80/80</td></tr>
-<tr><td>08-15</td><td>Wikipedia scraper 429 storm (6 parallel scrapers)</td><td>killed all, rewrote sequential with backoff</td></tr>
-<tr><td>08-16</td><td>Wave-2 NCCL stalls (3×)</td><td>chain supervisor relaunched with skip-ahead, zero data loss</td></tr>
-<tr><td>08-16</td><td><b>Credential leak found:</b> sanitizer embedded de5c password</td><td>fixed to $SSHPASS env; git history purged with git-filter-repo; HF copy replaced</td></tr>
-<tr><td>08-18</td><td><b>Exp 1 complete</b> — 150/150 (phase 1)</td><td>H6 = 47.8/M, translation-invariant</td></tr>
-<tr><td>08-18</td><td><b>Exp 1 expanded complete</b> — 360/360 (12 translations)</td><td>MSG outlier at 1,033/M; NCCL timeout at 212, resumed</td></tr>
-<tr><td>08-18</td><td><b>Exp 4b complete</b> — 351/351</td><td>H6 = 163,284/M on commentary prose</td></tr>
-<tr><td>08-18</td><td><b>Exp 12 complete</b> — 222/222</td><td>H6 digit-independent, e164 digit detector</td></tr>
-<tr><td>08-18</td><td>Exp 12 container crashed at 166/222 with segfault</td><td>resumed with skip-ahead, zero data loss</td></tr>
+<tr><th>Date</th><th>What happened</th><th>How we resolved it</th></tr>
+<tr><td>08-14</td><td>The GPU link stalled twice during the J-lens run</td><td>The supervisor auto-healed and resumed. All 80 of 80 samples completed.</td></tr>
+<tr><td>08-15</td><td>Wikipedia blocked us (a "429 storm") because we ran 6 scrapers at once</td><td>We killed all 6 scrapers and rewrote them to run one at a time with backoff between requests.</td></tr>
+<tr><td>08-16</td><td>The GPU link stalled 3 times during wave-2 observation</td><td>The chain supervisor relaunched with skip-ahead each time. Zero data lost.</td></tr>
+<tr><td>08-16</td><td><b>We found a credential leak.</b> A code sanitizer had accidentally embedded the de5c password in a script.</td><td>We switched to passing the password through the $SSHPASS environment variable, purged the password from git history with git-filter-repo, and replaced the copy on HuggingFace.</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 phase 1 complete</b>, 150 of 150 records</td><td>H6 fired at 47.8 per million tokens, and the rate was the same across translations.</td></tr>
+<tr><td>08-18</td><td><b>Exp 1 expanded complete</b>, 360 of 360 records across 12 translations</td><td>The Message paraphrase was the outlier at 1,033 per million tokens. The GPU link timed out at record 212; we resumed.</td></tr>
+<tr><td>08-18</td><td><b>Exp 4b complete</b>, 351 of 351 records</td><td>H6 fired at 163,284 per million tokens on the prose commentary.</td></tr>
+<tr><td>08-18</td><td><b>Exp 12 complete</b>, 222 of 222 records</td><td>H6 does not care about digits. Expert 164 does, confirming it is a digit detector.</td></tr>
+<tr><td>08-18</td><td>The Exp 12 container crashed with a segfault at record 166 of 222</td><td>We resumed with skip-ahead. Zero data lost.</td></tr>
 </table>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

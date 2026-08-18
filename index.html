@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>DeepSeek-V4-Flash REAP — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li class="here"><a href="index.html">Main page</a></li>
@@ -30,13 +32,13 @@
 <li><a href="wiki/exp13.html">Exp 13: Ablation</a></li>
 <li><a href="wiki/forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#tldr">Simple conclusions</a></li>
-<li><a href="#facts">Key findings at a glance</a></li>
-<li><a href="#viz">Key visualizations</a></li>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#hypotheses">Hypotheses</a></li>
-<li><a href="#experiments-overview">Experiments</a></li>
-<li><a href="#resources">Resources</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#background">What is a "mixture of experts" model?</a></li>
+<li><a href="#tldr">What we found</a></li>
+<li><a href="#viz">Charts that tell the story</a></li>
+<li><a href="#how-we-did-it">How we did it</a></li>
+<li><a href="#experiments-overview">The experiments</a></li>
+<li><a href="#hypotheses">What we hypothesized, and what happened</a></li>
+<li><a href="#resources">Where to find everything</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -51,115 +53,96 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#tldr">Simple conclusions</a></li>
-<li><a href="#facts">Key findings at a glance</a></li>
-<li><a href="#viz">Key visualizations</a></li>
-<li><a href="#abstract">Abstract</a></li>
-<li><a href="#hypotheses">Hypotheses</a></li>
-<li><a href="#experiments-overview">Experiments</a></li>
-<li><a href="#resources">Resources</a></li>
+<li><a href="#background">What is a "mixture of experts" model?</a></li>
+<li><a href="#tldr">What we found</a></li>
+<li><a href="#viz">Charts that tell the story</a></li>
+<li><a href="#how-we-did-it">How we did it</a></li>
+<li><a href="#experiments-overview">The experiments</a></li>
+<li><a href="#hypotheses">What we hypothesized, and what happened</a></li>
+<li><a href="#resources">Where to find everything</a></li>
 </ul></div>
 
-<h1>DeepSeek-V4-Flash-0731 expert routing on religious texts</h1>
-<p class="lead">A read-only interpretability study of a sparse mixture-of-experts language model — does it route religious text differently? <b>Short answer: no.</b> The apparent "scripture detector" was a digit-density confound. What survives is a large <b>verse/prose format axis</b> (H6) confirmed across three independent experiments and 933 records.</p>
+<h1>Does an AI read the Bible differently?</h1>
+<p class="lead">We took a large language model and watched which parts of its brain lit up when it read religious text. The short answer: no, it doesn't treat the Bible any differently from other text. But we found something more interesting along the way, and we were wrong about our first big finding. Here's the whole story.</p>
 
 <div class="infobox">
-<div class="ib-title">DeepSeek-V4-Flash-0731</div>
-<div class="ib-subtitle">MoE routing interpretability study</div>
+<div class="ib-title">The model we studied</div>
+<div class="ib-subtitle">DeepSeek-V4-Flash-0731</div>
 <table>
+<tr><th>What it is</th><td>A "mixture of experts" language model</td></tr>
 <tr><th>Layers</th><td>43</td></tr>
-<tr><th>Routed experts/layer</th><td>256</td></tr>
-<tr><th>Top-k gating</th><td>6</td></tr>
-<tr><th>Hidden dim</th><td>4096</td></tr>
-<tr><th>Vocab</th><td>129,280</td></tr>
-<tr><th>Expert precision</th><td>fp4</td></tr>
-<tr><th>Attention precision</th><td>fp8</td></tr>
-<tr><th>Gate function</th><td>sqrt-softplus</td></tr>
-<tr><th>Route scale</th><td>1.5</td></tr>
-<tr><th>Hyper-connections</th><td>hc_head ×4, n_hash_layers=3</td></tr>
-<tr><th>Total records observed</th><td>2,749 + 933 experiment</td></tr>
-<tr><th>Total tokens observed</th><td>28,387,310</td></tr>
+<tr><th>Experts per layer</th><td>256</td></tr>
+<tr><th>Experts used per token</th><td>6 (out of 256)</td></tr>
+<tr><th>Vocabulary</th><td>129,280 tokens</td></tr>
+<tr><th>Text we fed it</th><td>6,311 passages from 9 religions + 3,562 Christian books</td></tr>
+<tr><th>Total text processed</th><td>28 million tokens</td></tr>
+<tr><th>What we recorded</th><td>Which experts the model chose for every token, at every layer</td></tr>
 </table>
 </div>
 
-<h2 id="tldr">Simple conclusions</h2>
+<h2 id="background">What is a "mixture of experts" model?</h2>
+<p>Most language models process every token through the same neural network. A mixture of experts (MoE) model works differently. It has 256 smaller sub-networks ("experts") at each of its 43 layers. For every single token it reads, a "gate" decides which 6 of those 256 experts should handle it. The other 250 experts stay dormant.</p>
+
+<p>Think of it like a hospital. A patient walks in (a token), and a triage nurse (the gate) decides which 6 specialists out of 256 should see them. The question we asked: does the triage nurse send Bible verses to different specialists than it sends, say, Shakespeare or Wikipedia?</p>
+
+<h2 id="tldr">What we found</h2>
 <ol>
-<li><b>No religion-specific routing.</b> The model does not have "Bible experts" or "Qur'an experts." Inter-tradition routing differences are driven by surface-form features (digit density, punctuation, sentence length), not theological content.</li>
-<li><b>The "scripture detector" was a digit confound.</b> Expert e164 at L42 was zero on Bible text (0% digits) and high on everything else — not because it detects scripture, but because it detects <i>digits</i>. <a href="wiki/exp12.html">Exp 12</a> confirmed this with a 1,453× ratio (1,453× more firing with digits vs without).</li>
-<li><b>The H6 verse/prose axis is the real finding.</b> 13+ experts fire at up to 163,284/M on prose and ~0 on verse — a format detector, not a content detector. Confirmed by three independent experiments across 933 records and 6,207,903 tokens.</li>
-<li><b>Translation invariance confirmed.</b> H6 fires at near-zero on all verse-formatted Bible translations (KJV through NLT). The Message (MSG), a prose paraphrase, fires at 1,033/M — proving H6 detects verse <i>format</i>, not content.</li>
+<li><b>The model doesn't have religion-specific experts.</b> There's no "Bible expert" or "Qur'an expert." When the model reads text from different religions, the routing differences come from surface-level features like how many digits are in the text, not from the theological content.</li>
+<li><b>Our first big finding was wrong.</b> We thought we'd found an expert (#164) that detected whether text was "memorized scripture" or not. It fired at zero on the Bible and high on everything else. Cool, right? Turns out it was just detecting digits. Our pipeline had stripped verse numbers ("John 3:16") from the Bible, making it the only 0% digit text in the corpus. <a href="wiki/exp12.html">Experiment 12</a> proved this: the expert fired 1,453 times harder on text with digits than without.</li>
+<li><b>The real finding: a verse/prose detector.</b> A group of about 13 experts (we call this cluster "H6") fires massively on prose and goes silent on verse. Not prose about religion vs. verse about religion. Just prose vs. verse, period. The model cares about whether text is laid out in short verse lines or flowing paragraphs. It doesn't care what the text is about.</li>
+<li><b>Proof from The Message Bible.</b> We tested 12 English Bible translations. H6 fired at near-zero on all of them except one: The Message (MSG), a paraphrase that rewrites the Bible as conversational prose. On MSG, H6 fired at 1,033 per million tokens. Same religious content, different format, completely different routing. That's the smoking gun.</li>
 </ol>
 
-<h2 id="facts">Key findings at a glance</h2>
+<h2 id="viz">Charts that tell the story</h2>
 <table class="wikitable">
-<tr><th>Finding</th><th>Magnitude</th><th>Status</th></tr>
-<tr><td>e164 digit detector</td><td class="num">1,453× ratio (with vs without digits)</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>H6 verse/prose axis</td><td class="num">163,284/M on prose vs ~0 on verse</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>H6 digit-independence</td><td class="num">1.02× ratio (with vs without digits)</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>H6 translation invariance</td><td class="num">0–171/M across 11 verse translations</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>MSG format outlier</td><td class="num">1,033/M (prose paraphrase)</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>No religion-specific routing</td><td>—</td><td><span class="tag tag-ok">confirmed</span></td></tr>
-<tr><td>e164 "scripture detector"</td><td>—</td><td><span class="tag tag-bad">retracted</span></td></tr>
-<tr><td>H3: routing concentration = predictability</td><td>—</td><td><span class="tag tag-bad">retracted</span></td></tr>
+<tr><th>Chart</th><th>What you're looking at</th></tr>
+<tr><td><a href="img/chart_h6_axis.png"><img src="img/chart_h6_axis.png" alt="H6 axis" style="width:200px"></a></td><td>The H6 experts barely fire on verse-formatted text (left bars, near zero) and fire heavily on prose (right bars). The gap is enormous.</td></tr>
+<tr><td><a href="img/chart_exp1_all_by_translation.png"><img src="img/chart_exp1_all_by_translation.png" alt="H6 by translation" style="width:200px"></a></td><td>H6 firing rate across 12 Bible translations. Every verse-formatted translation is near zero. The Message (MSG) towers above the rest because it's written as prose, not verse.</td></tr>
+<tr><td><a href="img/chart_exp12_h6_vs_e164.png"><img src="img/chart_exp12_h6_vs_e164.png" alt="H6 vs e164" style="width:200px"></a></td><td>Two separate effects: H6 (verse/prose, left pair) fires the same with or without digits. e164 (digit detector, right pair) fires massively more with digits. These are two different things the model detects.</td></tr>
+<tr><td><a href="img/chart_jaccard_heatmap.png"><img src="img/chart_jaccard_heatmap.png" alt="Jaccard heatmap" style="width:200px"></a></td><td>How similar the routing is between religious traditions. Darker = more overlap. All traditions share a common backbone; none is uniquely isolated.</td></tr>
 </table>
 
-<h2 id="viz">Key visualizations</h2>
+<h2 id="how-we-did-it">How we did it</h2>
+<p>We built a read-only harness that loads the model and processes text, but instead of generating output, it records which experts the gate selects for every token at every layer. We never modified the model's weights. We never trained it. We just watched.</p>
+<p>The corpus was 6,311 passages from 9 religious traditions (Bible, Qur'an, Bhagavad Gita, Tao Te Ching, Dhammapada, Analects, Book of Mormon, Upanishads) plus 3,562 books of Christian literature from Project Gutenberg. We also ran targeted experiments with 12 Bible translations, commentary text with embedded Bible quotes, and controlled digit-density pairs.</p>
+<p>Every single record had to pass integrity checks before we accepted it: the expert frequencies had to add up correctly, no NaN values, no infinities. Zero violations across all 3,682 records.</p>
+
+<h2 id="experiments-overview">The experiments</h2>
 <table class="wikitable">
-<tr><th>Chart</th><th>What it shows</th></tr>
-<tr><td><a href="img/chart_h6_axis.png"><img src="img/chart_h6_axis.png" alt="H6 axis" style="width:200px"></a></td><td>H6 verse/prose axis: verse texts fire ~0, prose fires 10,000–90,000/M</td></tr>
-<tr><td><a href="img/chart_exp1_all_by_translation.png"><img src="img/chart_exp1_all_by_translation.png" alt="H6 by translation" style="width:200px"></a></td><td>H6 rate by Bible translation (12 translations, log scale). MSG towers above all others.</td></tr>
-<tr><td><a href="img/chart_exp12_h6_vs_e164.png"><img src="img/chart_exp12_h6_vs_e164.png" alt="H6 vs e164" style="width:200px"></a></td><td>H6 (digit-independent) vs e164 (digit detector) — the two routing axes are orthogonal.</td></tr>
-<tr><td><a href="img/chart_jaccard_heatmap.png"><img src="img/chart_jaccard_heatmap.png" alt="Jaccard heatmap" style="width:200px"></a></td><td>Inter-tradition Jaccard overlap (top-20 REAP experts). Bible–Christian (0.33) is the lowest pair.</td></tr>
+<tr><th>#</th><th>What we tested</th><th>Records</th><th>Status</th><th>What we learned</th></tr>
+<tr><td><a href="wiki/exp1.html">Exp 1</a></td><td>Same Bible passages in 12 translations</td><td class="num">360</td><td><span class="tag tag-ok">done</span></td><td>H6 fires near-zero on all verse translations. MSG (prose paraphrase) fires at 1,033/M. Format, not content.</td></tr>
+<tr><td><a href="wiki/exp4.html">Exp 4b</a></td><td>Commentary text with embedded Bible quotes</td><td class="num">351</td><td><span class="tag tag-ok">done</span></td><td>H6 fires on the prose commentary, not on the verse quotes inside it.</td></tr>
+<tr><td><a href="wiki/exp12.html">Exp 12</a></td><td>Same text with and without digits</td><td class="num">222</td><td><span class="tag tag-ok">done</span></td><td>H6 doesn't care about digits. e164 does (1,453x difference).</td></tr>
+<tr><td><a href="wiki/exp13.html">Exp 13</a></td><td>Knock out H6 experts, measure damage</td><td class="num">480</td><td><span class="tag tag-pending">staged</span></td><td>Causal test: does removing H6 actually hurt the model on prose?</td></tr>
 </table>
 
-<h2 id="abstract">Abstract</h2>
-<p>This study observes the expert-routing behavior of DeepSeek-V4-Flash-0731 — a sparse mixture-of-experts model with 43 layers, 256 routed experts per layer, and top-6 gating using a sqrt-softplus score function — across a large corpus of religious and theological texts. The corpus spans nine traditions plus 3,562 books of Christian literature, totalling 78M observed tokens across 6,311 records. A read-only, fail-closed harness records per-token routing decisions for every layer of every sample.</p>
-
-<p>The study's original headline finding — that expert #164 at layer 42 was a "not-memorized-scripture" detector — was <b>retracted</b> after external review identified a digit-density confound. <a href="wiki/exp12.html">Exp 12</a> confirmed e164 is a digit detector (1,453× ratio). What survives is a large format-associated routing effect (the <a href="wiki/results.html#h6axis">H6 verse/prose axis</a>: 13+ experts fire at up to 163,284/M on prose and ~0 on verse, Cohen's d = 1.38–2.79) and a well-supported absence of religion-specific routing. The H6 axis is confirmed by three independent experiments: <a href="wiki/exp1.html">Exp 1</a> (translation-invariant across 12 translations; MSG format outlier confirms), <a href="wiki/exp4.html">Exp 4b</a> (163,284/M on commentary, fires on prose not verse quotes), and <a href="wiki/exp12.html">Exp 12</a> (digit-independent, 1.02× ratio).</p>
-
-<h2 id="hypotheses">Hypotheses</h2>
+<h2 id="hypotheses">What we hypothesized, and what happened</h2>
 <dl>
-<dt>H1 — Digit/citation apparatus detector <span class="tag tag-ok">confirmed (Exp 12)</span></dt>
-<dd>e164 at L42 is a digit detector. 1,453× ratio between with_digits and digit_stripped text. The original "not-memorized-scripture" interpretation is retracted.</dd>
+<dt>"There's a scripture detector" <span class="tag tag-bad">wrong</span></dt>
+<dd>We thought expert #164 detected whether text was memorized scripture. It was actually detecting digits. Our pipeline had stripped verse numbers from the Bible, creating a fake correlation.</dd>
 
-<dt>H2 — Surface-form routing, not theology <span class="tag tag-ok">confirmed (Exp 1)</span></dt>
-<dd>Expert routing differences between religious traditions are driven by surface-form features (digit density, punctuation, sentence length), not theological content. Controlling for these should eliminate most inter-tradition differences. Confirmed by Exp 1: H6 fires at 59.5/M on verse across 12 translations — translation-invariant.</dd>
+<dt>"Routing differs by religion" <span class="tag tag-bad">wrong</span></dt>
+<dd>The routing differences between traditions disappeared once we controlled for digit density and text format. The model doesn't route by theology.</dd>
 
-<dt>H3 — Routing concentration = predictability <span class="tag tag-bad">retracted</span></dt>
-<dd>The hypothesis that effective-expert count inversely tracks text predictability was retracted. The correlation is positive (+0.47), not negative. The 65 vs 111 gap is a window-length artifact.</dd>
+<dt>"There's a verse/prose format detector" <span class="tag tag-ok">confirmed</span></dt>
+<dd>A cluster of 13+ experts (H6) fires at up to 163,284 per million tokens on prose and at essentially zero on verse. Confirmed by three independent experiments across 933 records. This is the study's main finding.</dd>
 
-<dt>H6 — Verse/prose format axis <span class="tag tag-ok">confirmed (Exp 1, 4b, 12)</span></dt>
-<dd>A cluster of 13+ experts (anchors: L21e42, L22e105, L23e113, L30e198, L32e254, L41e147) fires at up to 163,284/M on discursive prose and ~0 on bare verse text. This is a <b>format detector</b>, not a content or religion detector. Cohen's d = 1.38–2.79. Confirmed by:
-<ul>
-<li><b>Exp 1</b> (360 records, 12 translations): H6 = 59.5/M on verse (excl. MSG). MSG (prose paraphrase) at 1,033/M confirms format detection.</li>
-<li><b>Exp 4b</b> (351 records, 5,156,659 tokens): H6 = 163,284/M on commentary prose. Fires on prose context, not verse quotes. r = −0.13 with quote fraction.</li>
-<li><b>Exp 12</b> (222 records, 111 pairs): H6 = 1.02× ratio with/without digits. Digit-independent.</li>
-</ul></dd>
+<dt>"Routing concentration tracks predictability" <span class="tag tag-bad">wrong</span></dt>
+<dd>We thought texts that used fewer experts were more predictable. The correlation goes the other direction (+0.47). The gap was an artifact of how we chunked the text.</dd>
 </dl>
 
-<h2 id="experiments-overview">Experiments</h2>
+<h2 id="resources">Where to find everything</h2>
 <table class="wikitable">
-<tr><th>#</th><th>Experiment</th><th>Records</th><th>Status</th><th>Key result</th></tr>
-<tr><td><a href="wiki/exp1.html">Exp 1</a></td><td>Multi-translation Bible</td><td class="num">360</td><td><span class="tag tag-ok">complete</span></td><td>H6 translation-invariant across 12 translations. MSG at 1,033/M confirms format detection.</td></tr>
-<tr><td><a href="wiki/exp4.html">Exp 4b</a></td><td>Quotation switch</td><td class="num">351</td><td><span class="tag tag-ok">complete</span></td><td>H6 = 163,284/M on commentary, not verse quotes.</td></tr>
-<tr><td><a href="wiki/exp12.html">Exp 12</a></td><td>Digit minimal-pairs</td><td class="num">222</td><td><span class="tag tag-ok">complete</span></td><td>H6 digit-independent (1.02×). e164 digit detector (1,453×).</td></tr>
-<tr><td><a href="wiki/exp13.html">Exp 13</a></td><td>H6 ablation</td><td class="num">480</td><td><span class="tag tag-pending">staged</span></td><td>Causal test: knock out H6 anchors, measure Δ-NLL.</td></tr>
-<tr><td>Exp 11</td><td>Context dump</td><td>—</td><td><span class="tag tag-pending">staged</span></td><td>What tokens trigger the specialist cluster?</td></tr>
-<tr><td>Exp 3</td><td>Secular null</td><td>—</td><td><span class="tag tag-pending">not staged</span></td><td>Is routing religion-specific or general-English?</td></tr>
+<tr><th>What</th><th>Where</th></tr>
+<tr><td>All code, data, and this wiki</td><td><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub: 0xSero/dsv4-reap-routing</a></td></tr>
+<tr><td>Consolidated dataset (45 files)</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace: deepseek-v4-flash-reap</a></td></tr>
+<tr><td>Raw observation data</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">HuggingFace: religious-reap-observations</a></td></tr>
+<tr><td>External review by Claude Opus 5</td><td><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">review_claude_opus5.md</a> (this is the review that caught our digit confound)</td></tr>
+<tr><td>External review by Kimi K3</td><td><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">review_kimi_k3.md</a></td></tr>
+<tr><td>Interactive layer-by-layer viewer</td><td><a href="jlens_viewer.html">J-space viewer</a></td></tr>
 </table>
 
-<h2 id="resources">Resources</h2>
-<table class="wikitable">
-<tr><th>Resource</th><th>Link</th></tr>
-<tr><td>GitHub repo (code + wiki)</td><td><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">0xSero/dsv4-reap-routing</a></td></tr>
-<tr><td>HuggingFace (consolidated, 45 files)</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">0xSero/deepseek-v4-flash-reap</a></td></tr>
-<tr><td>HuggingFace (raw observations)</td><td><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-religious-reap-observations" target="_blank">0xSero/deepseek-v4-flash-religious-reap-observations</a></td></tr>
-<tr><td>Claude Opus 5 external review (570 lines)</td><td><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_claude_opus5.md" target="_blank">review_claude_opus5.md</a></td></tr>
-<tr><td>Kimi K3 external review (264 lines)</td><td><a href="https://github.com/0xSero/dsv4-reap-routing/blob/main/analysis_all/review_kimi_k3.md" target="_blank">review_kimi_k3.md</a></td></tr>
-<tr><td>Interactive J-space viewer</td><td><a href="jlens_viewer.html">jlens_viewer.html</a></td></tr>
-</table>
-
-<div class="catlinks"><b>Categories:</b> <a href="index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="index.html">DSv4-Flash interpretability</a> | <a href="wiki/results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

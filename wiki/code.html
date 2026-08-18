@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Code reference — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,13 +32,13 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#acquisition">1. Corpus acquisition</a></li>
-<li><a href="#preparation">2. Corpus preparation</a></li>
-<li><a href="#observation">3. Observation</a></li>
-<li><a href="#analysis">4. Analysis</a></li>
-<li><a href="#jlens-code">5. J-lens probes</a></li>
-<li><a href="#ops-code">6. Operations and publication</a></li>
-<li><a href="#docker">7. Docker</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#acquisition">1. Getting the text (corpus acquisition)</a></li>
+<li><a href="#preparation">2. Cleaning and splitting the text (corpus preparation)</a></li>
+<li><a href="#observation">3. Watching the model (observation)</a></li>
+<li><a href="#analysis">4. Making sense of the results (analysis)</a></li>
+<li><a href="#jlens-code">5. Looking inside the model (J-lens probes)</a></li>
+<li><a href="#ops-code">6. Keeping things synced and published (operations)</a></li>
+<li><a href="#docker">7. The Docker container</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -51,88 +53,95 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#acquisition">1. Corpus acquisition</a></li>
-<li><a href="#preparation">2. Corpus preparation</a></li>
-<li><a href="#observation">3. Observation</a></li>
-<li><a href="#analysis">4. Analysis</a></li>
-<li><a href="#jlens-code">5. J-lens probes</a></li>
-<li><a href="#ops-code">6. Operations and publication</a></li>
-<li><a href="#docker">7. Docker</a></li>
+<li><a href="#acquisition">1. Getting the text (corpus acquisition)</a></li>
+<li><a href="#preparation">2. Cleaning and splitting the text (corpus preparation)</a></li>
+<li><a href="#observation">3. Watching the model (observation)</a></li>
+<li><a href="#analysis">4. Making sense of the results (analysis)</a></li>
+<li><a href="#jlens-code">5. Looking inside the model (J-lens probes)</a></li>
+<li><a href="#ops-code">6. Keeping things synced and published (operations)</a></li>
+<li><a href="#docker">7. The Docker container</a></li>
 </ul></div>
 
 <h1>Code reference</h1>
-<div class="hatnote">Every script in the study. Sanitized copies on <a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub</a> and <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>.</div>
+<div class="hatnote">Every script in the study, explained in plain English. Sanitized copies are on <a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub</a> and <a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace</a>.</div>
 
-<h2 id="acquisition">1. Corpus acquisition</h2>
+<h2 id="acquisition">1. Getting the text (corpus acquisition)</h2>
+<p>These scripts download the religious and secular texts we fed to the model. They are scrapers: they visit Project Gutenberg and Wikipedia, download books and articles, and save them as raw text files.</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
-<tr><td><code>scrape_christian.py</code></td><td>Gutenberg Christian-literature scrape</td><td><code>corpus/christian/raw/*.txt</code></td></tr>
-<tr><td><code>scrape_theology_books.py</code></td><td>Gutenberg theology books, 40+ topics</td><td><code>corpus/theology/raw/book_*.txt</code> (3,827 books)</td></tr>
-<tr><td><code>scrape_wikipedia.py</code></td><td>Wikipedia theology articles via MediaWiki API</td><td><code>corpus/theology/raw/wiki_*.txt</code> (7,508 articles)</td></tr>
-<tr><td><code>build_exp1_translations.py</code></td><td>5 public-domain Bible translations from bible-api.com</td><td><code>corpus/samples/exp1_translations.jsonl</code> (150 records)</td></tr>
-<tr><td><code>build_exp1_copyrighted.py</code></td><td>7 copyrighted Bible translations from Bible Gateway</td><td><code>corpus/samples/exp1_all_translations.jsonl</code> (360 records)</td></tr>
+<tr><th>Script</th><th>What it does</th><th>Output</th></tr>
+<tr><td><code>scrape_christian.py</code></td><td>Downloads Christian literature books from Project Gutenberg</td><td><code>corpus/christian/raw/*.txt</code></td></tr>
+<tr><td><code>scrape_theology_books.py</code></td><td>Downloads theology books from Gutenberg across 40-plus topics</td><td><code>corpus/theology/raw/book_*.txt</code> (3,827 books)</td></tr>
+<tr><td><code>scrape_wikipedia.py</code></td><td>Downloads Wikipedia articles about theology using Wikipedia's API</td><td><code>corpus/theology/raw/wiki_*.txt</code> (7,508 articles)</td></tr>
+<tr><td><code>build_exp1_translations.py</code></td><td>Fetches 5 public-domain English Bible translations from bible-api.com for Experiment 1</td><td><code>corpus/samples/exp1_translations.jsonl</code> (150 records)</td></tr>
+<tr><td><code>build_exp1_copyrighted.py</code></td><td>Fetches 7 copyrighted Bible translations from Bible Gateway, also for Experiment 1</td><td><code>corpus/samples/exp1_all_translations.jsonl</code> (360 records)</td></tr>
 </table>
 
-<h2 id="preparation">2. Corpus preparation</h2>
+<h2 id="preparation">2. Cleaning and splitting the text (corpus preparation)</h2>
+<p>Raw downloaded text is not ready for the model. These scripts clean it up: they split long books into chunks short enough for the model to read in one pass (at most 16,384 tokens), strip verse numbers from the Bible, and convert the text into the token format the model expects. They also build the special paired corpora we needed for individual experiments.</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
-<tr><td><code>prepare_corpus.py</code></td><td>Tokenize + window core 8 texts; strips KJV verse numbers</td><td><code>corpus/samples/{{bible,quran,...}}.jsonl</code></td></tr>
-<tr><td><code>prepare_christian_corpus.py</code></td><td>Same for Gutenberg Christian corpus</td><td><code>corpus/samples/christian.jsonl</code></td></tr>
-<tr><td><code>prepare_theology_corpus.py</code></td><td>Tokenize + window theology corpus</td><td><code>corpus/samples/theology.jsonl</code></td></tr>
-<tr><td><code>select_theology.py</code></td><td>Stratified selection with topic quotas</td><td><code>corpus/samples/theology_sel.jsonl</code> (1,090)</td></tr>
-<tr><td><code>build_exp12_digit_minimal_pairs.py</code></td><td>111 digit minimal-pair corpus, 5 categories</td><td><code>corpus/samples/exp12_digit_minimal_pairs.jsonl</code> (222)</td></tr>
-<tr><td><code>build_exp4b_v2.py</code></td><td>351 quotation-switch windows with annotated quote spans</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code></td></tr>
-<tr><td><code>build_exp13_ablation_corpus.py</code></td><td>4-cell ablation corpus (verse/prose × religious/secular)</td><td><code>corpus/samples/exp13_ablation_corpus.jsonl</code> (480)</td></tr>
+<tr><th>Script</th><th>What it does</th><th>Output</th></tr>
+<tr><td><code>prepare_corpus.py</code></td><td>Splits the 8 core religious texts into model-sized chunks and strips verse numbers from the King James Bible. This is the step that accidentally created the digit confound.</td><td><code>corpus/samples/{{bible,quran,...}}.jsonl</code></td></tr>
+<tr><td><code>prepare_christian_corpus.py</code></td><td>Does the same chunking and tokenizing for the Gutenberg Christian literature corpus</td><td><code>corpus/samples/christian.jsonl</code></td></tr>
+<tr><td><code>prepare_theology_corpus.py</code></td><td>Does the same for the theology corpus</td><td><code>corpus/samples/theology.jsonl</code></td></tr>
+<tr><td><code>select_theology.py</code></td><td>Picks a balanced subset of the theology corpus, setting quotas per topic so no single topic dominates</td><td><code>corpus/samples/theology_sel.jsonl</code> (1,090)</td></tr>
+<tr><td><code>build_exp12_digit_minimal_pairs.py</code></td><td>Builds 111 pairs of text for Experiment 12: the same passage twice, once with digits and once with digits removed, across 5 categories (dates, lists, statistics, scripture citations, misc numeric)</td><td><code>corpus/samples/exp12_digit_minimal_pairs.jsonl</code> (222)</td></tr>
+<tr><td><code>build_exp4b_v2.py</code></td><td>Builds 351 chunks of Christian commentary that contain embedded Bible quotes, and marks exactly where each quote begins and ends so we can compare routing on the quote versus the surrounding prose</td><td><code>corpus/samples/exp4b_quotation_switch.jsonl</code></td></tr>
+<tr><td><code>build_exp13_ablation_corpus.py</code></td><td>Builds the corpus for Experiment 13: 4 groups of text (verse-religious, prose-religious, verse-secular, prose-secular), 120 passages each</td><td><code>corpus/samples/exp13_ablation_corpus.jsonl</code> (480)</td></tr>
 </table>
 
-<h2 id="observation">3. Observation</h2>
+<h2 id="observation">3. Watching the model (observation)</h2>
+<p>These are the scripts that actually run the model and record which experts it picks. The model is too large for one GPU, so it runs split across two machines working together (we call this "TP2," for tensor parallelism across 2 devices). The main script never modifies the model. It only reads.</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th><th>Notes</th></tr>
-<tr><td><code>observe_religious.py</code></td><td><b>The harness.</b> Read-only TP2 inference, Gate hooks, per-record aggregates, fail-closed assertions</td><td>Verified line-for-line vs <code>model.py</code> Gate.forward</td></tr>
-<tr><td><code>run_full_observation.sh</code></td><td>Launch both ranks, model load + NCCL rendezvous</td><td>Credentials via env only</td></tr>
-<tr><td><code>chain_next_runs.sh</code></td><td>Chain supervisor: sequences runs, detects stalls, relaunches</td><td>Log: <code>/tmp/chain_runs.log</code></td></tr>
-<tr><td><code>exp13_ablation_hook.py</code></td><td>Exp 13 ablation hook — zero out H6 anchors, measure Δ-NLL</td><td>Deployed to both nodes, not yet run</td></tr>
+<tr><th>Script</th><th>What it does</th><th>Notes</th></tr>
+<tr><td><code>observe_religious.py</code></td><td><b>The heart of the study.</b> This is the script that loads the model, feeds it text, and records which experts the gate selects for every token at every layer. It never lets the model generate output. It also runs the integrity checks on every record before accepting it.</td><td>We verified this script line by line against the model's own gate code to make sure we record what the model really does.</td></tr>
+<tr><td><code>run_full_observation.sh</code></td><td>The launch script that starts the model on both GPU machines and waits for them to connect to each other before observation begins</td><td>Machine passwords are passed through environment variables only, never written into the script</td></tr>
+<tr><td><code>chain_next_runs.sh</code></td><td>A supervisor script that runs experiments one after another, detects when a run has stalled, and relaunches it</td><td>Keeps a log at <code>/tmp/chain_runs.log</code></td></tr>
+<tr><td><code>exp13_ablation_hook.py</code></td><td>A hook for Experiment 13 that temporarily zeroes out the H6 experts to see how much that hurts the model's performance. This is the one experiment that intervenes rather than just observing.</td><td>Deployed to both machines, not yet run</td></tr>
 </table>
 
-<h2 id="analysis">4. Analysis</h2>
+<h2 id="analysis">4. Making sense of the results (analysis)</h2>
+<p>Once observation is done, these scripts crunch the recorded data: they count how often each expert was selected, compute REAP scores, compare which experts different texts share, and generate the charts and reports you see in this wiki.</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th><th>Output</th></tr>
-<tr><td><code>analyze_experts.py</code></td><td>Aggregate frequencies/REAP, cross-text Jaccard, effective-expert counts</td><td><code>core_agg.json</code>, <code>christian_agg.json</code>, <code>analysis/*.csv</code></td></tr>
-<tr><td><code>analyze_exp1_all.py</code></td><td>Expanded Exp 1: H6 across 12 translations, PD vs CR, invariance stats</td><td>Console output + <code>EXP1_RESULTS.md</code></td></tr>
-<tr><td><code>analyze_exp4.py</code></td><td>Exp 4 pilot: H6 rates by group, per-anchor breakdowns</td><td>Exp 4 pilot analysis</td></tr>
-<tr><td><code>analyze_exp4b.py</code></td><td>Exp 4b: H6 composite rates, quote_fraction correlation</td><td><code>EXP4B_RESULTS.md</code></td></tr>
-<tr><td><code>analyze_exp12.py</code></td><td>Exp 12: H6 and e164 by condition, per-category, per-pair</td><td><code>EXP12_RESULTS.md</code></td></tr>
-<tr><td><code>chart_exp1_all.py</code></td><td>3 charts for expanded Exp 1</td><td><code>chart_exp1_all_*.png</code></td></tr>
-<tr><td><code>chart_exp12.py</code></td><td>3 charts for Exp 12</td><td><code>chart_exp12_*.png</code></td></tr>
-<tr><td><code>generate_report.py</code></td><td>Verification report: invariant checks</td><td><code>report.html</code></td></tr>
-<tr><td><code>build_wiki_site.py</code></td><td>Generates this wiki</td><td><code>site/*.html</code></td></tr>
+<tr><th>Script</th><th>What it does</th><th>Output</th></tr>
+<tr><td><code>analyze_experts.py</code></td><td>The main analysis script. It aggregates how often each expert was selected and its REAP score, computes how much overlap there is between the expert sets used by different texts (using a similarity measure called Jaccard), and counts how many distinct experts each text effectively uses.</td><td><code>core_agg.json</code>, <code>christian_agg.json</code>, <code>analysis/*.csv</code></td></tr>
+<tr><td><code>analyze_exp1_all.py</code></td><td>Analyzes Experiment 1: how H6 behaves across all 12 Bible translations, comparing public-domain and copyrighted translations, and checking whether routing is the same across translations</td><td>Console output + <code>EXP1_RESULTS.md</code></td></tr>
+<tr><td><code>analyze_exp4.py</code></td><td>Analyzes the Experiment 4 pilot: H6 firing rates broken down by group and by individual anchor expert</td><td>Exp 4 pilot analysis</td></tr>
+<tr><td><code>analyze_exp4b.py</code></td><td>Analyzes Experiment 4b: H6 rates on the commentary corpus, and whether the fraction of quoted text in each sample correlates with H6 activity</td><td><code>EXP4B_RESULTS.md</code></td></tr>
+<tr><td><code>analyze_exp12.py</code></td><td>Analyzes Experiment 12: how H6 and expert 164 behave with and without digits, broken down by category and by individual text pair</td><td><code>EXP12_RESULTS.md</code></td></tr>
+<tr><td><code>chart_exp1_all.py</code></td><td>Generates 3 charts visualizing the expanded Experiment 1 results</td><td><code>chart_exp1_all_*.png</code></td></tr>
+<tr><td><code>chart_exp12.py</code></td><td>Generates 3 charts visualizing the Experiment 12 results</td><td><code>chart_exp12_*.png</code></td></tr>
+<tr><td><code>generate_report.py</code></td><td>Produces an HTML report that re-checks all the integrity invariants on the finished data</td><td><code>report.html</code></td></tr>
+<tr><td><code>build_wiki_site.py</code></td><td>Generates this wiki from the data and stats above</td><td><code>site/*.html</code></td></tr>
 </table>
 
-<h2 id="jlens-code">5. J-lens probes</h2>
+<h2 id="jlens-code">5. Looking inside the model (J-lens probes)</h2>
+<p>These scripts run the two lens techniques described on the <a href="jspace.html">J-space lens page</a>: the logit lens (what word would the model guess at each layer) and the bounded Jacobian (how much does nudging the input change the output).</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th></tr>
-<tr><td><code>run_jlens.py</code> / <code>jlens_dsv4.py</code></td><td>Logit lens + bounded Jacobian on religious corpus</td></tr>
-<tr><td><code>run_jlens_tp2.sh</code></td><td>TP2 deployment wrapper</td></tr>
-<tr><td><code>jlens_viewer.py</code></td><td>Interactive HTML viewer of lens records</td></tr>
+<tr><th>Script</th><th>What it does</th></tr>
+<tr><td><code>run_jlens.py</code> / <code>jlens_dsv4.py</code></td><td>Runs both the logit lens and the bounded Jacobian on the religious corpus and saves the per-layer, per-position results</td></tr>
+<tr><td><code>run_jlens_tp2.sh</code></td><td>The launch wrapper that deploys the lens scripts across both GPU machines</td></tr>
+<tr><td><code>jlens_viewer.py</code></td><td>Builds the interactive HTML viewer that lets you browse the lens results by tradition, sample, and position</td></tr>
 </table>
 
-<h2 id="ops-code">6. Operations and publication</h2>
+<h2 id="ops-code">6. Keeping things synced and published (operations)</h2>
+<p>These scripts handle the plumbing: copying code and data to GitHub and HuggingFace, uploading records as they are produced, and chaining experiments together so they run unattended.</p>
 <table class="wikitable">
-<tr><th>Script</th><th>Purpose</th></tr>
-<tr><td><code>sync_to_github.sh</code></td><td>Self-throttling 4h sync to GitHub</td></tr>
-<tr><td><code>upload_hf_project.py</code></td><td>Consolidated upload to HuggingFace (45 files)</td></tr>
-<tr><td><code>stream_to_hf.py</code></td><td>Streaming record upload during observation</td></tr>
-<tr><td><code>chain_exp1_exp12.sh</code></td><td>Chain runner: Exp 1 → Exp 12</td></tr>
+<tr><th>Script</th><th>What it does</th></tr>
+<tr><td><code>sync_to_github.sh</code></td><td>Pushes code and data to GitHub, but throttles itself to run at most once every 4 hours so it does not spam the repo</td></tr>
+<tr><td><code>upload_hf_project.py</code></td><td>Uploads the consolidated dataset (45 files) to HuggingFace in one go</td></tr>
+<tr><td><code>stream_to_hf.py</code></td><td>Uploads observation records to HuggingFace as they are produced, so the dataset stays current during long runs</td></tr>
+<tr><td><code>chain_exp1_exp12.sh</code></td><td>Runs Experiment 1 and then Experiment 12 back to back without needing a person to start the second one</td></tr>
 </table>
 
-<h2 id="docker">7. Docker</h2>
+<h2 id="docker">7. The Docker container</h2>
+<p>The model runs inside a Docker container so that its environment is identical every time. Here is the base image and the key settings:</p>
 <pre>FROM ghcr.io/anemll/dspark-vllm-gx10:0.1.1
 ENV TOKENIZER_ID=deepseek-ai/DeepSeek-V4-Flash-0731
 ENV TOKENIZER_REV=9e165c30e2704aec5d9d593cce3eebd58bbef1cb
 ENV CKPT_DIR=/ckpt</pre>
-<p>Container image: <code>local/dspark-vllm-gx10:proven-0731</code>. NCCL forced to socket transport (IB disabled in container).</p>
+<p>The container image is tagged <code>local/dspark-vllm-gx10:proven-0731</code>. The two GPUs communicate over a plain network socket rather than InfiniBand, because InfiniBand is disabled inside the container.</p>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

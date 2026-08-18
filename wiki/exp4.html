@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Exp 4: Quotation switch — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,13 +32,13 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#design">1. Design</a></li>
-<li><a href="#split">2. Natural split</a></li>
-<li><a href="#results">3. Pilot results (Exp 4a)</a></li>
-<li><a href="#charts">4. Pilot visualizations</a></li>
-<li><a href="#findings">5. Pilot findings</a></li>
-<li><a href="#limitations">6. Limitations (Exp 4 pilot)</a></li>
-<li><a href="#exp4b">7. Exp 4b: Scaled results (351 records)</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#design">The setup</a></li>
+<li><a href="#split">Two kinds of text in the sample</a></li>
+<li><a href="#results">Pilot results (Exp 4a)</a></li>
+<li><a href="#charts">Pilot charts</a></li>
+<li><a href="#findings">Pilot findings</a></li>
+<li><a href="#limitations">Where the pilot was weak</a></li>
+<li><a href="#exp4b">Exp 4b: the scaled version (351 records)</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -51,37 +53,40 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#design">1. Design</a></li>
-<li><a href="#split">2. Natural split</a></li>
-<li><a href="#results">3. Pilot results (Exp 4a)</a></li>
-<li><a href="#charts">4. Pilot visualizations</a></li>
-<li><a href="#findings">5. Pilot findings</a></li>
-<li><a href="#limitations">6. Limitations (Exp 4 pilot)</a></li>
-<li><a href="#exp4b">7. Exp 4b: Scaled results (351 records)</a></li>
+<li><a href="#design">The setup</a></li>
+<li><a href="#split">Two kinds of text in the sample</a></li>
+<li><a href="#results">Pilot results (Exp 4a)</a></li>
+<li><a href="#charts">Pilot charts</a></li>
+<li><a href="#findings">Pilot findings</a></li>
+<li><a href="#limitations">Where the pilot was weak</a></li>
+<li><a href="#exp4b">Exp 4b: the scaled version (351 records)</a></li>
 </ul></div>
 
-<h1>Experiment 4: Quotation Switch (Pilot + Exp 4b)</h1>
-<div class="hatnote">Within-document test: do H6 experts fire on quoted verse or surrounding commentary? <b>Result: H6 fires on prose context, not verse quotes.</b></div>
+<h1>Experiment 4: the quotation switch test</h1>
+<div class="hatnote">Christian commentary books are prose with Bible verses quoted inside them. We wanted to know whether H6 fires on the verse quotes or on the surrounding prose. <b>Answer: it fires on the prose. The embedded verse quotes do not turn H6 off.</b></div>
 
-<h2 id="design">1. Design</h2>
-<p>30 windows (~16k tokens each) from Christian books containing KJV Bible quotations embedded in commentary prose. Each window contains <b>both</b> quoted verse and surrounding commentary. Question: does H6 fire on the verse portions, the commentary portions, or both?</p>
+<h2 id="design">The setup</h2>
+<p>A lot of Christian writing is a mix: a paragraph of commentary, then a quoted Bible verse, then more commentary. This gave us a natural experiment. If H6 fires on these documents, is it reacting to the verse quotes embedded inside, or to the prose commentary around them?</p>
+<p>We took 30 windows of about 16,000 tokens each from Christian books that quote the King James Bible. Every window contains both quoted verse and surrounding commentary. The question is which part H6 is reacting to.</p>
 
-<h2 id="split">2. Natural split</h2>
+<h2 id="split">Two kinds of text in the sample</h2>
 <table class="wikitable">
 <tr><th>Group</th><th>n</th><th>Description</th><th>Digit density</th></tr>
 <tr><td>KJV files (verse format)</td><td class="num">5</td><td>Bible text with chapter:verse numbering</td><td>2.3–6.1%</td></tr>
 <tr><td>Commentary books (prose)</td><td class="num">24</td><td>Sermons, theology with embedded Bible quotes</td><td>0.0–1.0%</td></tr>
 </table>
 
-<h2 id="results">3. Pilot results (Exp 4a)</h2>
+<h2 id="results">Pilot results (Exp 4a)</h2>
+<p>Our first pass compared the two kinds of text at the window level. "H6 composite (M)" is the combined firing rate of all six H6 experts, per million tokens. The "vs. Bible verse" column shows how many times higher that rate is than the rate on pure Bible verse.</p>
 <table class="wikitable">
 <tr><th>Group</th><th>n</th><th>Tokens</th><th>H6 composite (M)</th><th>vs. Bible verse</th></tr>
-<tr><td>Pure Bible verse (core data)</td><td class="num">1,189</td><td class="num">1,045,776</td><td class="num">4.1</td><td>—</td></tr>
+<tr><td>Pure Bible verse (core data)</td><td class="num">1,189</td><td class="num">1,045,776</td><td class="num">4.1</td><td>baseline</td></tr>
 <tr><td>KJV files (verse+apparatus)</td><td class="num">5</td><td class="num">81,920</td><td class="num">8,664</td><td>2,109×</td></tr>
 <tr><td>Commentary books (prose+quotes)</td><td class="num">24</td><td class="num">367,406</td><td class="num">44,822</td><td>10,911×</td></tr>
 </table>
+<p>The pattern is stark. Pure Bible verse fires H6 at about 4/M. The KJV files, which are verse text plus the chapter and verse apparatus around it, fire at 8,664/M. The commentary books fire at 44,822/M, roughly 11,000 times higher than pure verse. H6 is reacting to the prose, not the verse.</p>
 
-<h2 id="charts">4. Pilot visualizations</h2>
+<h2 id="charts">Pilot charts</h2>
 <table class="wikitable">
 <tr><th>Chart</th><th>What it shows</th></tr>
 <tr><td><a href="../img/chart_exp4_h6_comparison.png">H6 comparison</a></td><td>H6 composite rates across 4 groups (log scale)</td></tr>
@@ -89,21 +94,21 @@
 <tr><td><a href="../img/chart_exp4_digit_scatter.png">Digit density scatter</a></td><td>Digit density vs H6, colored by text type</td></tr>
 </table>
 
-<h2 id="findings">5. Pilot findings</h2>
+<h2 id="findings">Pilot findings</h2>
 <ol>
-<li><b>H6 fires on prose context, not verse content.</b> Commentary with quotes fires at 44,822/M — same as pure commentary. The verse quotes don't suppress H6.</li>
-<li><b>All 6 anchors fire more on commentary than KJV files.</b> No anchor shows the opposite pattern.</li>
+<li><b>H6 fires on the prose context, not the verse content.</b> Commentary with quotes fires at 44,822/M, the same as pure commentary. The verse quotes inside do not suppress H6.</li>
+<li><b>All 6 anchors fire more on commentary than on KJV files.</b> No single expert breaks the pattern.</li>
 </ol>
 
-<h2 id="limitations">6. Limitations (Exp 4 pilot)</h2>
+<h2 id="limitations">Where the pilot was weak</h2>
 <ul>
-<li>Digit density confound (KJV files 2.3–6.1% digits vs commentary 0–1%)</li>
-<li>Small n (30 windows, 5 KJV files)</li>
-<li>No within-document quote-span annotation (pilot used window-level comparison)</li>
+<li>Digit density was a confound. The KJV files had 2.3 to 6.1% digits (from chapter:verse numbering) while the commentary had 0 to 1%.</li>
+<li>The sample was small: 30 windows, only 5 KJV files.</li>
+<li>We did not annotate exactly which spans inside each window were verse quotes. The pilot compared whole windows, not quote spans.</li>
 </ul>
 
-<h2 id="exp4b">7. Exp 4b: Scaled results (351 records)</h2>
-<p>Exp 4b addresses the pilot's limitations: 351 records, 5,156,659 tokens, 41,426 quote tokens across 18 sources, with annotated quote spans.</p>
+<h2 id="exp4b">Exp 4b: the scaled version (351 records)</h2>
+<p>Exp 4b fixes all three of those limitations. It uses 351 records and 5,156,659 tokens, with 41,426 tokens of explicitly annotated verse quotes drawn from 18 sources. Now we know, token by token, which parts are verse and which are prose.</p>
 <table class="wikitable">
 <tr><th>Metric</th><th>Value</th></tr>
 <tr><td>Records</td><td class="num">351</td></tr>
@@ -112,11 +117,11 @@
 <tr><td>Quote fraction vs H6 correlation</td><td class="num">r = −0.13</td></tr>
 <tr><td>Invariant violations</td><td class="num">0</td></tr>
 </table>
-<p>The −0.13 correlation means <b>more verse quotes → slightly less H6 firing</b>, but the effect is weak. H6 fires on the prose context regardless of how much verse is quoted within it. This confirms the pilot finding at scale: H6 is a prose detector, not a verse detector or a "non-scripture" detector.</p>
+<p>The −0.13 correlation between quote fraction and H6 means: the more verse a document quotes, the slightly less H6 fires, but the effect is weak. H6 fires on the prose context regardless of how much verse is quoted inside it. This confirms the pilot finding at scale. H6 is a prose detector, not a verse detector and not a "non-scripture" detector.</p>
 <figure><img src="../img/chart_exp4b_scatter.png" alt="Exp 4b scatter">
 <figcaption>H6 rate vs quote fraction per record. The weak negative trend (r = −0.13) confirms H6 fires on prose context, not verse content.</figcaption></figure>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>

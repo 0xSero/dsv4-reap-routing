@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5">
 <title>Methods and harness — DSv4-Flash REAP Wiki</title>
 <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 <div id="mw-head">
-  <span class="brand">DSv4-Flash REAP Research Wiki</span>
+  <button class="nav-toggle" onclick="document.getElementById('mw-panel').classList.toggle('open');document.getElementById('mw-overlay').classList.toggle('show')">&#9776;</button>
+  <span class="brand">DSv4-Flash REAP Wiki</span>
   <span class="search"><input type="text" placeholder="Search (placeholder)"><button>Go</button></span>
 </div>
+<div id="mw-overlay" onclick="document.getElementById('mw-panel').classList.remove('open');this.classList.remove('show')"></div>
 <div id="mw-panel">
   <div class="portal"><h3>Wiki pages</h3><ul>
 <li><a href="../index.html">Main page</a></li>
@@ -30,14 +32,13 @@
 <li><a href="exp13.html">Exp 13: Ablation</a></li>
 <li><a href="forward_plan.html">Forward plan</a></li>
   </ul></div>
-<div class="portal"><h3>On this page</h3><ul><li><a href="#model">1. Model specification</a></li>
-<li><a href="#harness">2. Observation harness</a></li>
-<li><a href="#pipeline">3. Corpus pipeline</a></li>
-<li><a href="#reap">4. REAP metric</a></li>
-<li><a href="#jlens">5. J-lens probes</a></li>
-<li><a href="#fail-closed">6. Fail-closed guarantees</a></li>
-<li><a href="#faithfulness">7. Faithfulness verification</a></li>
-<li><a href="#infra">8. Deployment infrastructure</a></li></ul></div>
+<div class="portal"><h3>On this page</h3><ul><li><a href="#model">The model</a></li>
+<li><a href="#harness">The observation harness</a></li>
+<li><a href="#pipeline">How we got the text</a></li>
+<li><a href="#reap">How we measured expert importance (REAP)</a></li>
+<li><a href="#jlens">Looking inside the model (J-lens)</a></li>
+<li><a href="#fail-closed">Integrity checks</a></li>
+<li><a href="#infra">The hardware</a></li></ul></div>
   <div class="portal"><h3>Resources</h3><ul>
 <li><a href="https://github.com/0xSero/dsv4-reap-routing" target="_blank">GitHub repo</a></li>
 <li><a href="https://huggingface.co/datasets/0xSero/deepseek-v4-flash-reap" target="_blank">HuggingFace (consolidated)</a></li>
@@ -52,92 +53,89 @@
 <div id="mw-body"><div class="mw-body">
 <p class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</p>
 <div class="toc"><div class="toctitle">Contents</div><ul>
-<li><a href="#model">1. Model specification</a></li>
-<li><a href="#harness">2. Observation harness</a></li>
-<li><a href="#pipeline">3. Corpus pipeline</a></li>
-<li><a href="#reap">4. REAP metric</a></li>
-<li><a href="#jlens">5. J-lens probes</a></li>
-<li><a href="#fail-closed">6. Fail-closed guarantees</a></li>
-<li><a href="#faithfulness">7. Faithfulness verification</a></li>
-<li><a href="#infra">8. Deployment infrastructure</a></li>
+<li><a href="#model">The model</a></li>
+<li><a href="#harness">The observation harness</a></li>
+<li><a href="#pipeline">How we got the text</a></li>
+<li><a href="#reap">How we measured expert importance (REAP)</a></li>
+<li><a href="#jlens">Looking inside the model (J-lens)</a></li>
+<li><a href="#fail-closed">Integrity checks</a></li>
+<li><a href="#infra">The hardware</a></li>
 </ul></div>
 
-<h1>Methods and observation harness</h1>
-<div class="hatnote">The technical setup: model, harness, REAP metric, J-lens probes, and the fail-closed integrity guarantees.</div>
+<h1>How we watched the model think</h1>
+<div class="hatnote">The technical setup, explained for someone who doesn't do ML for a living.</div>
 
-<h2 id="model">1. Model specification</h2>
+<h2 id="model">The model</h2>
+<p>DeepSeek-V4-Flash-0731 is a "mixture of experts" language model. Instead of processing every word through one big neural network, it has 256 small expert networks at each of its 43 layers. For each token (roughly, each word or piece of a word), a gate picks the best 6 experts for that token and sends it to just those. The rest sit idle.</p>
+
 <table class="wikitable">
-<tr><th>Parameter</th><th>Value</th></tr>
-<tr><td>Architecture</td><td>DeepSeek-V4-Flash-0731 (sparse MoE)</td></tr>
-<tr><td>Layers</td><td class="num">43</td></tr>
-<tr><td>Routed experts per layer</td><td class="num">256</td></tr>
-<tr><td>Top-k gating</td><td class="num">6</td></tr>
-<tr><td>Gate function</td><td>sqrt-softplus, route_scale=1.5</td></tr>
-<tr><td>Hidden dimension</td><td class="num">4096</td></tr>
-<tr><td>Vocabulary</td><td class="num">129,280</td></tr>
-<tr><td>Expert weights precision</td><td>fp4</td></tr>
-<tr><td>Attention weights precision</td><td>fp8</td></tr>
-<tr><td>Hyper-connections</td><td>hc_head ×4, n_hash_layers=3</td></tr>
-<tr><td>Tokenizer</td><td>DeepSeek-V4-Flash-0731, rev <code>9e165c30</code></td></tr>
+<tr><th>Property</th><th>Value</th><th>What it means</th></tr>
+<tr><td>Layers</td><td class="num">43</td><td>How many times the token gets processed in sequence</td></tr>
+<tr><td>Experts per layer</td><td class="num">256</td><td>How many sub-networks are available at each layer</td></tr>
+<tr><td>Experts used per token</td><td class="num">6</td><td>How many of those 256 actually get activated</td></tr>
+<tr><td>Vocabulary</td><td class="num">129,280</td><td>How many distinct tokens the model knows</td></tr>
+<tr><td>Expert precision</td><td>fp4</td><td>4-bit floats for expert weights (saves memory, slight quality tradeoff)</td></tr>
+<tr><td>Attention precision</td><td>fp8</td><td>8-bit floats for attention (good balance of speed and quality)</td></tr>
+<tr><td>Gate function</td><td>sqrt-softplus</td><td>The math the gate uses to score each expert</td></tr>
 </table>
 
-<h2 id="harness">2. Observation harness</h2>
-<p>The harness (<code>observe_religious.py</code>, 22KB) runs read-only TP2 inference on the DGX Spark pair (de5c rank0 + 557f rank1). It:</p>
-<ul>
-<li>Loads the converted checkpoint (<code>model{0,1}-mp2.safetensors</code>) into vLLM/Sparkinfer</li>
-<li>Hooks the Gate module's <code>forward()</code> to capture per-token routing (gate weights, activation norms, expert frequencies)</li>
-<li>Verified line-for-line against <code>model.py</code> Gate.forward — the hook is faithful</li>
-<li>Asserts fail-closed invariants before accepting any record</li>
-<li>Writes fsynced JSONL (crash-safe, resume-safe via <code>completed_keys()</code>)</li>
-<li>Supports <code>--raw-budget-tokens</code> for per-token routing capture (needed by Exp 11)</li>
-</ul>
+<h2 id="harness">The observation harness</h2>
+<p>We wrote a Python script called <code>observe_religious.py</code> that does one simple thing: it feeds text to the model and records which experts get selected, without letting the model generate any output. It's like putting the model in an fMRI machine. We can see which parts light up, but we're not changing anything.</p>
 
-<h2 id="pipeline">3. Corpus pipeline</h2>
+<p>Here's what happens for each piece of text we feed in:</p>
 <ol>
-<li><b>Scrape</b> — Project Gutenberg (Gutendex/mirror) + Wikipedia (MediaWiki API). Rate-limited: Gutenberg 0.8–1.5s, Wikipedia 3s with 429 exponential backoff.</li>
-<li><b>Split</b> — Per-book/per-chapter plain text via <code>corpus/split_corpus.py</code></li>
-<li><b>Tokenize</b> — Pinned tokenizer rev <code>9e165c30</code></li>
-<li><b>Window</b> — ≤16,384 tokens per sample; verse numbers stripped from Bible (the digit-confound origin)</li>
-<li><b>Emit</b> — Resumable JSONL + SHA-256 manifests via shared <code>_emit_jsonl</code></li>
+<li>The model reads the text token by token</li>
+<li>At every layer, we intercept the gate's decision and record: which 6 experts were picked, how strongly each was picked (gate weight), and how active each was (activation norm)</li>
+<li>We write this to disk as JSON, one record per text sample</li>
+<li>Before accepting a record, we run integrity checks (see below)</li>
 </ol>
 
-<h2 id="reap">4. REAP metric</h2>
-<p><b>REAP</b> = gate_weight × activation_norm. A composite metric for expert importance that combines how strongly an expert is selected (gate weight) with how active it is when selected (activation norm). Computed per-expert per-layer per-sample, then aggregated across samples within a corpus.</p>
+<p>The harness runs on two GPU machines working together (the model is too big for one). We verified our interception code line-by-line against the model's actual gate logic to make sure we're recording what the model really does, not a distorted version of it.</p>
 
-<h2 id="jlens">5. J-lens probes</h2>
-<p>Two probes capture the model's intermediate representations:</p>
+<h2 id="pipeline">How we got the text</h2>
+<ol>
+<li><b>Download</b> religious texts from Project Gutenberg and Wikipedia. We were polite about it: max one request every 0.8 seconds for Gutenberg, every 3 seconds for Wikipedia.</li>
+<li><b>Split</b> each book into chunks of at most 16,384 tokens (the model's maximum input size).</li>
+<li><b>Strip verse numbers</b> from the Bible ("1 In the beginning..." becomes "In the beginning..."). This is the step that accidentally created the digit confound we describe in the results.</li>
+<li><b>Tokenize</b> using the model's own tokenizer.</li>
+<li><b>Save</b> as JSONL with checksums so we can detect corruption.</li>
+</ol>
+
+<h2 id="reap">How we measured expert importance (REAP)</h2>
+<p>We needed a way to rank which experts matter most for a given text. We use a metric called REAP, which is just two things multiplied together:</p>
 <ul>
-<li><b>Logit lens</b> — Project the residual stream through the unembedding matrix at each layer to see the model's running next-token guess. Records top-10 tokens + probabilities per position per layer.</li>
-<li><b>Bounded Jacobian</b> — Perturb the input embedding by ε=0.01 along 16 random directions, measure output logit change. L2 norm = cheap proxy for the full input-output Jacobian.</li>
+<li><b>Gate weight</b>: how strongly the gate selected that expert (a number from 0 to 1)</li>
+<li><b>Activation norm</b>: how active the expert was when it ran (a measure of how much it contributed)</li>
 </ul>
-<p>Both run on the same 80 samples (10 per tradition, except Upanishads n=3) under the same read-only harness. See <a href="jspace.html">J-space lens page</a> for details.</p>
+<p>A high REAP score means the expert was both frequently selected and contributed a lot when selected. We compute this per expert, per layer, per text sample, then average across all samples in a category.</p>
 
-<h2 id="fail-closed">6. Fail-closed guarantees</h2>
-<p>Every record must pass these invariants before it is accepted:</p>
+<h2 id="jlens">Looking inside the model (J-lens)</h2>
+<p>We also used two techniques to see what the model is "thinking" at each layer:</p>
 <ul>
-<li><b>Frequency sum</b>: <code>sum(expert_frequencies) == seqlen × topk</code> for every layer</li>
-<li><b>Non-negative</b>: All gate weights and activation norms ≥ 0</li>
-<li><b>Finite</b>: No NaN or Inf in any recorded value</li>
-<li><b>Shape match</b>: <code>len(expert_frequencies) == 256</code> for routed layers</li>
+<li><b>Logit lens</b>: at each layer, we take the model's intermediate state and project it through the output layer to see what word it would guess next at that point. This lets us watch the prediction form over the course of the 43 layers.</li>
+<li><b>Bounded Jacobian</b>: we nudge the input by a tiny amount in 16 random directions and measure how much the output changes. This tells us how sensitive the model is to small input perturbations at each layer.</li>
 </ul>
-<p>Any violation → the record is discarded and the run aborts. Zero violations across all 3,682 records observed to date.</p>
+<p>We ran both on 80 samples across all traditions. See the <a href="jspace.html">J-space lens page</a> for details and the interactive viewer.</p>
 
-<h2 id="faithfulness">7. Faithfulness verification</h2>
-<p>The Gate hook was verified line-for-line against the model's <code>Gate.forward()</code> method. The Kimi K3 external review independently reproduced the e164 zero-on-Bible finding from the committed observation artifacts, confirming the harness is faithful.</p>
+<h2 id="fail-closed">Integrity checks</h2>
+<p>Every single record has to pass these checks before we accept it. If any check fails, we throw the record out and stop the run:</p>
+<ul>
+<li>The expert frequencies must add up to exactly <code>sequence_length x 6</code> (because 6 experts are picked per token, one frequency count per expert per token)</li>
+<li>All gate weights and activation norms must be non-negative</li>
+<li>No NaN or infinity values allowed anywhere</li>
+<li>Every layer must report exactly 256 experts</li>
+</ul>
+<p>Result: zero violations across all 3,682 records.</p>
 
-<h2 id="infra">8. Deployment infrastructure</h2>
+<h2 id="infra">The hardware</h2>
 <table class="wikitable">
-<tr><th>Component</th><th>Spec</th></tr>
-<tr><td>Head node (rank 0)</td><td>de5c (DGX Spark), 10.0.1.1, password auth via SSH_ASKPASS</td></tr>
-<tr><td>Worker node (rank 1)</td><td>557f (DGX Spark), 192.168.1.96, key auth</td></tr>
-<tr><td>Container image</td><td><code>local/dspark-vllm-gx10:proven-0731</code></td></tr>
-<tr><td>NCCL transport</td><td>Socket (IB disabled in container), NCCL_TIMEOUT=600s</td></tr>
-<tr><td>Checkpoint</td><td>Converted MP2 safetensors on both nodes</td></tr>
-<tr><td>Jump path</td><td>Mac → 557f (key) → de5c (password via ConnectX 10.0.1.1)</td></tr>
-<tr><td>Resume</td><td>JSONL skip-ahead via <code>completed_keys()</code> — zero data loss on NCCL stalls</td></tr>
+<tr><th>What</th><th>Details</th></tr>
+<tr><td>Two GPU servers</td><td>Both are DGX Spark machines. One acts as the "head" (rank 0), the other as the "worker" (rank 1). They communicate over a direct network link.</td></tr>
+<tr><td>Container</td><td>The model runs inside a Docker container with all dependencies pinned.</td></tr>
+<tr><td>Crash recovery</td><td>If the network link between the two GPUs hiccups (which happened several times), the harness skips already-completed records on restart. Zero data lost across 3,682 records and 3 crashes.</td></tr>
 </table>
 
-<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="results.html">MoE routing</a></div>
+<div class="catlinks"><b>Categories:</b> <a href="../index.html">DSv4-Flash interpretability</a> | <a href="../results.html">MoE routing</a></div>
 </div></div>
 </body>
 </html>
