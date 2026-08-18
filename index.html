@@ -80,17 +80,17 @@ a{color:var(--accent)}
 <h2 id="f5">5. What we're doing next</h2>
 <p>The <a href="wiki/forward_plan.html">forward plan</a> (designed by GPT-5.6-terra via Codex CLI) outlines the next phase:</p>
 <ul>
-<li><b>Exp 4b</b> <span style="color:#b25f00">▸ running now</span> — per-token routing capture on 351 commentary windows with 41,426 quote tokens. The decisive within-document test: does H6 fire token-by-token on the verse quote, or on the surrounding commentary?</li>
+<li><b>Exp 4b</b> <span style="color:#2a7a2a">✓ complete</span> — 351 commentary windows, 5.2M tokens. H6 fires at 163,284/M on commentary prose, with a slight negative correlation (r = &minus;0.13) between quote fraction and H6 rate. See <a href="wiki/exp4.html">Exp 4 results</a>.</li>
+<li><b>Exp 1</b> <span style="color:#2a7a2a">✓ complete</span> — <a href="wiki/exp1.html">150 records</a>: 30 Bible passages in 5 English translations (KJV, WEB, ASV, YLT, BBE), all 0-digit controlled. H6 fires at 47.8/M &mdash; a 3,415&times; ratio vs commentary. KJV and ASV show perfect zero. The verse/prose axis is translation-invariant: H6 detects verse <i>structure</i>, not wording or memorization.</li>
+<li><b>Exp 12</b> <span style="color:#b25f00">▸ launching</span> — 222 records (111 pairs): with_digits vs digit_stripped across 5 categories. Negative control: confirm digit experts respond to digit density, confirm H6 does not.</li>
 <li><b>Exp 13</b> — <a href="wiki/exp13.html">scoped ablation</a>. Zero out the 6 H6 anchor experts and measure the effect on next-token prediction (Delta-NLL). Two modes: contribution knockout (keep gate selection, zero output) and route-mask compensation (reselect replacements). Dose series: 1→3→6 experts. 20 matched random control clusters.</li>
-<li><b>Exp 1</b> — 149 records: 30 Bible passages in 5 English translations (KJV, WEB, ASV, YLT, BBE). If routing is translation-invariant, H6 responds to verse structure, not wording.</li>
-<li><b>Exp 12</b> — 222 records (111 pairs): with_digits vs digit_stripped across 5 categories. Negative control: confirm digit experts respond to digit density, confirm H6 does not.</li>
 <li><b>Exps 15–20</b> — controlled format-edit factorial, secular/religious factorial, quote-boundary carryover, gate-vs-contribution separation, religion null as equivalence, lens robustness.</li>
 </ul>
 
 <h2>So what did we learn?</h2>
 <p>Three things. About the model: late-layer routing keeps one eye on the surface of the page (digits); a large format-associated routing axis (verse/prose) fires 10,911× harder on prose than verse and ignores embedded verse quotes; religious tradition per se barely registers in the wiring. About method: when your corpora differ in digit density, footnote density, translation status and window length all at once, an external audit that decodes the actual tokens is worth more than any amount of clean bookkeeping. And about the process: retractions are the method working — the measurement rig never lied, but the stories we told about it did, and the corrected findings are more interesting than the original ones.</p>
 
-<p class="next"><b>Everything is public:</b> <a href="RESEARCH_WIKI.html">research wiki</a> · <a href="wiki/narrative.html">correctness-first narrative</a> · <a href="wiki/exp4.html">Exp 4 results</a> · <a href="wiki/exp13.html">Exp 13 ablation</a> · <a href="wiki/forward_plan.html">forward plan</a> · <a href="wiki/results.html">full results</a> · <a href="wiki/jspace.html">J-space lens</a> · observation code · raw records in <code>0xSero/deepseek-v4-flash-reap</code> (private, access on request) · <a href="https://github.com/0xSero/dsv4-reap-routing">GitHub repo →</a></p>
+<p class="next"><b>Everything is public:</b> <a href="RESEARCH_WIKI.html">research wiki</a> · <a href="wiki/narrative.html">correctness-first narrative</a> · <a href="wiki/exp4.html">Exp 4 results</a> · <a href="wiki/exp1.html">Exp 1 results</a> · <a href="wiki/exp13.html">Exp 13 ablation</a> · <a href="wiki/forward_plan.html">forward plan</a> · <a href="wiki/results.html">full results</a> · <a href="wiki/jspace.html">J-space lens</a> · observation code · raw records in <code>0xSero/deepseek-v4-flash-reap</code> (private, access on request) · <a href="https://github.com/0xSero/dsv4-reap-routing">GitHub repo →</a></p>
 </div>
 </body>
 </html>

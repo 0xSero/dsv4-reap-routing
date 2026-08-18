@@ -202,6 +202,7 @@
       <li><a href="wiki/narrative.html">Narrative (correctness-first)</a></li>
       <li><a href="wiki/exp4.html">Exp 4 results</a></li>
       <li><a href="wiki/exp13.html">Exp 13 ablation</a></li>
+      <li><a href="wiki/exp1.html">Exp 1 results</a></li>
       <li><a href="wiki/forward_plan.html">Forward plan</a></li>
     </ul>
   </div>
@@ -264,6 +265,7 @@
 <tr><td><a href="wiki/narrative.html"><b>Narrative (correctness-first)</b></a></td><td>Plain-language story of what the data says, with every claim verified against raw data. Retractions, agreed hypotheses, experiment rankings.</td></tr>
 <tr><td><a href="wiki/exp4.html"><b>Exp 4: Quotation switch</b></a></td><td>The decisive within-document test — does H6 fire on quoted verse or surrounding commentary? Pilot results: H6 fires on prose context, not verse content (10,911&times; ratio).</td></tr>
 <tr><td><a href="wiki/exp13.html"><b>Exp 13: H6 ablation</b></a></td><td>Causal intervention: knock out the 6 H6 anchor experts and measure Delta-NLL on prose vs verse. Two modes (contribution knockout, route-mask compensation), dose series, 20 matched controls.</td></tr>
+<tr><td><a href="wiki/exp1.html"><b>Exp 1: Multi-translation Bible test</b></a></td><td>30 Bible passages in 5 public-domain translations (KJV, ASV, YLT, WEB, BBE), all 0-digit controlled. Result: H6 fires at 47.8/M &mdash; a 3,415&times; ratio vs commentary. The verse/prose axis is translation-invariant: H6 detects verse structure, not wording or memorization.</td></tr>
 <tr><td><a href="wiki/forward_plan.html"><b>Forward plan</b></a></td><td>Next experimental phase designed by GPT-5.6-terra: Exp 4b (per-token capture), Exp 13 (ablation), Exps 15-20 (format-edit factorial, secular factorial, lens robustness).</td></tr>
 </table>
 
@@ -339,6 +341,11 @@
 <tr><td>Exp 4: H6 comparison</td><td>H6 firing rates: Bible verse vs KJV files vs commentary vs Christian prose (log scale)</td><td><a href="img/chart_exp4_h6_comparison.png">view</a></td></tr>
 <tr><td>Exp 4: Per-anchor comparison</td><td>Per-anchor H6 rates showing verse vs commentary context effect</td><td><a href="img/chart_exp4_per_anchor.png">view</a></td></tr>
 <tr><td>Exp 4: Digit density scatter</td><td>Digit density vs H6 composite, colored by text type</td><td><a href="img/chart_exp4_digit_scatter.png">view</a></td></tr>
+<tr><td>Exp 4b: Quote fraction scatter</td><td>quote_fraction vs H6 composite (log scale) &mdash; negative correlation r = &minus;0.13</td><td><a href="img/chart_exp4b_scatter.png">view</a></td></tr>
+<tr><td>Exp 4b: Per-anchor boxplot</td><td>Per-anchor H6 firing distributions across 351 commentary records</td><td><a href="img/chart_exp4b_per_anchor.png">view</a></td></tr>
+<tr><td>Exp 4b: By source document</td><td>Mean H6 rate by source document &mdash; shows consistency across independent books</td><td><a href="img/chart_exp4b_by_source.png">view</a></td></tr>
+<tr><td>Exp 1: H6 by translation</td><td>H6 composite rate per translation (bar chart, log scale) &mdash; KJV and ASV at perfect zero</td><td><a href="img/chart_exp1_by_translation.png">view</a></td></tr>
+<tr><td>Exp 1: Per-passage scatter</td><td>H6 rate per passage &times; translation &mdash; flat distribution shows translation invariance</td><td><a href="img/chart_exp1_per_passage.png">view</a></td></tr>
 </table>
 
 <!-- TOC -->
