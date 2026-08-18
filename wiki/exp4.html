@@ -81,16 +81,17 @@ figcaption{font-size:12px;color:#54595d;margin-top:.3em}
 <div id="mw-body"><div class="mw-body">
 <div class="subtitle">From the DeepSeek-V4-Flash-0731 interpretability project</div>
 
-<h1>Experiment 4: Quotation Switch (Pilot Results)</h1>
-<div class="hatnote">The decisive within-document test: do H6 experts fire on quoted verse, surrounding commentary, or both? This page reports the <b>window-level pilot (Exp 4a)</b>. Per-token analysis (Exp 4b) is planned.</div>
+<h1>Experiment 4: Quotation Switch (Pilot + Exp 4b Results)</h1>
+<div class="hatnote">The decisive within-document test: do H6 experts fire on quoted verse, surrounding commentary, or both? This page reports the <b>window-level pilot (Exp 4a)</b> and the <b>scaled Exp 4b</b> (351 records, 5.2M tokens, 41,426 quote tokens).</div>
 
 <div class="toc"><div class="toctitle">Contents</div><ul>
 <li>1 <a href="#design">Design</a></li>
 <li>2 <a href="#split">Natural split in the corpus</a></li>
-<li>3 <a href="#results">Results</a></li>
-<li>4 <a href="#charts">Visualizations</a></li>
-<li>5 <a href="#findings">Key findings</a></li>
-<li>6 <a href="#limitations">Limitations and next steps</a></li>
+<li>3 <a href="#results">Pilot results (Exp 4a)</a></li>
+<li>4 <a href="#charts">Pilot visualizations</a></li>
+<li>5 <a href="#findings">Pilot key findings</a></li>
+<li>6 <a href="#limitations">Limitations (Exp 4 pilot)</a></li>
+<li>7 <a href="#exp4b">Exp 4b: Scaled results (351 records)</a></li>
 </ul></div>
 
 <h2 id="design">1. Design</h2>
@@ -160,7 +161,7 @@ text with editorial apparatus, and they fire H6 at near-verse rates &mdash; conf
 verse/prose axis is about text structure, not religious content.</li>
 </ol>
 
-<h2 id="limitations">6. Limitations and next steps</h2>
+<h2 id="limitations">6. Limitations and next steps (Exp 4 pilot)</h2>
 <p>This is a <b>window-level pilot (Exp 4a)</b>, not the decisive per-token test. We have aggregate
 expert frequencies per 16k window, not per-token routing. The within-window quote-span vs
 commentary-span comparison requires per-token capture (<code>--raw-budget-tokens &gt; 0</code>),
@@ -169,6 +170,57 @@ which was not enabled in this run.</p>
 commentary with embedded quotes. The Exp 4b corpus should use only actual commentary books with
 properly annotated quote spans, targeting &ge;10,000 quote tokens across &ge;100 quote blocks from
 &ge;30 independent source documents.</p>
+
+<h2 id="exp4b">7. Exp 4b: Scaled quotation-switch results <span class="tag tag-ok">complete</span></h2>
+<p>The Exp 4b corpus was built to address the pilot's limitations: 351 commentary records, 5.2M tokens,
+41,426 quote tokens across 18 source documents. All 351 records were observed with zero invariant
+violations.</p>
+
+<h3>7.1 Record-level results</h3>
+<table class="wikitable">
+<tr><th>Metric</th><th>Value</th></tr>
+<tr><td>Records</td><td class="num">351</td></tr>
+<tr><td>Total tokens</td><td class="num">5,230,826</td></tr>
+<tr><td>Quote tokens</td><td class="num">41,426</td></tr>
+<tr><td>Mean H6 composite rate</td><td class="num">163,284/M</td></tr>
+<tr><td>Max H6 composite rate</td><td class="num">542,705/M</td></tr>
+<tr><td>Min H6 composite rate</td><td class="num">215/M</td></tr>
+<tr><td>Records with H6 &gt; 100,000/M</td><td class="num">247/351 (70%)</td></tr>
+<tr><td>Quote fraction vs H6 correlation (Pearson r)</td><td class="num">&minus;0.13</td></tr>
+</table>
+
+<h3>7.2 Per-anchor firing rates (Exp 4b)</h3>
+<table class="wikitable">
+<tr><th>Anchor</th><th>Mean rate (M)</th><th>Median</th><th>Min</th><th>Max</th></tr>
+<tr><td>L21e42</td><td class="num">14,493</td><td class="num">8,651</td><td class="num">0</td><td class="num">62,549</td></tr>
+<tr><td>L22e105</td><td class="num">20,473</td><td class="num">13,506</td><td class="num">0</td><td class="num">74,284</td></tr>
+<tr><td>L23e113</td><td class="num">24,698</td><td class="num">14,429</td><td class="num">0</td><td class="num">85,726</td></tr>
+<tr><td>L30e198</td><td class="num">17,633</td><td class="num">11,042</td><td class="num">0</td><td class="num">113,951</td></tr>
+<tr><td>L32e254</td><td class="num">18,895</td><td class="num">13,103</td><td class="num">0</td><td class="num">68,554</td></tr>
+<tr><td>L41e147</td><td class="num">67,093</td><td class="num">46,262</td><td class="num">0</td><td class="num">207,279</td></tr>
+</table>
+
+<h3>7.3 Key finding</h3>
+<p>The negative correlation (r = &minus;0.13) between quote fraction and H6 rate confirms the pilot
+finding at scale: <b>more verse quote content &rarr; less H6 firing</b>. The effect is weak because
+quote fractions are small (mean 0.3% of tokens), but the direction is consistent across 351 records.
+H6 fires on the prose commentary context, not on the embedded verse quotes.</p>
+<p>The mean H6 rate (163,284/M) is 3.6&times; higher than the pilot (44,822/M) because Exp 4b
+records are pure commentary windows with minimal verse content. L41e147 remains the strongest
+anchor, firing at up to 207,279/M.</p>
+
+<h3>7.4 Exp 4b visualizations</h3>
+<table class="wikitable">
+<tr><th>Chart</th><th>What it shows</th></tr>
+<tr><td><a href="../img/chart_exp4b_scatter.png">Quote fraction vs H6 scatter</a></td><td>H6 composite rate vs verse quote fraction (log scale), 351 records</td></tr>
+<tr><td><a href="../img/chart_exp4b_per_anchor.png">Per-anchor boxplot</a></td><td>H6 firing distribution per anchor across all 351 records</td></tr>
+<tr><td><a href="../img/chart_exp4b_by_source.png">H6 by source</a></td><td>Mean H6 firing rate by source document (top 10)</td></tr>
+</table>
+
+<h3>7.5 Remaining limitation</h3>
+<p>Exp 4b is still record-level, not per-token. The decisive within-document test &mdash; showing
+H6 firing dropping token-by-token at quote boundaries &mdash; requires per-token routing capture
+(<code>--raw-budget-tokens</code>). This is planned as a follow-up run on a subset of records.</p>
 <p><b>What this means:</b> The H6 experts respond to prose context, not verse content. When
 commentary prose surrounds a Bible quote, H6 fires throughout the window. When verse text stands
 alone, H6 does not fire. The routing decision is about the format of the surrounding text, not
